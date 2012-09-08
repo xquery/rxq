@@ -11,3 +11,6 @@ to setup app
    9001-myapp-test
 
    root: top level directory
+
+
+latest restxq.xqy currently being tested under examples/lib/restxq.xqy
