@@ -1,8 +1,9 @@
 xquery version "1.0-ml";
 module namespace test = "http://github.com/robwhitby/xray/test";
 import module namespace assert = "http://github.com/robwhitby/xray/assertions" at "/xray/src/assertions.xqy";
-
 import module namespace restxq="﻿http://exquery.org/ns/rest/annotation/" at "../example/lib/restxq.xqy";
+import module namespace ex1="﻿http://example.org/mine/" at "../example/external.xqy";
+
 
 (: 
   optional setup function evaluated first
@@ -45,13 +46,18 @@ declare function test-resource-functions()
 {
     assert:equal(restxq:resource-functions(),
     document{<restxq:resource-functions>
-<restxq:resource-function
-  xquery-uri = "xs:anyURI">
-  <restxq:identity
-    namespace = "xs:anyURI"
-    local-name = "xs:NCName"
-    arity = "xs:int"/>
-</restxq:resource-function>
-</restxq:resource-functions>})
+    <restxq:resource-function
+    xquery-uri = "xs:anyURI">
+      <restxq:identity
+      namespace = "xs:anyURI"
+      local-name = "xs:NCName"
+      arity = "xs:int"/>
+    </restxq:resource-function>
+    </restxq:resource-functions>})
+};
 
+
+declare function test-rewrite()
+{
+    assert:equal(restxq:rewrite-options("ex1"), <options xmlns="http://marklogic.com/appservices/rest"></options>)
 };

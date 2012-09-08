@@ -20,9 +20,9 @@ declare variable $rxq:endpoint as xs:string := "/rewrite.xqy?mode=mux";
  :  /rewrite.xqy?mode=mux
  :  /rewrite.xqy?mode=error
  :)    
-    
-declare function rxq:rewrite($prefix){
-let $options :=  <options xmlns="http://marklogic.com/appservices/rest">
+
+declare function rxq:rewrite-options($prefix) as element(rest:options){
+ <options xmlns="http://marklogic.com/appservices/rest">
   {
   for $f in xdmp:functions()
   let $name as xs:string := fn:string(fn:function-name($f))
@@ -43,8 +43,11 @@ let $options :=  <options xmlns="http://marklogic.com/appservices/rest">
     ()
    }
   </options>
-  return
-   rest:rewrite($options)
+ };
+  
+
+declare function rxq:rewrite($prefix) {
+   rest:rewrite( rxq:rewrite-options($prefix) )
 };
 
 declare function rxq:handle-error(){
