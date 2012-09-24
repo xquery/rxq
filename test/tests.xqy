@@ -1,9 +1,12 @@
 xquery version "1.0-ml";
 module namespace test = "http://github.com/robwhitby/xray/test";
-import module namespace assert = "http://github.com/robwhitby/xray/assertions" at "/xray/src/assertions.xqy";
-import module namespace restxq="﻿http://exquery.org/ns/rest/annotation/" at "../example/lib/restxq.xqy";
-import module namespace ex1="﻿http://example.org/mine/" at "../example/external.xqy";
+import module namespace rxq="﻿http://exquery.org/ns/rest/annotation/" at "/example/lib/restxq.xqy";
+import module namespace ex1="﻿http://example.org/mine/" at "/example/external.xqy";
 
+import module namespace other="﻿http://example.org/other/" at "/example/other.xqy";
+import module namespace assert = "http://github.com/robwhitby/xray/assertions" at "/xray/src/assertions.xqy";
+
+declare option xdmp:mapping "true";
 
 (: 
   optional setup function evaluated first
@@ -26,38 +29,46 @@ declare function test-default-endpoint()
   let $foo := "foo"
   let $bar := "bar"
   return (
-    assert:not-empty($restxq:endpoint),
-    assert:equal($restxq:endpoint, "/rewrite.xqy?mode=mux")
+    assert:not-empty($rxq:endpoint),
+    assert:equal($rxq:endpoint, "/rewrite.xqy?mode=mux")
   )
 };
 
 
 declare function test-uri()
 {
-    assert:equal(restxq:uri(), xs:anyURI("http://www.example.org"))
+    assert:equal(rxq:uri(), xs:anyURI("http://www.example.org"))
 };
 
 declare function test-base-uri()
 {
-    assert:equal(restxq:base-uri(), xs:anyURI("http://www.example.org"))
+    assert:equal(rxq:base-uri(), xs:anyURI("http://www.example.org"))
 };
 
 declare function test-resource-functions()
 {
-    assert:equal(restxq:resource-functions(),
-    document{<restxq:resource-functions>
-    <restxq:resource-function
+    assert:equal(rxq:resource-functions(),
+    document{<rxq:resource-functions>
+    <rxq:resource-function
     xquery-uri = "xs:anyURI">
-      <restxq:identity
+      <rxq:identity
       namespace = "xs:anyURI"
       local-name = "xs:NCName"
       arity = "xs:int"/>
-    </restxq:resource-function>
-    </restxq:resource-functions>})
+    </rxq:resource-function>
+    </rxq:resource-functions>})
 };
 
 
-declare function test-rewrite()
+declare function test-rewrite-options()
 {
-    assert:equal(restxq:rewrite-options("ex1"), <options xmlns="http://marklogic.com/appservices/rest"></options>)
+  let $result := rxq:rewrite-options(("ex1"))
+    return
+    assert:equal($result,<test/>)
+};
+
+
+declare function test-rewrite-options2()
+{
+    assert:equal(rxq:rewrite-options(("ex1","other")), <options xmlns="http://marklogic.com/appservices/rest"></options>)
 };

@@ -14,6 +14,8 @@ import module namespace rest = "http://marklogic.com/appservices/rest"
 
 declare variable $rxq:endpoint as xs:string := "/rewrite.xqy?mode=mux";
 
+declare option xdmp:mapping "true";
+
 (:~
  :
  :  /rewrite.xqy?mode=rewrite
@@ -21,33 +23,36 @@ declare variable $rxq:endpoint as xs:string := "/rewrite.xqy?mode=mux";
  :  /rewrite.xqy?mode=error
  :)    
 
-declare function rxq:rewrite-options($prefix) as element(rest:options){
+declare function rxq:rewrite-options($prefixes as xs:string*) as element(rest:options){
  <options xmlns="http://marklogic.com/appservices/rest">
   {
-  for $f in xdmp:functions()
+  for $prefix in $prefixes
+    return
+  for $f in xdmp:functions()[fn:prefix-from-QName(fn:function-name(.)) = $prefixes]
   let $name as xs:string := fn:string(fn:function-name($f))
   return
-    if(fn:starts-with($name,$prefix)) then
+    if(xdmp:annotation($f,xs:QName('rxq:path'))) then
     <request uri="{xdmp:annotation($f,xs:QName('rxq:path'))}" endpoint="{$rxq:endpoint}">
       <uri-param name="f">{$name}</uri-param>
       <uri-param name="output">{xdmp:annotation($f,xs:QName('rxq:method'))}</uri-param>
-      <uri-param name="var1">$1</uri-param>
-      <uri-param name="var2">$2</uri-param>
+      <uri-param name="var1"></uri-param>
       <uri-param name="content-type">{xdmp:annotation($f,xs:QName('rxq:content-type'))}</uri-param>  
       {if (xdmp:annotation($f,xs:QName('rxq:GET')))    then <http method="GET"/>    else ()}
       {if (xdmp:annotation($f,xs:QName('rxq:POST')))   then <http method="POST"/>   else ()}
       {if (xdmp:annotation($f,xs:QName('rxq:PUT')))    then <http method="PUT"/>    else ()}
       {if (xdmp:annotation($f,xs:QName('rxq:DELETE'))) then <http method="DELETE"/> else ()}
     </request>
-    else
+  else
     ()
    }
   </options>
  };
   
 
-declare function rxq:rewrite($prefix) {
-   rest:rewrite( rxq:rewrite-options($prefix) )
+declare function rxq:rewrite($prefixes as xs:string*) {
+rest:rewrite(
+  rxq:rewrite-options($prefixes)
+)   
 };
 
 declare function rxq:handle-error(){
