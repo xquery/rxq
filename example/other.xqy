@@ -14,10 +14,11 @@ declare %restxq:content-type('text/html') %restxq:GET %restxq:path('/test1/') fu
 };
 
 
-declare %restxq:content-type('text/html') %restxq:GET %restxq:path('/home1/') function other:homepage() {
+declare %restxq:content-type('text/html') %restxq:GET %restxq:path('/home1/(.*)') function other:homepage($test) {
 <html>
 <body>
 <h1>homepage1</h1>
+test: {$test}
 </body>
 </html>
 };
