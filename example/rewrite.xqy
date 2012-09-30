@@ -1,6 +1,6 @@
 xquery version "1.0-ml";
 
-import module namespace rxq="﻿http://exquery.org/ns/rest/annotation/" at "lib/restxq.xqy";
+import module namespace rxq="﻿http://exquery.org/ns/restxq" at "lib/restxq.xqy";
 
 (:~ include your modules imports here :)
 import module namespace ex1="﻿http://example.org/mine/" at "external.xqy";

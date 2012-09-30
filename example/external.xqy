@@ -2,11 +2,11 @@ xquery version "1.0-ml";
 
 module namespace ex1="﻿http://example.org/mine/";
 
-declare namespace restxq="﻿http://exquery.org/ns/rest/annotation/";
+declare namespace rxq="﻿http://exquery.org/ns/restxq";
 
 
 
-declare %restxq:content-type('text/html') %restxq:GET %restxq:path('/test/a') function ex1:b($test) {
+declare %rxq:content-type('text/html') %rxq:GET %rxq:path('/test/a') function ex1:b($test) {
 <html>
 <body>
 <h1>Function b</h1>
@@ -16,7 +16,7 @@ test: {$test}
 };
 
 
-declare %restxq:content-type('text/html') %restxq:GET %restxq:path('/test/(.+)') function ex1:a($test) {
+declare %rxq:content-type('text/html') %rxq:GET %rxq:path('/test/(.+)') function ex1:a($test) {
 <html>
 <body>
 <h1>Function a</h1>
@@ -25,7 +25,7 @@ test: {$test}
 </html>
 };
 
-declare %restxq:content-type('text/html') %restxq:GET %restxq:path('/home/(.*)/(.*)/') function ex1:homepage($test1, $test2) {
+declare %rxq:content-type('text/html') %rxq:GET %rxq:path('/home/(.*)/(.*)/') function ex1:homepage($test1, $test2) {
 <html>
 <body>
 <h1>homepage</h1>

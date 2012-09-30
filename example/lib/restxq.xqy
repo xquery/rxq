@@ -1,6 +1,6 @@
 xquery version "1.0-ml";
 
-module namespace rxq="﻿http://exquery.org/ns/rest/annotation/";
+module namespace rxq="﻿http://exquery.org/ns/restxq";
 
 (:~ Implement of restxq as defined
  :
