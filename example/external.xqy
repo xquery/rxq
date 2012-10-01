@@ -43,7 +43,21 @@ test2: {$test2}<br/>
 declare %rxq:content-type('text/html') %rxq:GET %rxq:path('/') function ex1:allwebpages() {
 <html>
 <body>
-<h1>All web pages</h1>
+<h1>Other web pages</h1>
+<ul>
+{
+for $prefix in ("other", "ex1")
+    return
+  for $f in xdmp:functions()[fn:prefix-from-QName(fn:function-name(.)) = $prefix]
+  let $name as xs:string := fn:string(fn:function-name($f))
+  let $arity as xs:integer := (fn:function-arity($f),0)[1]
+  return
+    if(xdmp:annotation($f,xs:QName('rxq:path'))) then
+     <li> <a href="{xdmp:annotation($f,xs:QName('rxq:path'))}">{xdmp:annotation($f,xs:QName('rxq:path'))}</a></li>
+    else
+      ()
+}
+</ul>
 </body>
 </html>
 };
