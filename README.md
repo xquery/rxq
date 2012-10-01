@@ -1,16 +1,14 @@
-to setup app
-
-   9000-myapp
+to setup example app, create appserver
 
    root: example directory
+
    error handler: /rewrite.xqy?mode=error
+
    rewrite handler: /rewrite.xqy?mode=mux
 
-   xray tests
 
-   9001-myapp-test
+ test by reviewing module lib rxq:paths in browser
 
-   root: top level directory
+ 
 
-
-latest restxq.xqy currently being tested under examples/lib/restxq.xqy
+ 
