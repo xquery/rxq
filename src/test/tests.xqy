@@ -1,11 +1,10 @@
 xquery version "1.0-ml";
 module namespace test = "http://github.com/robwhitby/xray/test";
+import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/example-site/lib/restxq.xqy";
 
-import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/src/example-site/lib/restxq.xqy";
-
-import module namespace ex1="﻿http://example.org/ex1" at "/src/example-site/modules/ex1.xqy";
-import module namespace ex2="﻿http://example.org/ex2" at "/src/example-site/modules/ex2.xqy";
-import module namespace other="﻿http://example.org/other" at "/src/example-site/lib/other.xqy";
+import module namespace ex1="﻿http://example.org/ex1" at "/example-site/modules/ex1.xqy";
+import module namespace ex2="﻿http://example.org/ex2" at "/example-site/modules/ex2.xqy";
+import module namespace other="﻿http://example.org/other" at "/example-site/lib/other.xqy";
 
 import module namespace assert = "http://github.com/robwhitby/xray/assertions" at "/xray/src/assertions.xqy";
 
@@ -50,57 +49,55 @@ declare function test-base-uri()
 
 declare function test-resource-functions()
 {
-  let $result := xdmp:eval('
-import module namespace ex1="﻿http://example.org/ex1" at "/example/modules/ex1.xqy";
-import module namespace ex2="﻿http://example.org/ex2" at "/example/modules/ex2.xqy";
-import module namespace other="﻿http://example.org/other" at "/example/lib/other.xqy";
-import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/example/lib/restxq.xqy";
-
+  let $result  := xdmp:eval('
+    import module namespace ex1="﻿http://example.org/ex1" at "/example-site/modules/ex1.xqy";
+    import module namespace ex2="﻿http://example.org/ex2" at "/example-site/modules/ex2.xqy";
+    import module namespace other="﻿http://example.org/other" at "/example-site/lib/other.xqy";
+    import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/example-site/lib/restxq.xqy";
     rxq:resource-functions()
-
     ')
     return
-    assert:equal($result/*,      <rxq:resource-functions xmlns:rxq="﻿http://exquery.org/ns/restxq">
+    assert:equal( xdmp:quote($result), xdmp:quote(<rxq:resource-functions xmlns:rxq="﻿http://exquery.org/ns/restxq">
 	<rxq:resource-function xquery-uri="">
-	  <rxq:identity namespace="" local-name="ex2:a" arity="1"></rxq:identity>
+	  <rxq:identity namespace="" local-name="other:a" arity="1" uri="/a1/(.*)"></rxq:identity>
 	</rxq:resource-function>
 	<rxq:resource-function xquery-uri="">
-	  <rxq:identity namespace="" local-name="other:importtest" arity="1"></rxq:identity>
+	  <rxq:identity namespace="" local-name="ex1:allwebpages" arity="0" uri="/ex1/"></rxq:identity>
 	</rxq:resource-function>
 	<rxq:resource-function xquery-uri="">
-	  <rxq:identity namespace="" local-name="ex1:b" arity="1"></rxq:identity>
+	  <rxq:identity namespace="" local-name="ex1:b" arity="1" uri="/ex1/a/"></rxq:identity>
 	</rxq:resource-function>
 	<rxq:resource-function xquery-uri="">
-	  <rxq:identity namespace="" local-name="ex2:b" arity="1"></rxq:identity>
+	  <rxq:identity namespace="" local-name="ex1:a" arity="1" uri="/ex1/a/(.*)"></rxq:identity>
 	</rxq:resource-function>
 	<rxq:resource-function xquery-uri="">
-	  <rxq:identity namespace="" local-name="other:homepage" arity="1"></rxq:identity>
+	  <rxq:identity namespace="" local-name="ex1:homepage" arity="2" uri="/ex1/c/(.*)/(\d{4,7})/"></rxq:identity>
 	</rxq:resource-function>
 	<rxq:resource-function xquery-uri="">
-	  <rxq:identity namespace="" local-name="ex1:a" arity="1"></rxq:identity>
+	  <rxq:identity namespace="" local-name="ex2:allwebpages" arity="0" uri="/ex2/"></rxq:identity>
 	</rxq:resource-function>
 	<rxq:resource-function xquery-uri="">
-	  <rxq:identity namespace="" local-name="other:test" arity="0"></rxq:identity>
+	  <rxq:identity namespace="" local-name="ex2:homepage" arity="2" uri="/home/(.*)/(\d{4,7})/"></rxq:identity>
 	</rxq:resource-function>
 	<rxq:resource-function xquery-uri="">
-	  <rxq:identity namespace="" local-name="other:a" arity="1"></rxq:identity>
+	  <rxq:identity namespace="" local-name="other:homepage" arity="1" uri="/home1/(.*)"></rxq:identity>
 	</rxq:resource-function>
 	<rxq:resource-function xquery-uri="">
-	  <rxq:identity namespace="" local-name="ex1:homepage" arity="2"></rxq:identity>
+	  <rxq:identity namespace="" local-name="other:importtest" arity="1" uri="/import/test/"></rxq:identity>
 	</rxq:resource-function>
 	<rxq:resource-function xquery-uri="">
-	  <rxq:identity namespace="" local-name="ex2:homepage" arity="2"></rxq:identity>
+	  <rxq:identity namespace="" local-name="ex2:a" arity="1" uri="/test/(.+)/"></rxq:identity>
 	</rxq:resource-function>
 	<rxq:resource-function xquery-uri="">
-	  <rxq:identity namespace="" local-name="ex2:allwebpages" arity="0"></rxq:identity>
+	  <rxq:identity namespace="" local-name="ex2:b" arity="1" uri="/test/a/"></rxq:identity>
 	</rxq:resource-function>
 	<rxq:resource-function xquery-uri="">
-	  <rxq:identity namespace="" local-name="ex1:allwebpages" arity="0"></rxq:identity>
+	  <rxq:identity namespace="" local-name="other:test" arity="0" uri="/test1/"></rxq:identity>
 	</rxq:resource-function>
 	<rxq:resource-function xquery-uri="">
-	  <rxq:identity namespace="" local-name="other:testa" arity="0"></rxq:identity>
+	  <rxq:identity namespace="" local-name="other:testa" arity="0" uri="/test3"></rxq:identity>
 	</rxq:resource-function>
-      </rxq:resource-functions>)
+      </rxq:resource-functions>))
 };
 
 

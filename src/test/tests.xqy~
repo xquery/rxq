@@ -1,11 +1,11 @@
 xquery version "1.0-ml";
 module namespace test = "http://github.com/robwhitby/xray/test";
 
-import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/src/example-site/lib/restxq.xqy";
+import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/example-site/lib/restxq.xqy";
 
-import module namespace ex1="﻿http://example.org/ex1" at "/src/example-site/modules/ex1.xqy";
-import module namespace ex2="﻿http://example.org/ex2" at "/src/example-site/modules/ex2.xqy";
-import module namespace other="﻿http://example.org/other" at "/src/example-site/lib/other.xqy";
+import module namespace ex1="﻿http://example.org/ex1" at "/example-site/modules/ex1.xqy";
+import module namespace ex2="﻿http://example.org/ex2" at "/example-site/modules/ex2.xqy";
+import module namespace other="﻿http://example.org/other" at "/example-site/lib/other.xqy";
 
 import module namespace assert = "http://github.com/robwhitby/xray/assertions" at "/xray/src/assertions.xqy";
 
@@ -51,10 +51,10 @@ declare function test-base-uri()
 declare function test-resource-functions()
 {
   let $result  := xdmp:eval('
-    import module namespace ex1="﻿http://example.org/ex1" at "/src/example-site/modules/ex1.xqy";
-    import module namespace ex2="﻿http://example.org/ex2" at "/src/example-site/modules/ex2.xqy";
-    import module namespace other="﻿http://example.org/other" at "/src/example-site/lib/other.xqy";
-    import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/src/example-site/lib/restxq.xqy";
+    import module namespace ex1="﻿http://example.org/ex1" at "/example-site/modules/ex1.xqy";
+    import module namespace ex2="﻿http://example.org/ex2" at "/example-site/modules/ex2.xqy";
+    import module namespace other="﻿http://example.org/other" at "/example-site/lib/other.xqy";
+    import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/example-site/lib/restxq.xqy";
     rxq:resource-functions()
     ')
     return

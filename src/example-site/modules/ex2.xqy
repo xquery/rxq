@@ -8,7 +8,6 @@ declare function ex2:does-nothing(){
   ()
 };
 
-
 declare %rxq:content-type('text/html') %rxq:GET %rxq:path('/ex2/c/(.*)/(\d{4,7})/') function ex2:homepage($test1, $test2) {
 <html>
 <body>

@@ -1,5 +1,26 @@
 xquery version "1.0-ml";
-
+(:
+ : restxq.xqy
+ :
+ : Copyright (c) 2012 James Fuller. All Rights Reserved.
+ :
+ : Licensed under the Apache License, Version 2.0 (the "License");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ : http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an "AS IS" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :
+ : The use of the Apache License does not indicate that this project is
+ : affiliated with the Apache Software Foundation.
+ :
+ :)
+ 
 module namespace rxq="﻿http://exquery.org/ns/restxq";
 
 (:~ Implementation of restxq as defined at
@@ -19,13 +40,17 @@ import module namespace rest = "http://marklogic.com/appservices/rest"
 declare namespace rxq-output = "http://www.w3.org/2010/xslt-xquery-serialization";    
 declare namespace rxq-error = "http://exquery.org/ns/restxq/error";
 
+(:~ declare constants:)
 declare variable $rxq:_REWRITE_MODE := "rewrite";
 declare variable $rxq:_MUX_MODE := "mux";
 
 (:~ defines default evaluation endpoint :)
 declare variable $rxq:endpoint as xs:string := "/rewrite.xqy?mode=" ||  $rxq:_MUX_MODE;
 
-(:~ :)
+(:~:)
+declare variable $rxq:cache-flag as xs:boolean := fn:true();
+
+(:~ defines server field used by cache :)
 declare variable $rxq:server-field as xs:string := "rxq-server-field";
 
 (:~ defines default content type :)
@@ -107,7 +132,7 @@ declare function rxq:rewrite-options($prefixes as xs:string*) as element(rest:op
 
 
 declare function rxq:rewrite($prefixes as xs:string*) {
-  rxq:rewrite($prefixes, fn:false())
+  rxq:rewrite($prefixes,  $rxq:cache-flag )
 };
 
 (:~ rxq:mux - evaluates through function invoke 
@@ -230,7 +255,7 @@ declare function rxq:resource-functions() as element(rxq:resource-functions){
 	  arity = "{fn:function-arity($f)}"
 	  uri="{xdmp:annotation($f,xs:QName('rxq:path'))}"
 	  />   
-	</rxq:resource-function>
+    </rxq:resource-function>
     else ()}
 };
 
