@@ -11,12 +11,13 @@ xquery version "1.0-ml";
 import module namespace rxq="﻿http://exquery.org/ns/restxq" at "lib/restxq.xqy";
 
 (:~ STEP1 - import modules that you would like to include :)
-import module namespace ex1="﻿http://example.org/mine/ex1" at "modules/ex1.xqy";
-import module namespace ex2="﻿http://example.org/mine/ex2" at "modules/ex2.xqy";
-import module namespace other="﻿http://example.org/other" at "lib/other.xqy";
+
+(:
+   import module namespace ex1="﻿http://example.org/ex1" at "modules/ex1.xqy";
+:)
 
 (:~ STEP2 - list your module prefixes that contain rxq annotations :)
-declare variable $app-prefixes := ("ex1","ex2","other");
+declare variable $app-prefixes := ("ex1");
 
 
 (:~ Rewriter handles the following three conditions;
@@ -31,7 +32,7 @@ declare variable $app-prefixes := ("ex1","ex2","other");
 let $mode := xdmp:get-request-field("mode")
 return
  if ($mode eq "rewrite") then
-   rxq:rewrite($app-prefixes)
+   rxq:rewrite($app-prefixes,fn:false())
  else if($mode eq "mux") then
    rxq:mux(xdmp:get-request-field("content-type",$rxq:default-content-type),
            fn:function-lookup(xs:QName(xdmp:get-request-field("f")),xs:integer(xdmp:get-request-field("arity","0"))),

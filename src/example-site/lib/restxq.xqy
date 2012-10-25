@@ -18,9 +18,12 @@ import module namespace rest = "http://marklogic.com/appservices/rest"
 
 declare namespace rxq-output = "http://www.w3.org/2010/xslt-xquery-serialization";    
 declare namespace rxq-error = "http://exquery.org/ns/restxq/error";
-  
+
+declare variable $rxq:_REWRITE_MODE := "rewrite";
+declare variable $rxq:_MUX_MODE := "mux";
+
 (:~ defines default evaluation endpoint :)
-declare variable $rxq:endpoint as xs:string := "/rewrite.xqy?mode=mux";
+declare variable $rxq:endpoint as xs:string := "/rewrite.xqy?mode=" ||  $rxq:_MUX_MODE;
 
 (:~ :)
 declare variable $rxq:server-field as xs:string := "rxq-server-field";
@@ -28,10 +31,10 @@ declare variable $rxq:server-field as xs:string := "rxq-server-field";
 (:~ defines default content type :)
 declare variable $rxq:default-content-type as xs:string := "text/html";
 
-declare variable $rxq:default-requests as element(rest:request)* := (<request uri="*" endpoint="{$rxq:endpoint}">
-     <uri-param name="f">dummy to catch non existent pages</uri-param>
-   </request>)
-   
+declare variable $rxq:default-requests as element(rest:request) := <rest:request uri="*" endpoint="{$rxq:endpoint}">
+     <rest:uri-param name="f">dummy to catch non existent pages</rest:uri-param>
+   </rest:request>;
+
 (:~ NOTE - need to test this with update scenarios ! :)
 declare option xdmp:mapping "false";
 
@@ -102,6 +105,10 @@ declare function rxq:rewrite-options($prefixes as xs:string*) as element(rest:op
     }
 };
 
+
+declare function rxq:rewrite($prefixes as xs:string*) {
+  rxq:rewrite($prefixes, fn:false())
+};
 
 (:~ rxq:mux - evaluates through function invoke 
  :
@@ -213,14 +220,20 @@ declare function rxq:base-uri() as xs:anyURI{
 declare function rxq:resource-functions() as document-node(element(rxq:resource-functions)){
   document{<rxq:resource-functions>
   {
-    for $function in xdmp:functions()
+    for $f in xdmp:functions()
+      order by xdmp:annotation($f,xs:QName('rxq:path'))
     return
-    <rxq:resource-function xquery-uri = "">
+    if(xdmp:annotation($f,xs:QName('rxq:path'))) then  
+    <rxq:resource-function xquery-uri="">
       <rxq:identity
       namespace = ""
-      local-name = "{fn:function-name($function)}"
-      arity = "{fn:function-arity($function)}"/>
+      local-name = "{fn:function-name($f)}"
+      arity = "{fn:function-arity($f)}"
+      uri="{xdmp:annotation($f,xs:QName('rxq:path'))}"
+      />
+      
     </rxq:resource-function>
+    else ()
   }
   </rxq:resource-functions>}
 };
