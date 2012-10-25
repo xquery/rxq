@@ -45,9 +45,9 @@ declare %rxq:content-type('text/html') %rxq:GET %rxq:path('/ex1/') function ex1:
 <body>
 <h1>endpoints</h1>
 <ul>
-{for $f in rxq:resource-functions()/rxq:resource-functions/rxq:resource-function/rxq:identity
+{for $f in rxq:resource-functions()//rxq:identity
 return
-  <li> <a href="{xdmp:quote($f/@uri)}">{xdmp:quote($f/@uri)}</a> - {xdmp:quote($f/@local-name)}#{xdmp:quote($f/@arity)}</li>
+  <li> <a href="{string($f/@uri)}">{string($f/@uri)}</a> - {string($f/@local-name)}#{string($f/@arity)}</li>
 }
 </ul>
 </body>

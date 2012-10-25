@@ -218,22 +218,20 @@ declare function rxq:base-uri() as xs:anyURI{
  : @returns element(rxq:resource-functions)
  :)     
 declare function rxq:resource-functions() as element(rxq:resource-functions){
-  element rxq:resource-functions
-  {
+  element rxq:resource-functions{
     for $f in xdmp:functions()
       order by xdmp:annotation($f,xs:QName('rxq:path'))
-    return
-    if(xdmp:annotation($f,xs:QName('rxq:path'))) then  
-    <rxq:resource-function xquery-uri="">
-      <rxq:identity
-      namespace = ""
-      local-name = "{fn:function-name($f)}"
-      arity = "{fn:function-arity($f)}"
-      uri="{xdmp:annotation($f,xs:QName('rxq:path'))}"
-      />   
-    </rxq:resource-function>
-    else ()
-  }
+      return
+	if(xdmp:annotation($f,xs:QName('rxq:path'))) then  
+	<rxq:resource-function xquery-uri="">
+	  <rxq:identity
+	  namespace = ""
+	  local-name = "{fn:function-name($f)}"
+	  arity = "{fn:function-arity($f)}"
+	  uri="{xdmp:annotation($f,xs:QName('rxq:path'))}"
+	  />   
+	</rxq:resource-function>
+    else ()}
 };
 
 
