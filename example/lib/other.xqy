@@ -1,8 +1,6 @@
 xquery version "1.0-ml";
 
-module namespace other="﻿http://example.org/other/";
-
-import module namespace ex2="﻿http://example.org/mine/test" at "test-import.xqy";
+module namespace other="﻿http://example.org/other";
 
 declare namespace rxq="﻿http://exquery.org/ns/restxq";
 
@@ -53,5 +51,5 @@ test: {$test}
 
 (:~ import :)
 declare %rxq:content-type('text/html') %rxq:GET %rxq:path('/import/test/') function other:importtest($test) {
-  ex2:b($test)
+() (: ex2:b($test) :)
 };
