@@ -2,7 +2,7 @@ xquery version "1.0-ml";
 
 module namespace ex2="﻿http://example.org/ex2";
 
-import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/lib/restxq.xqy";
+import module namespace rxq="﻿http://exquery.org/ns/restxq" at "../lib/restxq.xqy";
 
 declare function ex2:raw1(){
   ()

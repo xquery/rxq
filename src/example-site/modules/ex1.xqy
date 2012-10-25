@@ -2,7 +2,7 @@ xquery version "1.0-ml";
 
 module namespace ex1="﻿http://example.org/ex1";
 
-import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/lib/restxq.xqy";
+import module namespace rxq="﻿http://exquery.org/ns/restxq" at "../lib/restxq.xqy";
 
 declare function ex1:does-nothing(){
   ()
