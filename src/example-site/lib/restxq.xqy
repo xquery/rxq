@@ -93,8 +93,14 @@ declare function rxq:rewrite-options($prefixes as xs:string*) as element(rest:op
       }
       <uri-param name="content-type">{xdmp:annotation($f,xs:QName('rxq:content-type'))}</uri-param>  
       {if (xdmp:annotation($f,xs:QName('rxq:GET')))    then <http method="GET"/>    else ()}
-      {if (xdmp:annotation($f,xs:QName('rxq:POST')))   then <http method="POST"/>   else ()}
-      {if (xdmp:annotation($f,xs:QName('rxq:PUT')))    then <http method="PUT"/>    else ()}
+      {if (xdmp:annotation($f,xs:QName('rxq:POST')))   then <http method="POST" user-params="allow">
+        {for $field in xdmp:get-request-field-names()
+	  return
+            <param name="{$field}" as="string" required="false"/>
+        }
+    </http>
+    else ()}
+      {if (xdmp:annotation($f,xs:QName('rxq:PUT')))    then <http method="PUT" user-params="allow"/>    else ()}
       {if (xdmp:annotation($f,xs:QName('rxq:DELETE'))) then <http method="DELETE"/> else ()}
     </request>
   else

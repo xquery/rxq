@@ -9,6 +9,51 @@ declare function ex1:does-nothing(){
 };
 
 
+declare %rxq:content-type('application/json') %rxq:PUT %rxq:path('/json/(.*)') function ex1:insert-json($id) {
+<html>
+<body>
+<h1>PUT example - save document as json {$id}</h1>
+<textarea rows="10" cols="40">
+{xdmp:get-request-body()}
+</textarea>
+</body>
+</html>
+};
+
+
+declare %rxq:content-type('application/x-www-form-urlencoded') %rxq:POST %rxq:path('/post/(.*)') function ex1:post-xml($id) {
+<html>
+<body>
+<h1>POST example - post params to {$id}</h1>
+<textarea rows="10" cols="40">
+{xdmp:get-request-field-names()}
+</textarea>
+</body>
+</html>
+};
+
+
+declare %rxq:content-type('text/xml') %rxq:DELETE %rxq:path('/xml/(.*)') function ex1:delete-xml($id) {
+<html>
+<body>
+<h1>DELETE example - remove  document at {$id}</h1>
+</body>
+</html>
+};
+
+
+declare %rxq:content-type('text/xml') %rxq:PUT %rxq:path('/xml/(.*)') function ex1:insert-xml($id) {
+<html>
+<body>
+<h1>PUT example - save document as xml {$id}</h1>
+<textarea rows="10" cols="40">
+{xdmp:get-request-body()}
+</textarea>
+</body>
+</html>
+};
+
+
 declare %rxq:content-type('text/html') %rxq:GET %rxq:path('/ex1/c/(.*)/(\d{4,7})/') function ex1:homepage($test1, $test2) {
 <html>
 <body>
