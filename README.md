@@ -25,9 +25,9 @@ ml-RESTXQ only supports 3 annotations at this time;
 * map url path - %rxq:path('/some/path/(.*)')
 * output content-type - %rxq:content-type('text/html')
 
-# Setting up the example-site
+# Setting up the example-site on MarkLogic 6
 
-First, you *need* MarkLogic 6 or latest technology preview release. Second, create an appserver, providing the following details;
+First, you *need* to download and install [MarkLogic 6](https://developer.marklogic.com/products). Second, create an appserver, providing the following details;
 
 * root: provide example-site directory
 * error handler: /rxq-rewriter.xqy?mode=error
