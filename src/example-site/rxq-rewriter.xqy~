@@ -23,6 +23,8 @@ xquery version "1.0-ml";
 
 import module namespace rxq="﻿http://exquery.org/ns/restxq" at "lib/restxq.xqy";
 
+import module namespace cprof="com.blakeley.cprof" at "/lib/cprof.xqy";
+
 (:~ rewrite.xqy - this is the rewriter for rxq.
  :
  :  There are 2 steps for configuring a restxq application.
@@ -52,14 +54,18 @@ declare variable $app-prefixes := ("ex1","ex2","other");
  :     error - provides http level error using rxq:handle-error
  :
  :)
+let $perf := fn:false()
 let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE )
 return
  if ($mode eq $rxq:_REWRITE_MODE ) then
    rxq:rewrite($app-prefixes,fn:false())
  else if($mode eq "mux") then
+   (if($perf) then cprof:enable() else (),
    rxq:mux(xdmp:get-request-field("content-type",$rxq:default-content-type),
            fn:function-lookup(xs:QName(xdmp:get-request-field("f")),xs:integer(xdmp:get-request-field("arity","0"))),
-           xs:integer(xdmp:get-request-field("arity","0")) )
+           xs:integer(xdmp:get-request-field("arity","0")) ),
+   if($perf) then cprof:report() else ()	   
+   )	   
  else
    rxq:handle-error()
      

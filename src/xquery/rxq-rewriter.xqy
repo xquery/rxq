@@ -8,7 +8,7 @@ xquery version "1.0-ml";
  :  STEP2 - enumerate module prefixes (TRY TO REFACTOR OUT)
  :
  :)
-import module namespace rxq="﻿http://exquery.org/ns/restxq" at "lib/restxq.xqy";
+import module namespace rxq="﻿http://exquery.org/ns/restxq" at "lib/rxq.xqy";
 
 (:~ STEP1 - import modules that you would like to include :)
 

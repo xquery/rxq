@@ -2,10 +2,51 @@ xquery version "1.0-ml";
 
 module namespace ex1="﻿http://example.org/ex1";
 
-import module namespace rxq="﻿http://exquery.org/ns/restxq" at "../lib/restxq.xqy";
+import module namespace rxq="﻿http://exquery.org/ns/restxq" at "../lib/rxq.xqy";
 
-declare function ex1:does-nothing(){
-  ()
+
+declare %rxq:content-type('application/json') %rxq:PUT %rxq:path('/json/(.*)') function ex1:insert-json($id) {
+<html>
+<body>
+<h1>PUT example - save document as json {$id}</h1>
+<textarea rows="10" cols="40">
+{xdmp:get-request-body()}
+</textarea>
+</body>
+</html>
+};
+
+
+declare %rxq:content-type('application/x-www-form-urlencoded') %rxq:POST %rxq:path('/post/(.*)') function ex1:post-xml($id) {
+<html>
+<body>
+<h1>POST example - post params to {$id}</h1>
+<textarea rows="10" cols="40">
+{xdmp:get-request-field-names()}
+</textarea>
+</body>
+</html>
+};
+
+
+declare %rxq:content-type('text/xml') %rxq:DELETE %rxq:path('/xml/(.*)') function ex1:delete-xml($id) {
+<html>
+<body>
+<h1>DELETE example - remove  document at {$id}</h1>
+</body>
+</html>
+};
+
+
+declare %rxq:content-type('text/xml') %rxq:PUT %rxq:path('/xml/(.*)') function ex1:insert-xml($id) {
+<html>
+<body>
+<h1>PUT example - save document as xml {$id}</h1>
+<textarea rows="10" cols="40">
+{xdmp:get-request-body()}
+</textarea>
+</body>
+</html>
 };
 
 
@@ -40,10 +81,11 @@ test: {$test}
 };
 
 
-declare %rxq:content-type('text/html') %rxq:GET %rxq:path('/ex1/') function ex1:allwebpages() {
+declare %rxq:content-type('text/html') %rxq:GET %rxq:path('/') function ex1:allwebpages() {
 <html>
 <body>
-<h1>endpoints</h1>
+<h1>Example RESTXQ app</h1>
+<h3>endpoints</h3>
 <ul>
 {for $f in rxq:resource-functions()//rxq:identity
 return
@@ -52,4 +94,10 @@ return
 </ul>
 </body>
 </html>
+};
+
+
+(:~ example of a function without annotation, hence it does not participate :)
+declare function ex1:does-nothing(){
+  ()
 };

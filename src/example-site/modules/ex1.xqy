@@ -2,11 +2,7 @@ xquery version "1.0-ml";
 
 module namespace ex1="﻿http://example.org/ex1";
 
-import module namespace rxq="﻿http://exquery.org/ns/restxq" at "../lib/restxq.xqy";
-
-declare function ex1:does-nothing(){
-  ()
-};
+import module namespace rxq="﻿http://exquery.org/ns/restxq" at "../lib/rxq.xqy";
 
 
 declare %rxq:content-type('application/json') %rxq:PUT %rxq:path('/json/(.*)') function ex1:insert-json($id) {
@@ -85,10 +81,21 @@ test: {$test}
 };
 
 
-declare %rxq:content-type('text/html') %rxq:GET %rxq:path('/ex1/') function ex1:allwebpages() {
+declare %rxq:content-type('text/html') %rxq:GET %rxq:path('/') function ex1:allwebpages() {
 <html>
 <body>
-<h1>endpoints</h1>
+<h1>RESTXQ app</h1>
+<p> Its easy to test the example app using curl
+<ul>
+<li>HTTP GET - /ex2/ maps onto modules/ex1.xqy function ex1:b#1</li>
+<li>HTTP PUT - /ex2/ maps onto modules/ex1.xqy function ex1:b#1</li>
+<li>HTTP POST - /ex2/ maps onto modules/ex1.xqy function ex1:b#1</li>
+<li>HTTP DELETE - /ex2/ maps onto modules/ex1.xqy function ex1:b#1</li>
+
+</ul>
+</p>
+
+<h3>Current endpoints</h3>
 <ul>
 {for $f in rxq:resource-functions()//rxq:identity
 return
@@ -97,4 +104,10 @@ return
 </ul>
 </body>
 </html>
+};
+
+
+(:~ example of a function without annotation, hence it does not participate :)
+declare function ex1:does-nothing(){
+  ()
 };
