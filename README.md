@@ -33,11 +33,10 @@ The following xquery module illustrates how to annotate your modules functions u
 
 ```
 xquery version "1.0-ml";
-
 module namespace addr="﻿http://example.org/address";
-
 declare namespace rxq="﻿http://exquery.org/ns/restxq";
 
+(:~ addr:get-addess - retrieves an address :)
 declare 
    %rxq:GET
    %rxq:path('/address/id/(.*)')
@@ -76,6 +75,37 @@ import module namespace addr="﻿http://example.org/addr at "modules/addr.xqy";
 This allows the RXQ implementation to scan for annotated functions and generate the neccessary url rewriting and evaluation.
 
 Please review the [src/example-site/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/example-site/rxq-rewriter.xqy) to see how to setup your own. Note that the example-site also has a facility for profiling (enable $perf to fn:true).
+
+To continue with our address example, lets add a function which inserts an address.
+
+```
+(:~ addr:insert-address - inserts an address :)
+declare 
+   %rxq:PUT
+   %rxq:path('/address/id/(.*)')
+   %rxq:produces('text/html')
+   %rxq:consumes('application/xml')
+function addr:insert-address($id){ 
+   .... 
+};
+```
+we are not interested in the actual implementation details of inserting the address (which could even be delegated to another xquery module, reinforcing the M in MVC). The `addr:insert-address` function would be invoked when an HTTP PUT Request is received.
+
+Lastly, if we wanted to remove an address
+
+```
+(:~ addr:remove-address - removes an address :)
+declare 
+   %rxq:DELETE
+   %rxq:path('/address/id/(.*)')
+   %rxq:produces('text/html')
+function addr:remove-address($id){ 
+   .... 
+};
+```
+This function would return some kind of success or failure html.
+
+Our usage of annotations is a very concise way of easily building up flexible RESTFul interfaces, as well as providing the basis from which to create MVC architectures for our XQuery web applications.
 
 # Setting up the example-site on MarkLogic 6
 
