@@ -19,11 +19,11 @@ To learn more [install](https://github.com/xquery/rxq#setting-up-the-example-sit
 # Distribution
 
 * README.md - this document
-* api - contains api level docs of RXQ rewriter and module library
-* src/example-site - contains example site which demonstrates how to use RXQ
-* src/xquery - contains clean rxq-rewriter.xqy and lib/rxq.xqy you can use in your own projects
-* src/xray - used for testing
-* src/tests - used for testing
+* [api](https://github.com/xquery/rxq/tree/master/api) - contains api level docs of RXQ rewriter and module library
+* [src/example-site](https://github.com/xquery/rxq/tree/master/src/example-site) - contains example site which demonstrates how to use RXQ
+* [src/xquery](https://github.com/xquery/rxq/tree/master/src/xquery) - contains clean rxq-rewriter.xqy and lib/rxq.xqy you can use in your own projects
+* src/xray - RXQ uses Rob Whitby excellent [XRAY](https://github.com/robwhitby/xray) for xquery unit testing 
+* [src/tests](https://github.com/xquery/rxq/tree/master/src/test) - used for testing
 
 # How RXQ works
 
