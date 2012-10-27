@@ -17,7 +17,9 @@ declare %rxq:GET rxq:path('/address/id/(.*)') function local:get-address($id){ .
 
 # Setting up the example-site
 
-Create an appserver, provide the followig details;
+First, you *need* MarkLogic 6 or latest technology preview release.
+
+Second, create an appserver, providing the followig details;
 
 * root: provide example-site directory
 * error handler: /rxq-rewriter.xqy?mode=error
@@ -27,7 +29,7 @@ Navigate to the created app (e.g. http://<host>:<port>/) and you should see the 
 
  test by reviewing module lib rxq:paths in browser
 
- # Limitations
+# Limitations
 
 The RESTXQ spec is still in draft form; where things were unclear I made my own impl decisions for the time being;
  
