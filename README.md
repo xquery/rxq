@@ -81,13 +81,13 @@ Please review the [src/example-site/rxq-rewriter.xqy](https://github.com/xquery/
 
 # Setting up the example-site on MarkLogic 6
 
-The easist way to see RXQ in action is to setup the example application under src/example-site.
+The easist way to see RXQ in action is to setup the example application under [src/example-site](https://github.com/xquery/rxq/tree/master/src/example-site).
 
 First, you *need* to download and install [MarkLogic 6](https://developer.marklogic.com/products). Second, create an appserver, providing the following details;
 
-* root: provide example-site directory
-* error handler: /rxq-rewriter.xqy?mode=error
-* rewrite handler: /rxq-rewriter.xqy?mode=rewrite
+* _root_: provide directory where example-site resides on your filesystem
+* _error handler_: `/rxq-rewriter.xqy?mode=error`
+* _rewrite handler_: `/rxq-rewriter.xqy?mode=rewrite`
 
 With everything setup, you can now point your web browser to the created app (e.g. http://<host>:<port>/) and you should see html page.
 
