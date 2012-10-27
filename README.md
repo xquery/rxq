@@ -83,4 +83,6 @@ The RESTXQ spec is still in draft form; where things were unclear I made my own 
 
 # More Info
 
- tba
+* Adam Retters [RESTXQ](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf) Adam Retters excellent overview.
+* MarkLogic doc on [xdmp:annotation()](https://docs.marklogic.com/xdmp:annotation)
+* [JSR-311](http://download.oracle.com/otndocs/jcp/jaxrs-1.0-fr-eval-oth-JSpec/)
