@@ -10,10 +10,20 @@ This approach has a priori art e.g. JSR-311: Java Annotations for REST
 
 # How RESTXQ works
 
-``
-declare %rxq:GET rxq:path('/address/id/(.*)') function local:get-address($id){ .... }
-``
+```
+declare 
+   %rxq:GET 
+   rxq:path('/address/id/(.*)') 
+function local:get-address($id){ 
+   .... 
+};
+```
 
+ml-RESTXQ only supports 3 annotations at this time;
+
+* http method - %rxq:GET | %rxq:PUT | %rxq:DELETE | %rxq:POST
+* map url path - %rxq:path('/some/path/(.*)')
+* output content-type - %rxq:content-type('text/html')
 
 # Setting up the example-site
 
