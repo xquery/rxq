@@ -17,9 +17,7 @@ declare %rxq:GET rxq:path('/address/id/(.*)') function local:get-address($id){ .
 
 # Setting up the example-site
 
-First, you *need* MarkLogic 6 or latest technology preview release.
-
-Second, create an appserver, providing the followig details;
+First, you *need* MarkLogic 6 or latest technology preview release. Second, create an appserver, providing the following details;
 
 * root: provide example-site directory
 * error handler: /rxq-rewriter.xqy?mode=error
