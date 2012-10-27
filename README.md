@@ -7,6 +7,13 @@ RESTXQ proposes an elegant approach for building web applications using XQuery w
 
 To understand what RESTXQ is and how it works with XQuery 3.0 annotations please [download](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf) Adam Retters excellent overview.
 
+# For the Impatient
+
+1) download [dist](https://github.com/xquery/rxq/zipball/master) and expand
+2) copy src/xquery/rxq-rewriter.xqy and src/xquery/lib/rxq.xqy to your project
+3) setup MarkLogic 6 appserver with url rewriter set to /rxq-rewriter.xqy?mode=rewrite and error handler to /rxq-rewriter.xqy?mode=error
+4) edit rxq-rewriter.xqy, import your xquery modules which have RESTXQ annotations 
+
 # Distribution
 
 * README.md - this document
@@ -58,6 +65,17 @@ First, you *need* to download and install [MarkLogic 6](https://developer.marklo
 
 With everything setup, you can now point your web browser to the created app (e.g. http://<host>:<port>/) and you should see html page.
 
+# Limitations
+
+The RESTXQ spec is still in draft form; where things were unclear I made my own impl decisions for the time being;
+ 
+ * allow for full regex expressions within rxq:path, instead of binding by variable names
+ * rxq:content-type provides return content-type
+ * its the responsibility of underlying function to grab hold of a PUT or POST content body
+ * added some more metadata to the output of rxq:resource-function() 
+ * RXQ works only for ML-1.0 at the moment (due to deps on some xdmp:features)
+ * 2 separate files e.g. at some point would like to merge rxq-rewriter.xqy into the rxq library module itself
+
 # License
 
 RXQ is released under Apache License v2.0
@@ -69,17 +87,6 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions.
-
-# Limitations
-
-The RESTXQ spec is still in draft form; where things were unclear I made my own impl decisions for the time being;
- 
- * allow for full regex expressions within rxq:path, instead of binding by variable names
- * rxq:content-type provides return content-type
- * its the responsibility of underlying function to grab hold of a PUT or POST content body
- * added some more metadata to the output of rxq:resource-function() 
- * RXQ works only for ML-1.0 at the moment (due to deps on some xdmp:features)
- * 2 separate files e.g. at some point would like to merge rxq-rewriter.xqy into the rxq library module itself
 
 # More Info
 
