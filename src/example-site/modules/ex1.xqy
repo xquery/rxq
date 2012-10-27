@@ -17,7 +17,7 @@ declare %rxq:content-type('application/json') %rxq:PUT %rxq:path('/json/(.*)') f
 };
 
 
-declare %rxq:content-type('application/x-www-form-urlencoded') %rxq:POST %rxq:path('/post/(.*)') function ex1:post-xml($id) {
+declare %rxq:produces('application/x-www-form-urlencoded') %rxq:POST %rxq:path('/post/(.*)') function ex1:post-xml($id) {
 <html>
 <body>
 <h1>POST example - post params to {$id}</h1>
@@ -29,7 +29,7 @@ declare %rxq:content-type('application/x-www-form-urlencoded') %rxq:POST %rxq:pa
 };
 
 
-declare %rxq:content-type('text/xml') %rxq:DELETE %rxq:path('/xml/(.*)') function ex1:delete-xml($id) {
+declare %rxq:produces('text/xml') %rxq:DELETE %rxq:path('/xml/(.*)') function ex1:delete-xml($id) {
 <html>
 <body>
 <h1>DELETE example - remove  document at {$id}</h1>
@@ -38,7 +38,7 @@ declare %rxq:content-type('text/xml') %rxq:DELETE %rxq:path('/xml/(.*)') functio
 };
 
 
-declare %rxq:content-type('text/xml') %rxq:PUT %rxq:path('/xml/(.*)') function ex1:insert-xml($id) {
+declare %rxq:produces('text/xml') %rxq:PUT %rxq:path('/xml/(.*)') function ex1:insert-xml($id) {
 <html>
 <body>
 <h1>PUT example - save document as xml {$id}</h1>
@@ -50,7 +50,7 @@ declare %rxq:content-type('text/xml') %rxq:PUT %rxq:path('/xml/(.*)') function e
 };
 
 
-declare %rxq:content-type('text/html') %rxq:GET %rxq:path('/ex1/c/(.*)/(\d{4,7})/') function ex1:homepage($test1, $test2) {
+declare %rxq:produces('text/html') %rxq:GET %rxq:path('/ex1/c/(.*)/(\d{4,7})/') function ex1:homepage($test1, $test2) {
 <html>
 <body>
 <h1>homepage</h1>
@@ -61,7 +61,7 @@ test2: {$test2}<br/>
 };
 
 
-declare %rxq:content-type('text/html') %rxq:GET %rxq:path('/ex1/a/') function ex1:b($test) {
+declare %rxq:produces('text/html') %rxq:GET %rxq:path('/ex1/a/') function ex1:b($test) {
 <html>
 <body>
 <h1>Function b</h1>
@@ -71,7 +71,7 @@ test: {$test}
 };
 
 
-declare %rxq:content-type('text/html') %rxq:GET %rxq:path('/ex1/a/(.*)') function ex1:a($test) {
+declare %rxq:produces('text/html') %rxq:GET %rxq:path('/ex1/a/(.*)') function ex1:a($test) {
 <html>
 <body>
 <h1>Function a</h1>
@@ -81,7 +81,7 @@ test: {$test}
 };
 
 
-declare %rxq:content-type('text/html') %rxq:GET %rxq:path('/') function ex1:allwebpages() {
+declare %rxq:produces('text/html') %rxq:GET %rxq:path('/') function ex1:allwebpages() {
 <html>
 <body>
 <h1>RESTXQ app</h1>

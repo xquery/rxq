@@ -88,7 +88,7 @@ declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element
           return
           <uri-param name="var{$var}">${$var}</uri-param>
       }
-      <uri-param name="content-type">{xdmp:annotation($f,xs:QName('rxq:content-type'))}</uri-param>  
+      <uri-param name="content-type">{xdmp:annotation($f,xs:QName('rxq:produces'))}</uri-param>  
       {if (xdmp:annotation($f,xs:QName('rxq:GET')))    then <http method="GET"  user-params="allow"/>    else ()}
       {if (xdmp:annotation($f,xs:QName('rxq:POST')))   then <http method="POST" user-params="allow">
         {for $field in xdmp:get-request-field-names()

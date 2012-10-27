@@ -49,7 +49,7 @@ RXQ supports 3 annotations at this time;
 
 * HTTP method annotation - %rxq:GET | %rxq:PUT | %rxq:DELETE | %rxq:POST
 * Path annotation (maping url path) - %rxq:path('/some/path/(.*)')
-* Output content-type - %rxq:content-type('text/html')
+* Produces annotation (output content-type) - %rxq:produces('text/html')
 
 When you deploy these modules in a MarkLogic appserver you must then import those modules into the controller.
 
@@ -72,7 +72,7 @@ With everything setup, you can now point your web browser to the created app (e.
 The RESTXQ spec is still in draft form; where things were unclear I made my own impl decisions for the time being;
  
  * allow for full regex expressions within rxq:path, instead of binding by variable names
- * rxq:content-type provides return content-type
+ * rxq:produces provides return content-type
  * its the responsibility of underlying function to grab hold of a PUT or POST content body
  * added some more metadata to the output of rxq:resource-function() 
  * RXQ works only for ML-1.0 at the moment (due to deps on some xdmp:features)
