@@ -9,10 +9,10 @@ To understand what RESTXQ is and how it works with XQuery 3.0 annotations please
 
 # For the Impatient
 
-1) download [dist](https://github.com/xquery/rxq/zipball/master) and expand
-2) copy src/xquery/rxq-rewriter.xqy and src/xquery/lib/rxq.xqy to your project
-3) setup MarkLogic 6 appserver with url rewriter set to /rxq-rewriter.xqy?mode=rewrite and error handler to /rxq-rewriter.xqy?mode=error
-4) edit rxq-rewriter.xqy, import your xquery modules which have RESTXQ annotations 
+1. download [dist](https://github.com/xquery/rxq/zipball/master) and expand
+2. copy src/xquery/rxq-rewriter.xqy and src/xquery/lib/rxq.xqy to your project
+3. setup MarkLogic 6 appserver with url rewriter set to /rxq-rewriter.xqy?mode=rewrite and error handler to /rxq-rewriter.xqy?mode=error
+4. edit rxq-rewriter.xqy, import your xquery modules which have RESTXQ annotations 
 
 # Distribution
 
