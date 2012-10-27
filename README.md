@@ -8,22 +8,31 @@ RESTXQ proposes an elegant approach for building web applications using XQuery w
 This approach has a priori art e.g. JSR-311: Java Annotations for REST
 
 
-# How RESTXQ works
+# How RXQ works
+
+The following xquery module illustrates how to annotate your moudles. 
 
 ```
+module namespace ex1="﻿http://example.org/ex1";
+
+declare namespace rxq="﻿http://exquery.org/ns/restxq";
+
 declare 
    %rxq:GET 
    rxq:path('/address/id/(.*)') 
-function local:get-address($id){ 
+function ex1:get-address($id){ 
    .... 
 };
 ```
 
-ml-RESTXQ only supports 3 annotations at this time;
+RXQ supports 3 annotations at this time;
 
-* http method - %rxq:GET | %rxq:PUT | %rxq:DELETE | %rxq:POST
-* map url path - %rxq:path('/some/path/(.*)')
-* output content-type - %rxq:content-type('text/html')
+* HTTP method annotation - %rxq:GET | %rxq:PUT | %rxq:DELETE | %rxq:POST
+* Path annotation (maping url path) - %rxq:path('/some/path/(.*)')
+* Output content-type - %rxq:content-type('text/html')
+
+When you deploy these modules in a MarkLogic appserver you must then import those modules into the controller.
+
 
 # Setting up the example-site on MarkLogic 6
 
@@ -45,5 +54,5 @@ The RESTXQ spec is still in draft form; where things were unclear I made my own 
  * rxq:content-type provides return content-type
  * its the responsibility of underlying function to grab hold of a PUT or POST content body
  * added some more metadata to the output of rxq:resource-function() 
-
- 
+ * RXQ works only for ML-1.0 at the moment (due to deps on some xdmp:features)
+ * 2 separate files e.g. at some point would like to merge rxq-rewriter.xqy into the rxq library module itself
