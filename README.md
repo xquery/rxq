@@ -10,7 +10,7 @@ This approach has a priori art e.g. JSR-311: Java Annotations for REST
 To understand what RESTXQ is and how it works please [download](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf) Adam Retters excellent overview.
 
 # How RXQ works
-The following xquery module illustrates how to annotate your moudles. 
+The following xquery module illustrates how to annotate your modules functions, so they can be accessible via HTTP requests. 
 
 ```
 module namespace ex1="﻿http://example.org/ex1";
@@ -24,6 +24,7 @@ function ex1:get-address($id){
    .... 
 };
 ```
+The above ex1:get-address() function is invoked when there is an HTTP GET Request on URL /address/id/(.*) where the regex at the end represents the actual id, which could be used by the function to lookup some xml.
 
 RXQ supports 3 annotations at this time;
 
