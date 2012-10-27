@@ -8,7 +8,45 @@ import module namespace other="﻿http://example.org/other" at "/example-site/li
 
 import module namespace assert = "http://github.com/robwhitby/xray/assertions" at "/xray/src/assertions.xqy";
 
+declare namespace http = "xdmp:http";
+
+declare variable $admin-auth := 
+    <authentication method="digest" xmlns="xdmp:http">
+        <username>admin</username>
+        <password>admin</password>
+    </authentication>;
+
+declare variable $base-url as xs:string := "http://localhost:9011";
+
+declare variable $methods :=
+    let $map := map:map()
+    let $put := map:put($map, "GET", xdmp:function(xs:QName("xdmp:http-get")))
+    let $put := map:put($map, "POST", xdmp:function(xs:QName("xdmp:http-post")))
+    let $put := map:put($map, "PUT", xdmp:function(xs:QName("xdmp:http-put")))
+    let $put := map:put($map, "DELETE", xdmp:function(xs:QName("xdmp:http-delete")))
+    let $put := map:put($map, "HEAD", xdmp:function(xs:QName("xdmp:http-head")))
+    return $map;
+
+      
 declare option xdmp:mapping "false";
+
+declare private function submit-request(
+$request as element(http:request)
+) as item()*
+{
+    let $method := map:get($methods, $request/http:method/text())
+    let $auth := $request/http:authentication
+    let $endpoint := $request/http:url/fn:string()
+    let $headers := $request/http:headers
+    let $body := if (fn:exists($request/http:body/node()))
+        then xdmp:quote($request/http:body/node())
+         else ()
+    let $options := <options xmlns="xdmp:http">{$auth}{$headers}</options>
+    return 
+    if (fn:empty($body))
+    then xdmp:apply($method, $endpoint, $options)
+    else xdmp:apply($method, $endpoint, $options, text { $body })
+};
 
 (: 
   optional setup function evaluated first
@@ -36,7 +74,24 @@ declare function test-default-endpoint()
   )
 };
 
+declare function test-site(){
+let $request := 
+  <request xmlns="xdmp:http" id="base1" description="base1 - simple get with authh">
+    <method>GET</method>
+    <url>{$base-url}</url>
+     <authentication method="digest">
+        <username>admin</username>
+        <password>admin</password>
+    </authentication>
+    <expected>
+      <code>200</code>
+    </expected>
+  </request>
 
+return
+  assert:equal( submit-request($request), fn:true() )
+};
+  
 declare function test-uri()
 {
     assert:equal(rxq:uri(), xs:anyURI("http://www.example.org"))
