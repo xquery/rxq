@@ -7,9 +7,9 @@ RESTXQ proposes an elegant approach for building web applications using XQuery w
 
 This approach has a priori art e.g. JSR-311: Java Annotations for REST
 
+To understand what RESTXQ is and how it works please [download](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf) Adam Retters excellent overview.
 
 # How RXQ works
-
 The following xquery module illustrates how to annotate your moudles. 
 
 ```
