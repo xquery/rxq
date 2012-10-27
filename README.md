@@ -143,7 +143,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 # More Info
 
-* RXQ github [repository](https://github.com/xquery/rxq)
-* [EXQuery RESTXQ Draft Specification](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation)
+* RXQ github [repository](https://github.com/xquery/rxq).
+* [EXQuery RESTXQ Draft Specification](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation).
 * Adam Retters [RESTXQ](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf).
 * [JSR-311](http://download.oracle.com/otndocs/jcp/jaxrs-1.0-fr-eval-oth-JSpec/).
