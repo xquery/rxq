@@ -81,6 +81,6 @@ The RESTXQ spec is still in draft form; where things were unclear I made my own 
  * RXQ works only for ML-1.0 at the moment (due to deps on some xdmp:features)
  * 2 separate files e.g. at some point would like to merge rxq-rewriter.xqy into the rxq library module itself
 
- # More Info
+# More Info
 
  tba
