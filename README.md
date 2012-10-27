@@ -100,14 +100,14 @@ function addr:remove-address($id){
    .... 
 };
 ```
-This function would return some kind of success or failure html.
+This function could return some kind of success or failure text/html.
 
-Our usage of annotations is a very concise way of easily building up flexible RESTFul interfaces, as well as providing the basis from which to create MVC architectures for our XQuery web applications.
+This usage of annotations turns out to be a very concise way of building up flexible RESTFul interfaces, as well as providing the basis from which to create MVC architectures for our XQuery web applications.
 
 
 # Setting up the example-site on MarkLogic 6
 
-The easist way to see RXQ in action is to setup the example application under [src/example-site](https://github.com/xquery/rxq/tree/master/src/example-site).
+The quickest way to see RXQ in action is to setup the example application under [src/example-site](https://github.com/xquery/rxq/tree/master/src/example-site).
 
 First, you *need* to download and install [MarkLogic 6](https://developer.marklogic.com/products). Second, create an appserver, providing the following details;
 
