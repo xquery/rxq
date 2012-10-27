@@ -1,6 +1,6 @@
 xquery version "1.0-ml";
 (:
- : restxq.xqy
+ : rxq.xqy
  :
  : Copyright (c) 2012 James Fuller - jim.fuller@webcomposite.com . All Rights Reserved.
  :
@@ -23,9 +23,9 @@ xquery version "1.0-ml";
  
 module namespace rxq="﻿http://exquery.org/ns/restxq";
 
-(:~ Implementation of restxq as defined at
+(:~ RXQ - MarkLogic RESTXQ Implementation 
  :
- :   http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html
+ :   @spec http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html
  :
  :)
 
@@ -42,8 +42,8 @@ declare variable $rxq:_MUX_MODE := "mux";
 (:~ defines default evaluation endpoint :)
 declare variable $rxq:endpoint as xs:string := "/rewrite.xqy?mode=" ||  $rxq:_MUX_MODE;
 
-(:~:)
-declare variable $rxq:cache-flag as xs:boolean := fn:true();
+(:~ cache REST mapping to server-field :)
+declare variable $rxq:cache-flag as xs:boolean := fn:false();
 
 (:~ defines server field used by cache :)
 declare variable $rxq:server-field as xs:string := "rxq-server-field";
@@ -56,9 +56,6 @@ declare variable $rxq:default-requests as element(rest:request) := <rest:request
    </rest:request>;
 
 declare variable $rxq:exclude-prefixes as xs:string* := ("xdmp");
-
-declare option xdmp:mapping "false";
-
 
 (:~ rxq:rewrite-options - generates REST lib <rest:request/> based on restxq annotations
  : 

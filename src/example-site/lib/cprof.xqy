@@ -26,6 +26,45 @@ declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
 declare namespace xe = "xdmp:eval";
 
+declare variable $p:report-xsl := <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:prof="http://marklogic.com/xdmp/profile"
+                  version="2.0">
+    <xsl:template match="prof:report">
+    <hr/>
+    <table border="1">
+    <tr>
+      <td>id</td>
+      <td>expr-source</td>
+      <td>uri</td>
+      <td>line</td>
+      <td>column</td>
+      <td>count</td>
+      <td>shallow-time</td>
+      <td>deep-time</td>   
+    </tr>
+    <xsl:apply-templates/>
+    </table>
+    <hr/>
+    </xsl:template>
+    <xsl:template match="prof:metadata">
+    elapsed: <xsl:value-of select="prof:overall-elapsed"/> |
+    created: <xsl:value-of select="prof:created"/> |
+    server-version: <xsl:value-of select="prof:server-version"/>
+    <br/>
+    </xsl:template>
+    <xsl:template match="prof:expression">
+      <tr>
+           <td><xsl:value-of select="prof:expr-id"/></td>
+	   <td><xsl:value-of select="prof:expr-source"/></td>
+	   <td><xsl:value-of select="prof:uri"/></td>
+	   <td><xsl:value-of select="prof:line"/></td>
+	   <td><xsl:value-of select="prof:column"/></td>
+	   <td><xsl:value-of select="prof:count"/></td>
+	   <td><xsl:value-of select="prof:shallow-time"/></td>
+	   <td><xsl:value-of select="prof:deep-time"/></td>
+      </tr>
+    </xsl:template>
+  </xsl:stylesheet>;
+
 declare private variable $STACK as element(prof:report)* := () ;
 
 declare private variable $IS-DISABLED as xs:boolean := true() ;

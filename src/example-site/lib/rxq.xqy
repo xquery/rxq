@@ -1,6 +1,6 @@
 xquery version "1.0-ml";
 (:
- : restxq.xqy
+ : rxq.xqy
  :
  : Copyright (c) 2012 James Fuller - jim.fuller@webcomposite.com . All Rights Reserved.
  :
@@ -23,9 +23,9 @@ xquery version "1.0-ml";
  
 module namespace rxq="﻿http://exquery.org/ns/restxq";
 
-(:~ Implementation of restxq as defined at
+(:~ RXQ- MarkLogic RESTXQ implementation
  :
- :   http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html
+ : @spec http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html
  :
  :)
 
@@ -42,7 +42,7 @@ declare variable $rxq:_MUX_MODE := "mux";
 (:~ defines default evaluation endpoint :)
 declare variable $rxq:endpoint as xs:string := "/rewrite.xqy?mode=" ||  $rxq:_MUX_MODE;
 
-(:~:)
+(:~ cache REST mapping to server-field :)
 declare variable $rxq:cache-flag as xs:boolean := fn:true();
 
 (:~ defines server field used by cache :)
@@ -51,12 +51,15 @@ declare variable $rxq:server-field as xs:string := "rxq-server-field";
 (:~ defines default content type :)
 declare variable $rxq:default-content-type as xs:string := "text/html";
 
+(:~ define catch all endpoint :)
 declare variable $rxq:default-requests as element(rest:request) := <rest:request uri="*" endpoint="{$rxq:endpoint}">
      <rest:uri-param name="f">dummy to catch non existent pages</rest:uri-param>
    </rest:request>;
 
+(:~ define list of prefixes for exclusion :)
 declare variable $rxq:exclude-prefixes as xs:string* := ("xdmp");
 
+(:~ define options :)
 declare option xdmp:mapping "false";
 
 
@@ -66,10 +69,10 @@ declare option xdmp:mapping "false";
  :
  : @return element(rest:options)
  :)    
-declare function rxq:rewrite-options($prefixes as xs:string*) as element(rest:options){
+declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element(rest:options){
  <options xmlns="http://marklogic.com/appservices/rest">
   {
-  for $f in xdmp:functions()[fn:prefix-from-QName(fn:function-name(.)) != $rxq:exclude-prefixes]
+  for $f in xdmp:functions()[fn:prefix-from-QName(fn:function-name(.)) != $exclude-prefixes]
   let $name as xs:string := fn:string(fn:function-name($f))
   let $arity as xs:integer := (fn:function-arity($f),0)[1]
   return
@@ -86,7 +89,7 @@ declare function rxq:rewrite-options($prefixes as xs:string*) as element(rest:op
           <uri-param name="var{$var}">${$var}</uri-param>
       }
       <uri-param name="content-type">{xdmp:annotation($f,xs:QName('rxq:content-type'))}</uri-param>  
-      {if (xdmp:annotation($f,xs:QName('rxq:GET')))    then <http method="GET"/>    else ()}
+      {if (xdmp:annotation($f,xs:QName('rxq:GET')))    then <http method="GET"  user-params="allow"/>    else ()}
       {if (xdmp:annotation($f,xs:QName('rxq:POST')))   then <http method="POST" user-params="allow">
         {for $field in xdmp:get-request-field-names()
 	  return
@@ -105,25 +108,25 @@ declare function rxq:rewrite-options($prefixes as xs:string*) as element(rest:op
  };
   
 
-(:~ rxq:rewrite -
+(:~ rxq:rewrite - creates rewritten URL string
  :
- : @param $prefixes - module prefixes to use
+ : @param $exclude-prefixes - module prefixes to use (DEPRECATE)
  : @cache $cache - if set to true will cache rest:options in server field
  :
  : @returns rewrite url
  :)
- declare function rxq:rewrite($prefixes as xs:string*, $cache as xs:boolean) {
+ declare function rxq:rewrite($exclude-prefixes as xs:string*, $cache as xs:boolean) as xs:string {
   try{
     if($cache) then
       if(xdmp:get-server-field($rxq:server-field)) then
-	    rest:rewrite(xdmp:get-server-field($rxq:server-field))
-	else
-	  let $options as element(rest:options) := rxq:rewrite-options($prefixes)
-	  let $_ := xdmp:set-server-field( $rxq:server-field, $options)
-	  return
-	    rest:rewrite($options)	
+	(rest:rewrite(xdmp:get-server-field($rxq:server-field)), xdmp:log("cache hit"))
       else
-	rest:rewrite( rxq:rewrite-options($prefixes) )
+	let $options as element(rest:options) := rxq:rewrite-options($rxq:exclude-prefixes)
+	let $_ := xdmp:set-server-field( $rxq:server-field, $options)
+	return
+	  rest:rewrite($options)
+   else
+     rest:rewrite( rxq:rewrite-options( $rxq:exclude-prefixes ) )
   }
   catch($e){
        rest:report-error($e)
@@ -135,8 +138,7 @@ declare function rxq:rewrite($prefixes as xs:string*) {
   rxq:rewrite($prefixes,  $rxq:cache-flag )
 };
 
-(:~ rxq:mux - evaluates through function invoke 
- :
+(:~ rxq:mux - function invoke 
  :
  : @param content-type
  : @param function
