@@ -34,7 +34,9 @@ otherwise to use in your own project, follow these steps;
 The following xquery module illustrates how to annotate your modules functions using RESTXQ, which in turn will map them to a URL so they can be invoked via an HTTP Request.
 
 ```
-module namespace ex1="﻿http://example.org/ex1";
+xquery version "1.0-ml";
+
+module namespace addr="﻿http://example.org/address";
 
 declare namespace rxq="﻿http://exquery.org/ns/restxq";
 
@@ -42,7 +44,7 @@ declare
    %rxq:GET
    %rxq:path('/address/id/(.*)')
    %rxq:produces('text/html')
-function ex1:get-address($id){ 
+function addr:get-address($id){ 
    .... 
 };
 ```
@@ -95,18 +97,16 @@ First, you *need* to download and install [MarkLogic 6](https://developer.marklo
 
 With everything setup, you can now point your web browser to the created app (e.g. http://<host>:<port>/) and you should see html page.
 
-# Points of interest and Limitations
-
-* no xdmp:eval were hurt (or used) within RXQ ... all done by first class function invokation available with XQuery 3.0
-*  annotations are effectively mapped by reusing MarkLogic's own [rest functions](https://docs.marklogic.com/rest-lib)
+# Points of interest & Limitations
 
 The RESTXQ spec is still in draft form; where things were unclear I made my own impl decisions for the time being;
- 
- * allow for full regex expressions within rxq:path, instead of binding by variable names
- * rxq:produces provides return content-type
+
+ * no `xdmp:eval` were hurt (or used) within the creation of RXQ ... all execution is done by first class function invokation available using XQuery 3.0
+ * annotations are effectively mapped by reusing MarkLogic's own [rest functions](https://docs.marklogic.com/rest-lib)
+ * RXQ is not pure XQuery 3.0 due to usage of xdmp: functions, such as [xdmp:annotation()](https://docs.marklogic.com/xdmp:annotation).
+ * allow for full regex expressions within `%rxq:path`, instead of binding by variable names
  * its the responsibility of underlying function to grab hold of a PUT or POST content body
- * added some more metadata to the output of rxq:resource-function() 
- * RXQ works only for ML-1.0 at the moment (due to deps on some xdmp:features)
+ * added some more metadata to the output of `rxq:resource-function()` 
  * 2 separate files e.g. at some point would like to merge rxq-rewriter.xqy into the rxq library module itself
 
 # License
@@ -126,5 +126,4 @@ Unless required by applicable law or agreed to in writing, software distributed 
 * RXQ github [repository](https://github.com/xquery/rxq)
 * [EXQuery RESTXQ Draft Specification](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation)
 * Adam Retters [RESTXQ](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf).
-* MarkLogic doc on [xdmp:annotation()](https://docs.marklogic.com/xdmp:annotation).
 * [JSR-311](http://download.oracle.com/otndocs/jcp/jaxrs-1.0-fr-eval-oth-JSpec/).
