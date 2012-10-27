@@ -91,7 +91,7 @@ function addr:insert-address($id){
 ```
 we are not interested in the actual implementation details of inserting the address (which could even be delegated to another xquery module, reinforcing the M in MVC). The `addr:insert-address` function would be invoked when an HTTP PUT Request is received.
 
-Lastly, if we wanted to remove an address
+Lastly, if we wanted to remove an address we need to support the HTTP DELETE method.
 
 ```
 (:~ addr:remove-address - removes an address :)
@@ -106,6 +106,7 @@ function addr:remove-address($id){
 This function would return some kind of success or failure html.
 
 Our usage of annotations is a very concise way of easily building up flexible RESTFul interfaces, as well as providing the basis from which to create MVC architectures for our XQuery web applications.
+
 
 # Setting up the example-site on MarkLogic 6
 
