@@ -3,7 +3,9 @@
 The recent release of [MarkLogic 6](http://www.marklogic.com) includes support for many cool [XQuery 3.0](http://www.w3.org/TR/xquery-30) features. 
 One such feature, [annotations](http://www.w3.org/TR/xquery-30/#id-annotations), provides us with the opportunity to implement Adam Retter's [RESTXQ](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation) draft (introduced at [XML Prague 2012](http://archive.xmlprague.cz/2012/sessions.html#RESTful-XQuery---Standardised-XQuery-3.0-Annotations-for-REST)).
 
-RESTXQ proposes an elegant approach for building web applications using XQuery with consistent MVC architectures. A priori art JSR-311: Java Annotations for REST is the foundation of RESTXQ and RXQ.
+RESTXQ proposes an elegant approach for building RESTFul interfaces, in addition to full blown web applications using XQuery within a consistent MVC architecture.
+
+RESTXQ is based on the annotations defined within [JSR-311](http://download.oracle.com/otndocs/jcp/jaxrs-1.0-fr-eval-oth-JSpec).
 
 To understand what RESTXQ is and how it works with XQuery 3.0 annotations please [download](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf) Adam Retters excellent overview.
 
