@@ -39,8 +39,9 @@ module namespace ex1="﻿http://example.org/ex1";
 declare namespace rxq="﻿http://exquery.org/ns/restxq";
 
 declare 
-   %rxq:GET 
-   %rxq:path('/address/id/(.*)') 
+   *%rxq:GET*
+   *%rxq:path('/address/id/(.*)')*
+   *%rxq:produces('text/html')*
 function ex1:get-address($id){ 
    .... 
 };
