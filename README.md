@@ -14,7 +14,7 @@ To learn just [install](https://github.com/xquery/rxq#setting-up-the-example-sit
 1. download RXQ [dist](https://github.com/xquery/rxq/zipball/master) and unzip
 2. copy [src/xquery/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/xquery/rxq-rewriter.xqy) and [src/xquery/lib/rxq.xqy](https://github.com/xquery/rxq/blob/master/src/xquery/lib/rxq.xqy) to your project
 3. setup MarkLogic 6 appserver with url rewriter set to _/rxq-rewriter.xqy?mode=rewrite_ and error handler to _/rxq-rewriter.xqy?mode=error_
-4. edit rxq-rewriter.xqy, by importing those (your application) xquery modules which have RESTXQ annotations embedded in function declarations
+4. edit _rxq-rewriter.xqy_, by importing those (your application) xquery modules which have RESTXQ annotations embedded in function declarations
 5. test by using a browser (or [curl](http://curl.haxx.se/docs/manpage.html))  to navigate to your controller paths as defined by your functions %rxq:path annotation
 
 
