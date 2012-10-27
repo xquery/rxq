@@ -1,19 +1,16 @@
 # RXQ - MarkLogic restxq implementation (v.1)
 
-
 xquerydoc-0.1.app.zip — osx installer - to install, unzip and double click
 
-
-
-
-The recent release of MarkLogic 6 included support for several XQuery 3.0 features. One such feature, annotations, provided the opportunity at attempting to implement Adam Retter's RESTXQ draft (introduced at XML Prague 2012). RESTXQ proposes a consistent and elegant approach for building web applications using XQuery.
+The recent release of [MarkLogic 6](http://www.marklogic.com) included support for several [XQuery 3.0](http://www.w3.org/TR/xquery-30) features. One such feature, annotations, provided the opportunity at attempting to implement Adam Retter's RESTXQ draft (introduced at XML Prague 2012). RESTXQ proposes a consistent and elegant approach for building web applications using XQuery.
 
 
 # How RESTXQ works
 
-```
+``
 declare %rxq:GET rxq:path('/address/id/(.*)') function local:get-address($id){ .... }
-```
+``
+
 
 # Setting up the example-site
 
