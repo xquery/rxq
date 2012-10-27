@@ -1,8 +1,11 @@
 # RXQ - MarkLogic restxq implementation (v.1)
 
 The recent release of [MarkLogic 6](http://www.marklogic.com) included support for several [XQuery 3.0](http://www.w3.org/TR/xquery-30) features. 
-One such feature, [annotations](http://www.w3.org/TR/xquery-30/#id-annotations), provides us with the opportunity to implement Adam Retter's RESTXQ draft (introduced at XML Prague 2012). 
-RESTXQ proposes a consistent and elegant approach for building web applications using XQuery.
+One such feature, [annotations](http://www.w3.org/TR/xquery-30/#id-annotations), provides us with the opportunity to implement Adam Retter's RESTXQ draft (introduced at [XML Prague 2012](http://archive.xmlprague.cz/2012/sessions.html#RESTful-XQuery---Standardised-XQuery-3.0-Annotations-for-REST)).
+
+RESTXQ proposes an elegant approach for building web applications using XQuery with consistent MVC architectures. 
+
+This approach has a priori art e.g. JSR-311: Java Annotations for REST
 
 
 # How RESTXQ works
