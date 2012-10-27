@@ -31,7 +31,7 @@ otherwise to use in your own project, follow these steps;
 
 # RXQ in action
 
-The following xquery module illustrates how to annotate your modules functions, so they can be accessible via HTTP Requests.
+The following xquery module illustrates how to annotate your modules functions using RESTXQ, which in turn will map them to a URL so they can be invoked via an HTTP Request.
 
 ```
 module namespace ex1="﻿http://example.org/ex1";
@@ -39,24 +39,47 @@ module namespace ex1="﻿http://example.org/ex1";
 declare namespace rxq="﻿http://exquery.org/ns/restxq";
 
 declare 
-   *%rxq:GET*
-   *%rxq:path('/address/id/(.*)')*
-   *%rxq:produces('text/html')*
+   %rxq:GET
+   %rxq:path('/address/id/(.*)')
+   %rxq:produces('text/html')
 function ex1:get-address($id){ 
    .... 
 };
 ```
-The above `ex1:get-address()` function is invoked when there is an HTTP GET Request on URL /address/id/(.*). The routing 'magic' is taken care of by the rxq-rewriter.xqy (which you attach to MarkLogic appserver). The `%rxq:GET` annotation specifies the HTTP method and the `%rxq:path` annotation value specifies the concrete URL.
 
-The value for the `ex1:get-address` function's $id variable is taken from the first regex capture group in the url as specified by %rxq:path. This $id value can then be used by some search to lookup the address.
+The `ex1:get-address($id)` function has 3 RESTXQ annotations defined;
 
-RXQ supports 3 annotations at this time;
+* _%rxq:GET_: indicates to select when HTTP REQUEST uses GET method
+* _%rxq:path('/address/id/(.*)')_: maps the url /address/id/(.*) to this function, note the usage of regex matching group to capture `$id`
+* _%rxq:produces('text/html')_: the output of this function, when returned by HTTP RESPONSE will have a content type of 'text/html'.
+
+The `ex1:get-address()` function is invoked when there is an HTTP GET Request on URL /address/id/(.*). 
+
+The routing 'magic' is taken care of by [src/xquery/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/xquery/rxq-rewriter.xqy) (which you attach to MarkLogic appserver). The `%rxq:GET` annotation specifies the HTTP method and the `%rxq:path` annotation value specifies the concrete URL.
+
+The value for the `ex1:get-address` function's `$id` variable is taken from the first regex capture group in the url as specified by %rxq:path. This $id value can then be used by some search to lookup the address.
+
+RXQ supports four RESTXQ annotations at this time;
 
 * HTTP method annotation - `%rxq:GET` | `%rxq:PUT` | `%rxq:DELET`E | `%rxq:POST`
 * Path annotation (maping url path) - `%rxq:path('/some/path/(.*)')`
 * Produces annotation (output content-type) - `%rxq:produces('text/html')`
+* Consumes annotation (ACCEPT) -
 
-When you deploy these modules in a MarkLogic appserver you must then import those modules into the controller.
+When you deploy these modules in a MarkLogic appserver you must then import those modules into the controller, just look for the line
+
+```
+(:~ STEP1 - import modules that contain annotation (controllers) here :)
+```
+
+for example if you wanted to use the ex1:get-address() function, you would import the module in the rxq-rewriter.xqy 
+
+```
+(:~ STEP1 - import modules that contain annotation (controllers) here :)
+import module namespace rxq="﻿http://example.org/ex1" at "modules/ex1.xqy";
+```
+
+This allows the RXQ implementation to scan for annotated functions and generate the neccessary url rewriting and evaluation.
 
 Please review the [src/example-site/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/example-site/rxq-rewriter.xqy) to see how to setup your own. Note that the example-site also has a facility for profiling (enable $perf to fn:true).
 
@@ -72,7 +95,10 @@ First, you *need* to download and install [MarkLogic 6](https://developer.marklo
 
 With everything setup, you can now point your web browser to the created app (e.g. http://<host>:<port>/) and you should see html page.
 
-# Limitations
+# Points of interest and Limitations
+
+* no xdmp:eval were hurt (or used) within RXQ ... all done by first class function invokation available with XQuery 3.0
+*  annotations are effectively mapped by reusing MarkLogic's own [rest functions](https://docs.marklogic.com/rest-lib)
 
 The RESTXQ spec is still in draft form; where things were unclear I made my own impl decisions for the time being;
  
