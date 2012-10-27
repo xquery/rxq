@@ -49,17 +49,17 @@ function addr:get-address($id){
 };
 ```
 
-The `ex1:get-address($id)` function has 3 RESTXQ annotations defined;
+The `addr:get-address($id)` function has defined 3 RESTXQ annotations;
 
 * _%rxq:GET_: indicates to select when HTTP REQUEST uses GET method
 * _%rxq:path('/address/id/(.*)')_: maps the url /address/id/(.*) to this function, note the usage of regex matching group to capture `$id`
 * _%rxq:produces('text/html')_: the output of this function, when returned by HTTP RESPONSE will have a content type of 'text/html'.
 
-The `ex1:get-address()` function is invoked when there is an HTTP GET Request on URL /address/id/(.*). 
+The `addr:get-address()` function is invoked when there is an HTTP GET Request on URL /address/id/(.*). 
 
 The routing 'magic' is taken care of by [src/xquery/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/xquery/rxq-rewriter.xqy) (which you attach to MarkLogic appserver). The `%rxq:GET` annotation specifies the HTTP method and the `%rxq:path` annotation value specifies the concrete URL.
 
-The value for the `ex1:get-address` function's `$id` variable is taken from the first regex capture group in the url as specified by %rxq:path. This $id value can then be used by some search to lookup the address.
+The value for the `addr:get-address` function's `$id` variable is taken from the first regex capture group in the url as specified by %rxq:path. This $id value can then be used by some search to lookup the address.
 
 RXQ supports four RESTXQ annotations at this time;
 
@@ -68,17 +68,11 @@ RXQ supports four RESTXQ annotations at this time;
 * Produces annotation (output content-type) - `%rxq:produces('text/html')`
 * Consumes annotation (ACCEPT) -
 
-When you deploy these modules in a MarkLogic appserver you must then import those modules into the controller, just look for the line
+When you deploy these modules in a MarkLogic appserver you must then import those modules into the rxq-rewriter.xqy. for example if you wanted to use the addr:get-address() function, you would import the module in the rxq-rewriter.xqy 
 
 ```
 (:~ STEP1 - import modules that contain annotation (controllers) here :)
-```
-
-for example if you wanted to use the ex1:get-address() function, you would import the module in the rxq-rewriter.xqy 
-
-```
-(:~ STEP1 - import modules that contain annotation (controllers) here :)
-import module namespace rxq="﻿http://example.org/ex1" at "modules/ex1.xqy";
+import module namespace addr="﻿http://example.org/addr at "modules/addr.xqy";
 ```
 
 This allows the RXQ implementation to scan for annotated functions and generate the neccessary url rewriting and evaluation.
