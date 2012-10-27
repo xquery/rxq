@@ -83,6 +83,7 @@ The RESTXQ spec is still in draft form; where things were unclear I made my own 
 
 # More Info
 
+* RXQ [repository](https://github.com/xquery/rxq)
 * [EXQuery RESTXQ Draft Specification](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation)
 * Adam Retters [RESTXQ](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf).
 * MarkLogic doc on [xdmp:annotation()](https://docs.marklogic.com/xdmp:annotation).
