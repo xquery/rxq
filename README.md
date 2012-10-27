@@ -5,9 +5,9 @@ One such feature, [annotations](http://www.w3.org/TR/xquery-30/#id-annotations),
 
 RESTXQ proposes an elegant approach for building web applications using XQuery with consistent MVC architectures. 
 
-This approach has a priori art e.g. JSR-311: Java Annotations for REST
+A priori art JSR-311: Java Annotations for REST is the foundation of this work.
 
-To understand what RESTXQ is and how it works please [download](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf) Adam Retters excellent overview.
+To understand what RESTXQ is and how it works with XQuery 3.0 annotations please [download](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf) Adam Retters excellent overview.
 
 # How RXQ works
 The following xquery module illustrates how to annotate your modules functions, so they can be accessible via HTTP requests. 
@@ -24,7 +24,7 @@ function ex1:get-address($id){
    .... 
 };
 ```
-The above ex1:get-address() function is invoked when there is an HTTP GET Request on URL /address/id/(.*) where the regex at the end represents the actual id, which could be used by the function to lookup some xml.
+The above ex1:get-address() function is invoked when there is an HTTP GET Request on URL /address/id/(.*) where the regex at the end represents the actual id, which could be used by the function to lookup some xml. The routing 'magic' is taken care of by the rxq-rewriter.xqy (which you attach to MarkLogic appserver).
 
 RXQ supports 3 annotations at this time;
 
@@ -37,15 +37,15 @@ When you deploy these modules in a MarkLogic appserver you must then import thos
 
 # Setting up the example-site on MarkLogic 6
 
+The easist way to see rxq in action is to setup the example application under src/example-site.
+
 First, you *need* to download and install [MarkLogic 6](https://developer.marklogic.com/products). Second, create an appserver, providing the following details;
 
 * root: provide example-site directory
 * error handler: /rxq-rewriter.xqy?mode=error
 * rewrite handler: /rxq-rewriter.xqy?mode=rewrite
 
-Navigate to the created app (e.g. http://<host>:<port>/) and you should see the following;
-
- test by reviewing module lib rxq:paths in browser
+With everything setup, you can now point your web browser to the created app (e.g. http://<host>:<port>/) and you should see html page.
 
 # Limitations
 
