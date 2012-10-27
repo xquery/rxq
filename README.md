@@ -19,14 +19,14 @@ To learn more [install](https://github.com/xquery/rxq#setting-up-the-example-sit
 
 # Distribution
 
-* README.md - this document
+* [README.md](https://github.com/xquery/rxq) - This document
 * [api](https://github.com/xquery/rxq/tree/master/api) - contains api level docs of RXQ rewriter and module library
 * [src/example-site](https://github.com/xquery/rxq/tree/master/src/example-site) - contains example site which demonstrates how to use RXQ
 * [src/xquery](https://github.com/xquery/rxq/tree/master/src/xquery) - contains clean rxq-rewriter.xqy and lib/rxq.xqy you can use in your own projects
 * src/xray - RXQ uses Rob Whitby excellent [XRAY](https://github.com/robwhitby/xray) for xquery unit testing 
 * [src/tests](https://github.com/xquery/rxq/tree/master/src/test) - used for testing
 
-# How RXQ works
+# RXQ in action
 
 The following xquery module illustrates how to annotate your modules functions, so they can be accessible via HTTP Requests.
 
@@ -42,19 +42,19 @@ function ex1:get-address($id){
    .... 
 };
 ```
-The above ex1:get-address() function is invoked when there is an HTTP GET Request on URL /address/id/(.*). The routing 'magic' is taken care of by the rxq-rewriter.xqy (which you attach to MarkLogic appserver). The %rxq:GET annotation specifies the HTTP method and the %rxq:path annotation value specifies the concrete URL.
+The above `ex1:get-address()` function is invoked when there is an HTTP GET Request on URL /address/id/(.*). The routing 'magic' is taken care of by the rxq-rewriter.xqy (which you attach to MarkLogic appserver). The `%rxq:GET` annotation specifies the HTTP method and the `%rxq:path` annotation value specifies the concrete URL.
 
-The value for the ex1:get-address function's $id variable is taken from the first regex capture group in the url as specified by %rxq:path. This $id value can then be used by some search to lookup the address.
+The value for the `ex1:get-address` function's $id variable is taken from the first regex capture group in the url as specified by %rxq:path. This $id value can then be used by some search to lookup the address.
 
 RXQ supports 3 annotations at this time;
 
-* HTTP method annotation - %rxq:GET | %rxq:PUT | %rxq:DELETE | %rxq:POST
-* Path annotation (maping url path) - %rxq:path('/some/path/(.*)')
-* Produces annotation (output content-type) - %rxq:produces('text/html')
+* HTTP method annotation - `%rxq:GET` | `%rxq:PUT` | `%rxq:DELET`E | `%rxq:POST`
+* Path annotation (maping url path) - `%rxq:path('/some/path/(.*)')`
+* Produces annotation (output content-type) - `%rxq:produces('text/html')`
 
 When you deploy these modules in a MarkLogic appserver you must then import those modules into the controller.
 
-Please review the src/example-site/rxq-rewriter.xqy to see how to setup your own.
+Please review the [src/example-site/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/example-site/rxq-rewriter.xqy) to see how to setup your own. Note that the example-site also has a facility for profiling (enable $perf to fn:true).
 
 # Setting up the example-site on MarkLogic 6
 
