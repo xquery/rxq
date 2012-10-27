@@ -60,7 +60,7 @@ With everything setup, you can now point your web browser to the created app (e.
 
 # License
 
-rxq is released under Apache License v2.0
+RXQ is released under Apache License v2.0
 
 Copyright 2012 Jim Fuller
 
