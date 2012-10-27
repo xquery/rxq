@@ -19,12 +19,14 @@ declare namespace rxq="﻿http://exquery.org/ns/restxq";
 
 declare 
    %rxq:GET 
-   rxq:path('/address/id/(.*)') 
+   %rxq:path('/address/id/(.*)') 
 function ex1:get-address($id){ 
    .... 
 };
 ```
-The above ex1:get-address() function is invoked when there is an HTTP GET Request on URL /address/id/(.*) where the regex at the end represents the actual id, which could be used by the function to lookup some xml. The routing 'magic' is taken care of by the rxq-rewriter.xqy (which you attach to MarkLogic appserver).
+The above ex1:get-address() function is invoked when there is an HTTP GET Request on URL /address/id/(.*). The routing 'magic' is taken care of by the rxq-rewriter.xqy (which you attach to MarkLogic appserver).
+
+The value for the ex1:get-address function's $id variable is taken from the first regex capture group in the url as specified by rxq:path (e.g. provided in the url itself). The $id value can be used by some search to lookup a value.
 
 RXQ supports 3 annotations at this time;
 
@@ -34,6 +36,7 @@ RXQ supports 3 annotations at this time;
 
 When you deploy these modules in a MarkLogic appserver you must then import those modules into the controller.
 
+Please review the src/example-site/rxq-rewriter.xqy to see how to setup your own.
 
 # Setting up the example-site on MarkLogic 6
 
@@ -47,6 +50,18 @@ First, you *need* to download and install [MarkLogic 6](https://developer.marklo
 
 With everything setup, you can now point your web browser to the created app (e.g. http://<host>:<port>/) and you should see html page.
 
+# License
+
+rxq is released under Apache License v2.0
+
+Copyright 2012 Jim Fuller
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions.
+
 # Limitations
 
 The RESTXQ spec is still in draft form; where things were unclear I made my own impl decisions for the time being;
@@ -57,3 +72,7 @@ The RESTXQ spec is still in draft form; where things were unclear I made my own 
  * added some more metadata to the output of rxq:resource-function() 
  * RXQ works only for ML-1.0 at the moment (due to deps on some xdmp:features)
  * 2 separate files e.g. at some point would like to merge rxq-rewriter.xqy into the rxq library module itself
+
+ # More Info
+
+ tba
