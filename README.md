@@ -36,7 +36,6 @@ xquery version "1.0-ml";
 module namespace addr="﻿http://example.org/address";
 declare namespace rxq="﻿http://exquery.org/ns/restxq";
 
-(:~ addr:get-addess - retrieves an address :)
 declare 
    %rxq:GET
    %rxq:path('/address/id/(.*)')
@@ -79,7 +78,6 @@ Please review the [src/example-site/rxq-rewriter.xqy](https://github.com/xquery/
 To continue with our address example, lets add a function which inserts an address.
 
 ```
-(:~ addr:insert-address - inserts an address :)
 declare 
    %rxq:PUT
    %rxq:path('/address/id/(.*)')
@@ -94,7 +92,6 @@ we are not interested in the actual implementation details of inserting the addr
 Lastly, if we wanted to remove an address we need to support the HTTP DELETE method.
 
 ```
-(:~ addr:remove-address - removes an address :)
 declare 
    %rxq:DELETE
    %rxq:path('/address/id/(.*)')
