@@ -11,7 +11,7 @@ To understand what RESTXQ is and how it works with XQuery 3.0 annotations please
 
 # For the Impatient
 
-To learn just [install](https://github.com/xquery/rxq#setting-up-the-example-site-on-marklogic-6) and review [src/example-site](https://github.com/xquery/rxq/tree/master/src/example-site), otherwise to use in your own project, follow these steps;
+To learn just [install](https://github.com/xquery/rxq#setting-up-the-example-site-on-marklogic-6) and review [src/example-site](https://github.com/xquery/rxq/tree/master/src/example-site), otherwise to use in your own project, follow these steps (you _need_ MarkLogic 6 or later);
 
 1. download RXQ [dist](https://github.com/xquery/rxq/zipball/master) and unzip
 2. copy [src/xquery/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/xquery/rxq-rewriter.xqy) and [src/xquery/lib/rxq.xqy](https://github.com/xquery/rxq/blob/master/src/xquery/lib/rxq.xqy) to your project
