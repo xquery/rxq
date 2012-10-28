@@ -14,11 +14,12 @@ declare variable $addresses := <addresses>
 </addresses>;
 
 
-(:~ path with variable and text/xml content type :)
+(:~ demonstrates HTTP GET  :)
 declare %rxq:produces('text/xml') %rxq:GET %rxq:path('/address/all') function address:all-addresses($dummy) {
 <success http-method="GET">{$addresses}</success>
 };
 
+(:~ demonstrates HTTP GET  :)
 declare %rxq:produces('text/xml') %rxq:GET %rxq:path('/address/(.*)') function address:get-address($id) {
  if($addresses/address[@id eq $id]) then
  <success id="{$id}" http-method="GET">{$addresses/address[@id eq $id]}</success>
@@ -26,24 +27,24 @@ declare %rxq:produces('text/xml') %rxq:GET %rxq:path('/address/(.*)') function a
  <failure id="{$id}"  http-method="GET">problem accessing {$id}</failure>
 };
 
-
+(:~ demonstrates HTTP PUT  :)
 declare %rxq:produces('text/xml') %rxq:PUT %rxq:path('/address/(.*)') function address:insert-address($id) {
 <success id="{$id}" http-method="PUT">{element address {
                                            attribute id {$id},
                                            (xdmp:get-request-body("xml")/.)/*} }</success>
 };
 
-
+(:~ demonstrates HTTP POST  :)
 declare %rxq:produces('*/*') %rxq:POST %rxq:path('/address/(.*)') function address:change-address($id) {
 <success id="{$id}" http-method="POST">{element address {
                                            attribute id {$id},
                                            (xdmp:get-request-body()/.)/*} }</success>
 };
 
+(:~ demonstrates HTTP DELETE  :)
 declare %rxq:produces('text/xml') %rxq:DELETE %rxq:path('/address/(.*)') function address:remove-address($id) {
    if($addresses/address[@id eq $id]) then
    <success id="{$id}" http-method="DELETE"></success>
    else
    <failure id="{$id}"  http-method="GET">problem accessing {$id}</failure>
 };
-
