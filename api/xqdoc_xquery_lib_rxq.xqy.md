@@ -1,4 +1,4 @@
-# library module: Ôªøhttp://exquery.org/ns/restxq
+# library module: http://exquery.org/ns/restxq
 
 
 ## Table of Contents
