@@ -64,13 +64,14 @@ declare function teardown()
 };
 
 
-declare function test-default-endpoint()
+declare function test-default-vars()
 {
-  let $foo := "foo"
-  let $bar := "bar"
-  return (
-    assert:not-empty($rxq:endpoint),
-    assert:equal($rxq:endpoint, "/rewrite.xqy?mode=mux")
+   (
+    assert:equal($rxq:default-endpoint, "/rxq-rewriter.xqy?mode=mux"),
+    assert:equal($rxq:exclude-prefixes, ("xdmp", "hof", "impl", "plugin", "amped-info", "debug", "cts", "json", "amped-common", "rest", "rest-impl", "fn", "math", "xs", "prof", "sc", "dbg", "xml", "magick", "map", "xp", "rxq", "idecl", "xsi")),
+    assert:equal($rxq:cache-flag, fn:false()),
+    assert:equal($rxq:default-content-type,"*/*")
+    
   )
 };
 
@@ -89,7 +90,7 @@ let $request :=
   </request>
 
 return
-  assert:equal( submit-request($request), fn:true() )
+  assert:equal( submit-request($request)//http:code, <code xmlns="xdmp:http">200</code> )
 };
   
 declare function test-uri()
@@ -119,10 +120,10 @@ declare function test-resource-functions()
 
 declare function test-rewrite-options()
 {
-  let $result := rxq:rewrite-options(("ex1"))
+  let $result := rxq:rewrite-options(())
     return
-    assert:equal($result, <options xmlns="http://marklogic.com/appservices/rest">
-	<request uri="*" endpoint="/rewrite.xqy?mode=mux">
+    assert:equal($result,<options xmlns="http://marklogic.com/appservices/rest">
+	<request uri="*" endpoint="/rxq-rewriter.xqy?mode=mux">
 	  <uri-param name="f">dummy to catch non existent pages</uri-param>
 	</request>
       </options>)
@@ -131,15 +132,172 @@ declare function test-rewrite-options()
 
 declare function test-rewrite-options2()
 {
-    assert:equal(rxq:rewrite-options(("ex1","other")),<options xmlns="http://marklogic.com/appservices/rest">
-	<request uri="*" endpoint="/rewrite.xqy?mode=mux">
+    assert:equal(rxq:rewrite-options(()),<options xmlns="http://marklogic.com/appservices/rest">
+	<request uri="*" endpoint="/rxq-rewriter.xqy?mode=mux">
 	  <uri-param name="f">dummy to catch non existent pages</uri-param>
 	</request>
       </options>)
 };
 
 
-declare function test-default-content-type()
+declare function test-rewriter()
 {
-    assert:equal($rxq:default-content-type,"text/html")
+
+  let $result  := xdmp:eval('
+    import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/example-site/lib/rxq.xqy";
+    import module namespace ex1="﻿http://example.org/ex1" at "/example-site/modules/ex1.xqy";
+    import module namespace ex2="﻿http://example.org/ex2" at "/example-site/modules/ex2.xqy";
+    import module namespace other="﻿http://example.org/other" at "/example-site/lib/other.xqy";
+
+    rxq:rewrite-options( $rxq:exclude-prefixes)
+    
+    ')
+    return
+    assert:equal($result, document{<options xmlns="http://marklogic.com/appservices/rest">
+	<request uri="^/ex2/a/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">ex2:a</uri-param>
+	  <uri-param name="output"></uri-param>
+	  <uri-param name="arity">1</uri-param>
+	  <uri-param name="var1">$1</uri-param>
+	  <uri-param name="content-type">text/html</uri-param>
+	  <http method="GET" user-params="allow"></http>
+	</request>
+	<request uri="^/import/test/$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">other:importtest</uri-param>
+	  <uri-param name="output"></uri-param>
+	  <uri-param name="arity">1</uri-param>
+	  <uri-param name="var1">$1</uri-param>
+	  <uri-param name="content-type">text/html</uri-param>
+	  <http method="GET" user-params="allow"></http>
+	</request>
+	<request uri="^/ex1/a/$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">ex1:b</uri-param>
+	  <uri-param name="output"></uri-param>
+	  <uri-param name="arity">1</uri-param>
+	  <uri-param name="var1">$1</uri-param>
+	  <uri-param name="content-type">text/html</uri-param>
+	  <http method="GET" user-params="allow"></http>
+	</request>
+	<request uri="^/ex2/a/$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">ex2:b</uri-param>
+	  <uri-param name="output"></uri-param>
+	  <uri-param name="arity">1</uri-param>
+	  <uri-param name="var1">$1</uri-param>
+	  <uri-param name="content-type">text/html</uri-param>
+	  <http method="GET" user-params="allow"></http>
+	</request>
+	<request uri="^/xml/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">ex1:delete-xml</uri-param>
+	  <uri-param name="output"></uri-param>
+	  <uri-param name="arity">1</uri-param>
+	  <uri-param name="var1">$1</uri-param>
+	  <uri-param name="content-type">text/xml</uri-param>
+	  <http method="DELETE"></http>
+	</request>
+	<request uri="^/home1/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">other:homepage</uri-param>
+	  <uri-param name="output"></uri-param>
+	  <uri-param name="arity">1</uri-param>
+	  <uri-param name="var1">$1</uri-param>
+	  <uri-param name="content-type">text/html</uri-param>
+	  <http method="GET" user-params="allow"></http>
+	</request>
+	<request uri="^/json/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">ex1:insert-json</uri-param>
+	  <uri-param name="output"></uri-param>
+	  <uri-param name="arity">1</uri-param>
+	  <uri-param name="var1">$1</uri-param>
+	  <uri-param name="content-type"></uri-param>
+	  <http method="PUT" user-params="allow"></http>
+	</request>
+	<request uri="^/ex1/a/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">ex1:a</uri-param>
+	  <uri-param name="output"></uri-param>
+	  <uri-param name="arity">1</uri-param>
+	  <uri-param name="var1">$1</uri-param>
+	  <uri-param name="content-type">text/html</uri-param>
+	  <http method="GET" user-params="allow"></http>
+	</request>
+	<request uri="^/test1/$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">other:test</uri-param>
+	  <uri-param name="output"></uri-param>
+	  <uri-param name="arity">0</uri-param>
+	  <uri-param name="content-type">text/html</uri-param>
+	  <http method="GET" user-params="allow"></http>
+	</request>
+	<request uri="^/xml/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">ex1:insert-xml</uri-param>
+	  <uri-param name="output"></uri-param>
+	  <uri-param name="arity">1</uri-param>
+	  <uri-param name="var1">$1</uri-param>
+	  <uri-param name="content-type">text/xml</uri-param>
+	  <http method="PUT" user-params="allow"></http>
+	</request>
+	<request uri="^/a1/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">other:a</uri-param>
+	  <uri-param name="output"></uri-param>
+	  <uri-param name="arity">1</uri-param>
+	  <uri-param name="var1">$1</uri-param>
+	  <uri-param name="content-type">text/xml</uri-param>
+	  <http method="GET" user-params="allow"></http>
+	</request>
+	<request uri="^/ex1/c/(.*)/(\d{{4,7}})/$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">ex1:homepage</uri-param>
+	  <uri-param name="output"></uri-param>
+	  <uri-param name="arity">2</uri-param>
+	  <uri-param name="var1">$1</uri-param>
+	  <uri-param name="var2">$2</uri-param>
+	  <uri-param name="content-type">text/html</uri-param>
+	  <http method="GET" user-params="allow"></http>
+	</request>
+	<request uri="^/ex2/c/(.*)/(\d{{4,7}})/$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">ex2:homepage</uri-param>
+	  <uri-param name="output"></uri-param>
+	  <uri-param name="arity">2</uri-param>
+	  <uri-param name="var1">$1</uri-param>
+	  <uri-param name="var2">$2</uri-param>
+	  <uri-param name="content-type">text/html</uri-param>
+	  <http method="GET" user-params="allow"></http>
+	</request>
+	<request uri="^/ex2/$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">ex2:allwebpages</uri-param>
+	  <uri-param name="output"></uri-param>
+	  <uri-param name="arity">0</uri-param>
+	  <uri-param name="content-type">text/html</uri-param>
+	  <http method="GET" user-params="allow"></http>
+	</request>
+	<request uri="^/$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">ex1:allwebpages</uri-param>
+	  <uri-param name="output"></uri-param>
+	  <uri-param name="arity">0</uri-param>
+	  <uri-param name="content-type">text/html</uri-param>
+	  <http method="GET" user-params="allow"></http>
+	</request>
+	<request uri="^/test3$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">other:testa</uri-param>
+	  <uri-param name="output"></uri-param>
+	  <uri-param name="arity">0</uri-param>
+	  <uri-param name="content-type">text/html</uri-param>
+	  <http method="GET" user-params="allow"></http>
+	</request>
+	<request uri="^/post/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">ex1:post-xml</uri-param>
+	  <uri-param name="output"></uri-param>
+	  <uri-param name="arity">1</uri-param>
+	  <uri-param name="var1">$1</uri-param>
+	  <uri-param name="content-type">application/x-www-form-urlencoded</uri-param>
+	  <http method="POST" user-params="allow">
+	    <param name="dir" as="string" required="false"/>
+	    <param name="modules" as="string" required="false"/>
+	    <param name="tests" as="string" required="false"/>
+	    <param name="format" as="string" required="false"/>
+	  </http>
+	</request>
+	<request uri="*" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns:rest="http://marklogic.com/appservices/rest">
+	  <uri-param name="f">dummy to catch non existent pages</uri-param>
+	</request>
+      </options>})
+
 };
+
+

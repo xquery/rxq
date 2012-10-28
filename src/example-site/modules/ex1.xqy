@@ -64,8 +64,11 @@ test2: {$test2}<br/>
 declare %rxq:produces('text/html') %rxq:GET %rxq:path('/ex1/a/') function ex1:b($test) {
 <html>
 <body>
-<h1>Function b</h1>
-test: {$test}
+<h1>Function ex1:b from modules/ex1.xqy</h1>
+method:HTTP GET <br/>
+path: /ex1/a/ <br/>
+produces: text/html <br/>
+$test value: {$test} <br/>
 </body>
 </html>
 };
@@ -74,8 +77,11 @@ test: {$test}
 declare %rxq:produces('text/html') %rxq:GET %rxq:path('/ex1/a/(.*)') function ex1:a($test) {
 <html>
 <body>
-<h1>Function a</h1>
-test: {$test}
+<h1>Function ex1:a in modules/ex1.xqy</h1>
+method:HTTP GET <br/>
+path: /ex1/a/(.*) <br/>
+produces: text/html <br/>
+$test value: {$test} <br/>
 </body>
 </html>
 };

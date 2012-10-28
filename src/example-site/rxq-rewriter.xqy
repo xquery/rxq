@@ -50,8 +50,9 @@ import module namespace other="﻿http://example.org/other" at "/lib/other.xqy";
 let $perf := fn:false()
 let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE )
 return
+ try{
  if ($mode eq $rxq:_REWRITE_MODE ) then
-   rxq:rewrite(())
+   rxq:rewrite(  $rxq:cache-flag )
  else if($mode eq $rxq:_MUX_MODE ) then
    (if($perf) then cprof:enable() else (),
    rxq:mux(xdmp:get-request-field("content-type",$rxq:default-content-type),
@@ -60,8 +61,13 @@ return
    if($perf) then xdmp:xslt-eval($cprof:report-xsl, cprof:report()) else ()	   
    )	   
  else
-   rxq:handle-error()
-     
+   "nothing"
+   (:
+   rxq:handle-error(<error xmlns="http://marklogic.com/xdmp/error"/>)
+:)
+ }catch($e){  
+   rxq:handle-error($e)
+}
 
   
 

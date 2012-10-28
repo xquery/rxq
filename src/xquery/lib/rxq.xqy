@@ -23,10 +23,11 @@ xquery version "1.0-ml";
  
 module namespace rxq="﻿http://exquery.org/ns/restxq";
 
-(:~ RXQ- MarkLogic RESTXQ implementation
+(:~  RXQ v0.1 - RESTful MVC with XQuery 3.0 annotations
  :
  : @spec http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html
- :
+ : @version 0.1
+ : 
  :)
 
 import module namespace rest = "http://marklogic.com/appservices/rest" 
