@@ -1,10 +1,10 @@
-# library module: http://exquery.org/ns/restxq
+# library module: Ôªøhttp://exquery.org/ns/restxq
 
 
 ## Table of Contents
 
-* Variables: [$rxq:_REWRITE_MODE](#var_rxq__REWRITE_MODE), [$rxq:_MUX_MODE](#var_rxq__MUX_MODE), [$rxq:endpoint](#var_rxq_endpoint), [$rxq:cache-flag](#var_rxq_cache-flag), [$rxq:server-field](#var_rxq_server-field), [$rxq:default-content-type](#var_rxq_default-content-type), [$rxq:default-requests](#var_rxq_default-requests), [$rxq:exclude-prefixes](#var_rxq_exclude-prefixes)
-* Functions: [rxq:rewrite-options\#1](#func_rxq_rewrite-options_1), [rxq:rewrite\#2](#func_rxq_rewrite_2), [rxq:rewrite\#1](#func_rxq_rewrite_1), [rxq:mux\#3](#func_rxq_mux_3), [rxq:uri\#0](#func_rxq_uri_0), [rxq:base-uri\#0](#func_rxq_base-uri_0), [rxq:resource-functions\#0](#func_rxq_resource-functions_0), [rxq:handle-error\#1](#func_rxq_handle-error_1), [rxq:handle-error\#0](#func_rxq_handle-error_0)
+* Variables: [$rxq:_REWRITE_MODE](#var_rxq__REWRITE_MODE), [$rxq:_MUX_MODE](#var_rxq__MUX_MODE), [$rxq:default-endpoint](#var_rxq_default-endpoint), [$rxq:cache-flag](#var_rxq_cache-flag), [$rxq:server-field](#var_rxq_server-field), [$rxq:default-content-type](#var_rxq_default-content-type), [$rxq:default-requests](#var_rxq_default-requests), [$rxq:exclude-prefixes](#var_rxq_exclude-prefixes)
+* Functions: [rxq:rewrite-options\#1](#func_rxq_rewrite-options_1), [rxq:rewrite\#1](#func_rxq_rewrite_1), [rxq:mux\#3](#func_rxq_mux_3), [rxq:uri\#0](#func_rxq_uri_0), [rxq:base-uri\#0](#func_rxq_base-uri_0), [rxq:resource-functions\#0](#func_rxq_resource-functions_0), [rxq:handle-error\#1](#func_rxq_handle-error_1)
 
 
 ## Variables
@@ -21,9 +21,9 @@ $rxq:_REWRITE_MODE as
 $rxq:_MUX_MODE as 
 ```
 
-### <a name="var_rxq_endpoint"/> $rxq:endpoint
+### <a name="var_rxq_default-endpoint"/> $rxq:default-endpoint
 ```xquery
-$rxq:endpoint as  xs:string
+$rxq:default-endpoint as  xs:string
 ```
  defines default evaluation endpoint 
 
@@ -32,7 +32,7 @@ $rxq:endpoint as  xs:string
 ```xquery
 $rxq:cache-flag as  xs:boolean
 ```
-
+ cache REST mapping to server-field 
 
 
 ### <a name="var_rxq_server-field"/> $rxq:server-field
@@ -53,11 +53,15 @@ $rxq:default-content-type as  xs:string
 ```xquery
 $rxq:default-requests as  element(rest:request)
 ```
+ define catch all endpoint 
+
 
 ### <a name="var_rxq_exclude-prefixes"/> $rxq:exclude-prefixes
 ```xquery
 $rxq:exclude-prefixes as  xs:string\*
 ```
+ define list of prefixes for exclusion 
+
 
 
 
@@ -65,50 +69,40 @@ $rxq:exclude-prefixes as  xs:string\*
 
 ### <a name="func_rxq_rewrite-options_1"/> rxq:rewrite-options\#1
 ```xquery
-rxq:rewrite-options($prefixes as xs:string*
+rxq:rewrite-options($exclude-prefixes as xs:string*
 ) as  element(rest:options)
 ```
 
 #### Params
 
-* $prefixes as  xs:string\*
+* $exclude-prefixes as  xs:string\*
 
 
 #### Returns
 *  element(rest:options)
 
-### <a name="func_rxq_rewrite_2"/> rxq:rewrite\#2
+### <a name="func_rxq_rewrite_1"/> rxq:rewrite\#1
 ```xquery
-rxq:rewrite($prefixes as xs:string*, $cache as xs:boolean
-)
+rxq:rewrite($cache as xs:boolean
+) as  xs:string
 ```
- rxq:rewrite -   
+ rxq:rewrite - creates rewritten URL string   
 
  $cache - if set to true will cache rest:options in server field    rewrite url 
 #### Params
 
-* $prefixes as  xs:string\* - module prefixes to use
-
 * $cache as  xs:boolean
 
 
-### <a name="func_rxq_rewrite_1"/> rxq:rewrite\#1
-```xquery
-rxq:rewrite($prefixes as xs:string*
-)
-```
-
-#### Params
-
-* $prefixes as  xs:string\*
-
+#### Returns
+*  xs:string
 
 ### <a name="func_rxq_mux_3"/> rxq:mux\#3
 ```xquery
 rxq:mux($content-type as xs:string, $function as function(*), $arity as xs:integer
 ) as  item()*
 ```
- rxq:mux - evaluates through function invoke     
+ rxq:mux - function invoke    
 
   
 #### Params
@@ -158,25 +152,17 @@ rxq:resource-functions(
 
 ### <a name="func_rxq_handle-error_1"/> rxq:handle-error\#1
 ```xquery
-rxq:handle-error($mode
-)
-```
- rxq:handle-error -    
-
-  
-#### Params
-
-* $mode
-
-
-### <a name="func_rxq_handle-error_0"/> rxq:handle-error\#0
-```xquery
-rxq:handle-error(
+rxq:handle-error($e
 )
 ```
  rxq:handle-error   
 
  html error response 
+#### Params
+
+* $e
+
+
 
 
 
