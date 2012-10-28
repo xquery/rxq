@@ -153,7 +153,7 @@ declare function test-rewriter()
     
     ')
     return
-    assert:equal($result, document{<options xmlns="http://marklogic.com/appservices/rest">
+    assert:equal($result, <options xmlns="http://marklogic.com/appservices/rest">
 	<request uri="^/ex2/a/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
 	  <uri-param name="f">ex2:a</uri-param>
 	  <uri-param name="output"></uri-param>
@@ -296,8 +296,7 @@ declare function test-rewriter()
 	<request uri="*" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns:rest="http://marklogic.com/appservices/rest">
 	  <uri-param name="f">dummy to catch non existent pages</uri-param>
 	</request>
-      </options>})
-
+      </options>)
 };
 
 

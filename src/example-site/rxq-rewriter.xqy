@@ -47,7 +47,7 @@ import module namespace other="﻿http://example.org/other" at "/lib/other.xqy";
  :     error - provides http level error using rxq:handle-error
  :
  :)
-let $perf := fn:false()
+let $perf := fn:true()
 let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE )
 return
  try{

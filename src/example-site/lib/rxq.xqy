@@ -115,7 +115,7 @@ declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element
  :
  : @returns rewrite url
  :)
- declare function rxq:rewrite( $cache as xs:boolean) as xs:string {
+ declare function rxq:rewrite($cache as xs:boolean) as xs:string {
   try{
     if($cache) then
       if(xdmp:get-server-field($rxq:server-field)) then
@@ -126,9 +126,7 @@ declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element
 	return
 	  rest:rewrite($options)
    else
-
 	let $options as element(rest:options) := rxq:rewrite-options($rxq:exclude-prefixes)
-	let $_ := xdmp:set-server-field( $rxq:server-field, $options)
 	return
 	  rest:rewrite($options)
   }
