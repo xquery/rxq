@@ -109,7 +109,7 @@ declare function test-resource-functions()
     import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/example-site/lib/rxq.xqy";
     import module namespace ex1="﻿http://example.org/ex1" at "/example-site/modules/ex1.xqy";
     import module namespace ex2="﻿http://example.org/ex2" at "/example-site/modules/ex2.xqy";
-    import module namespace other="﻿http://example.org/other" at "/example-site/lib/other.xqy";
+    import module namespace address="﻿http://example.org/address" at "/example-site/lib/address.xqy";
     declare option xdmp:output "method=xml";
     rxq:resource-functions()
     ')
