@@ -196,14 +196,6 @@ declare function test-rewriter()
 	  <uri-param name="content-type">text/html</uri-param>
 	  <http method="GET" user-params="allow"></http>
 	</request>
-	<request uri="^/xml/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
-	  <uri-param name="f">ex1:delete-xml</uri-param>
-	  <uri-param name="output"></uri-param>
-	  <uri-param name="arity">1</uri-param>
-	  <uri-param name="var1">$1</uri-param>
-	  <uri-param name="content-type">text/xml</uri-param>
-	  <http method="DELETE"></http>
-	</request>
 	<request uri="^/$" endpoint="/rxq-rewriter.xqy?mode=mux">
 	  <uri-param name="f">ex1:entry-point</uri-param>
 	  <uri-param name="output"></uri-param>
@@ -220,7 +212,7 @@ declare function test-rewriter()
 	  <uri-param name="content-type">text/html</uri-param>
 	  <http method="GET" user-params="allow"></http>
 	</request>
-	<request uri="^/test1/$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	<request uri="^/address/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
 	  <uri-param name="f">address:insert-address</uri-param>
 	  <uri-param name="output"></uri-param>
 	  <uri-param name="arity">1</uri-param>
@@ -236,14 +228,6 @@ declare function test-rewriter()
 	  <uri-param name="content-type">text/xml</uri-param>
 	  <http method="GET" user-params="allow"></http>
 	</request>
-	<request uri="^/json/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
-	  <uri-param name="f">ex1:insert-json</uri-param>
-	  <uri-param name="output"></uri-param>
-	  <uri-param name="arity">1</uri-param>
-	  <uri-param name="var1">$1</uri-param>
-	  <uri-param name="content-type"></uri-param>
-	  <http method="PUT" user-params="allow"></http>
-	</request>
 	<request uri="^/ex1/a/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
 	  <uri-param name="f">ex1:a</uri-param>
 	  <uri-param name="output"></uri-param>
@@ -252,7 +236,7 @@ declare function test-rewriter()
 	  <uri-param name="content-type">text/html</uri-param>
 	  <http method="GET" user-params="allow"></http>
 	</request>
-	<request uri="^/home1/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	<request uri="^/address/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
 	  <uri-param name="f">address:remove-address</uri-param>
 	  <uri-param name="output"></uri-param>
 	  <uri-param name="arity">1</uri-param>
@@ -260,20 +244,12 @@ declare function test-rewriter()
 	  <uri-param name="content-type">text/xml</uri-param>
 	  <http method="DELETE"></http>
 	</request>
-	<request uri="^/xml/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
-	  <uri-param name="f">ex1:insert-xml</uri-param>
+	<request uri="^/address/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">address:change-address</uri-param>
 	  <uri-param name="output"></uri-param>
 	  <uri-param name="arity">1</uri-param>
 	  <uri-param name="var1">$1</uri-param>
-	  <uri-param name="content-type">text/xml</uri-param>
-	  <http method="PUT" user-params="allow"></http>
-	</request>
-	<request uri="^/post/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
-	  <uri-param name="f">ex1:post-xml</uri-param>
-	  <uri-param name="output"></uri-param>
-	  <uri-param name="arity">1</uri-param>
-	  <uri-param name="var1">$1</uri-param>
-	  <uri-param name="content-type">application/x-www-form-urlencoded</uri-param>
+	  <uri-param name="content-type">*/*</uri-param>
 	  <http method="POST" user-params="allow">
 	    <param name="dir" as="string" required="false"/>
 	    <param name="modules" as="string" required="false"/>
