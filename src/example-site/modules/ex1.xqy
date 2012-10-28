@@ -4,60 +4,7 @@ module namespace ex1="﻿http://example.org/ex1";
 
 import module namespace rxq="﻿http://exquery.org/ns/restxq" at "../lib/rxq.xqy";
 
-
-declare %rxq:content-type('application/json') %rxq:PUT %rxq:path('/json/(.*)') function ex1:insert-json($id) {
-<html>
-<body>
-{ex1:header()}
-<h1>RXQ: PUT example - save document as json {$id}</h1>
-<textarea rows="10" cols="40">
-{xdmp:get-request-body()}
-</textarea>
-</body>
-{ex1:footer()}
-</html>
-};
-
-
-declare %rxq:produces('application/x-www-form-urlencoded') %rxq:POST %rxq:path('/post/(.*)') function ex1:post-xml($id) {
-<html>
-<body>
-{ex1:header()}
-<h1>RXQ: POST example - post params to {$id}</h1>
-<textarea rows="10" cols="40">
-{xdmp:get-request-field-names()}
-</textarea>
-{ex1:footer()}
-</body>
-</html>
-};
-
-
-declare %rxq:produces('text/xml') %rxq:DELETE %rxq:path('/xml/(.*)') function ex1:delete-xml($id) {
-<html>
-<body>
-{ex1:header()}
-<h1>RXQ: DELETE example - remove  document at {$id}</h1>
-{ex1:footer()}
-</body>
-</html>
-};
-
-
-declare %rxq:produces('text/xml') %rxq:PUT %rxq:path('/xml/(.*)') function ex1:insert-xml($id) {
-<html>
-<body>
-{ex1:header()}
-<h1>RXQ: PUT example - save document as xml {$id}</h1>
-<textarea rows="10" cols="40">
-{xdmp:get-request-body()}
-</textarea>
-{ex1:footer()}
-</body>
-</html>
-};
-
-
+(:~ example of using 2 regex capture groups :)
 declare %rxq:produces('text/html') %rxq:GET %rxq:path('/ex1/c/(.*)/(.*)/') function ex1:regex-example($var1, $var2) {
 <html>
 <body>
@@ -68,6 +15,26 @@ path: /ex1/c/(.*)/(.*) <br/>
 produces: text/html <br/>
 $var1: {$var1}<br/>
 $var2: {$var2}<br/>
+{ex1:footer()}
+</body>
+</html>
+};
+
+(:~ example of using regex to constrain input e.g. http://localhost:9011/ex1/c/b/c/999
+:   but
+:   http://localhost:9011/ex1/c/b/c/9999 does not work as d{1,3} states maximum length of 3 numbers
+:)
+declare %rxq:produces('text/html') %rxq:GET %rxq:path('/ex1/c/(.*)/(.*)/(\d{1,3})') function ex1:regex-example2($var1, $var2, $var3) {
+<html>
+<body>
+{ex1:header()}
+<h1>RXQ: Demonstrates 2 regex matching groups</h1>
+method:HTTP GET <br/>
+path: /ex1/c/(.*)/(.*) <br/>
+produces: text/html <br/>
+$var1: {$var1}<br/>
+$var2: {$var2}<br/>
+$var3: {$var3}<br/>
 {ex1:footer()}
 </body>
 </html>
@@ -88,7 +55,7 @@ $var1 value: {$var1} <br/>
 </html>
 };
 
-
+(:~ example of using regex capture group to supply variable $var1 value :)
 declare %rxq:produces('text/html') %rxq:GET %rxq:path('/ex1/a/(.*)') function ex1:a($var1) {
 <html>
 <body>
@@ -104,18 +71,20 @@ $var1 value: {$var1} <br/>
 };
 
 
+(:~ lists out all endpoints :)
 declare %rxq:produces('text/html') %rxq:GET %rxq:path('/') function ex1:entry-point() {
 <html>
 <body>
 {ex1:header()}
 <h1> RXQ v0.1 - RESTful MVC with XQuery 3.0 annotations</h1>
-<p> Its easy to create RESTful apis and applications with RXQ.
+<p> Its easy to create RESTful apis and applications with RXQ. To demonstrate, we have annotated all functionw within the lib/address.xqy XQuery module library, which you can run curl against to test.
 <ul>
-<li>HTTP GET - /ex2/ maps onto modules/ex1.xqy function ex1:b#1</li>
-<li>HTTP PUT - /ex2/ maps onto modules/ex1.xqy function ex1:b#1</li>
-<li>HTTP POST - /ex2/ maps onto modules/ex1.xqy function ex1:b#1</li>
-<li>HTTP DELETE - /ex2/ maps onto modules/ex1.xqy function ex1:b#1</li>
-
+<li>HTTP GET - All Addresses - curl http://localhost:9011/address/all</li>
+<li>HTTP GET - Get single address with id=3 - curl http://localhost:9011/address/3</li>
+<li>HTTP GET - Get single address with id=22 (failure because it does not exist) - curl http://localhost:9011/address/22</li>
+<li>HTTP PUT - Insert document with id=9 - curl -i -H "Accept: application/xml" -X PUT -d "&lt;address&gt;&lt;name&gt;New&lt;/name&gt;&lt;email&gt;new@example.org&lt;/email&gt;&lt;/address&gt;" http://localhost:9011/address/9</li>
+<li>HTTP POST - Insert document with id=9 -  curl -i -X POST -d "name=new&amp;email=new@example.org" http://localhost:9011/address/9</li>
+<li>HTTP DELETE - Remove document with id=9 - curl -i -X DELETE http://localhost:9011/address/1</li>
 </ul>
 </p>
 

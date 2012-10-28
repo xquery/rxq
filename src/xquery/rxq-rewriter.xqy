@@ -21,17 +21,18 @@ xquery version "1.0-ml";
  :
  :)
 
-import module namespace rxq="﻿http://exquery.org/ns/restxq" at "lib/rxq.xqy";
+(:~ RXQ MarkLogic RESTXQ implementation :)
+import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/lib/rxq.xqy";
 
-(:~ This is the rewriter for RXQ.
+(:~ rewriter for RXQ.
  :
- : 
+ :
  :)
 
 (:~ STEP1 - import modules that contain annotation (controllers) here :)
 
 
-(:~ Rewriter handles the following three conditions;
+(:~ Rewriter routes between the following three conditions;
  : 
  :     rewrite - rewrites url using rxq:rewrite
  :
@@ -40,17 +41,22 @@ import module namespace rxq="﻿http://exquery.org/ns/restxq" at "lib/rxq.xqy";
  :     error - provides http level error using rxq:handle-error
  :
  :)
+let $perf := fn:false()
 let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE )
 return
+ try{
  if ($mode eq $rxq:_REWRITE_MODE ) then
-   rxq:rewrite(())
+   rxq:rewrite(  $rxq:cache-flag )
  else if($mode eq $rxq:_MUX_MODE ) then
    rxq:mux(xdmp:get-request-field("content-type",$rxq:default-content-type),
-   fn:function-lookup(xs:QName(xdmp:get-request-field("f")),xs:integer(xdmp:get-request-field("arity","0"))),
-   xs:integer(xdmp:get-request-field("arity","0")) )  	   
+           fn:function-lookup(xs:QName(xdmp:get-request-field("f")),xs:integer(xdmp:get-request-field("arity","0"))),
+           xs:integer(xdmp:get-request-field("arity","0")) ),
+   )	   
  else
-   rxq:handle-error()
-     
+   "no definition"
+ }catch($e){  
+   rxq:handle-error($e)
+}
 
   
 

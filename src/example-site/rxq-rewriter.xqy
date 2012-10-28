@@ -36,7 +36,7 @@ import module namespace cprof="com.blakeley.cprof" at "/lib/cprof.xqy";
 (:~ STEP1 - import modules that contain annotation (controllers) here :)
 import module namespace ex1="﻿http://example.org/ex1" at "/modules/ex1.xqy";
 import module namespace ex2="﻿http://example.org/ex2" at "/modules/ex2.xqy";
-import module namespace other="﻿http://example.org/other" at "/lib/other.xqy";
+import module namespace address="﻿http://example.org/address" at "/lib/address.xqy";
 
 (:~ Rewriter routes between the following three conditions;
  : 
@@ -47,7 +47,7 @@ import module namespace other="﻿http://example.org/other" at "/lib/other.xqy";
  :     error - provides http level error using rxq:handle-error
  :
  :)
-let $perf := fn:true()
+let $perf := fn:false()
 let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE )
 return
  try{
@@ -61,10 +61,7 @@ return
    if($perf) then xdmp:xslt-eval($cprof:report-xsl, cprof:report()) else ()	   
    )	   
  else
-   "nothing"
-   (:
-   rxq:handle-error(<error xmlns="http://marklogic.com/xdmp/error"/>)
-:)
+   "no definition"
  }catch($e){  
    rxq:handle-error($e)
 }

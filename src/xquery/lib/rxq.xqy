@@ -23,11 +23,10 @@ xquery version "1.0-ml";
  
 module namespace rxq="﻿http://exquery.org/ns/restxq";
 
-(:~  RXQ v0.1 - RESTful MVC with XQuery 3.0 annotations
+(:~ RXQ- MarkLogic RESTXQ implementation
  :
  : @spec http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html
- : @version 0.1
- : 
+ :
  :)
 
 import module namespace rest = "http://marklogic.com/appservices/rest" 
@@ -41,24 +40,24 @@ declare variable $rxq:_REWRITE_MODE := "rewrite";
 declare variable $rxq:_MUX_MODE := "mux";
 
 (:~ defines default evaluation endpoint :)
-declare variable $rxq:endpoint as xs:string := "/rewrite.xqy?mode=" ||  $rxq:_MUX_MODE;
+declare variable $rxq:default-endpoint as xs:string := "/rxq-rewriter.xqy?mode=" ||  $rxq:_MUX_MODE;
 
 (:~ cache REST mapping to server-field :)
-declare variable $rxq:cache-flag as xs:boolean := fn:true();
+declare variable $rxq:cache-flag as xs:boolean := fn:false();
 
 (:~ defines server field used by cache :)
 declare variable $rxq:server-field as xs:string := "rxq-server-field";
 
 (:~ defines default content type :)
-declare variable $rxq:default-content-type as xs:string := "text/html";
+declare variable $rxq:default-content-type as xs:string := "*/*";
 
 (:~ define catch all endpoint :)
-declare variable $rxq:default-requests as element(rest:request) := <rest:request uri="*" endpoint="{$rxq:endpoint}">
+declare variable $rxq:default-requests as element(rest:request) := <rest:request uri="*" endpoint="{$rxq:default-endpoint}">
      <rest:uri-param name="f">dummy to catch non existent pages</rest:uri-param>
    </rest:request>;
 
 (:~ define list of prefixes for exclusion :)
-declare variable $rxq:exclude-prefixes as xs:string* := ("xdmp");
+declare variable $rxq:exclude-prefixes as xs:string* := ("xdmp", "hof", "impl", "plugin", "amped-info", "debug", "cts", "json", "amped-common", "rest", "rest-impl", "fn", "math", "xs", "prof", "sc", "dbg", "xml", "magick", "map", "xp", "rxq", "idecl", "xsi");
 
 (:~ define options :)
 declare option xdmp:mapping "false";
@@ -73,12 +72,12 @@ declare option xdmp:mapping "false";
 declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element(rest:options){
  <options xmlns="http://marklogic.com/appservices/rest">
   {
-  for $f in xdmp:functions()[fn:prefix-from-QName(fn:function-name(.)) != $exclude-prefixes]
+  for $f in xdmp:functions()[not(fn:prefix-from-QName(fn:function-name(.)) = $exclude-prefixes)]
   let $name as xs:string := fn:string(fn:function-name($f))
   let $arity as xs:integer := (fn:function-arity($f),0)[1]
   return
     if(xdmp:annotation($f,xs:QName('rxq:path'))) then
-    <request uri="^{xdmp:annotation($f,xs:QName('rxq:path'))}$" endpoint="{$rxq:endpoint}">
+    <request uri="^{xdmp:annotation($f,xs:QName('rxq:path'))}$" endpoint="{$rxq:default-endpoint}">
       <uri-param name="f">{$name}</uri-param>
       <uri-param name="output">{xdmp:annotation($f,xs:QName('rxq:method'))}</uri-param>
       <uri-param name="arity">{$arity}</uri-param>
@@ -89,7 +88,7 @@ declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element
           return
           <uri-param name="var{$var}">${$var}</uri-param>
       }
-      <uri-param name="content-type">{xdmp:annotation($f,xs:QName('rxq:content-type'))}</uri-param>  
+      <uri-param name="content-type">{xdmp:annotation($f,xs:QName('rxq:produces'))}</uri-param>  
       {if (xdmp:annotation($f,xs:QName('rxq:GET')))    then <http method="GET"  user-params="allow"/>    else ()}
       {if (xdmp:annotation($f,xs:QName('rxq:POST')))   then <http method="POST" user-params="allow">
         {for $field in xdmp:get-request-field-names()
@@ -116,28 +115,26 @@ declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element
  :
  : @returns rewrite url
  :)
- declare function rxq:rewrite($exclude-prefixes as xs:string*, $cache as xs:boolean) as xs:string {
+ declare function rxq:rewrite($cache as xs:boolean) as xs:string {
   try{
     if($cache) then
       if(xdmp:get-server-field($rxq:server-field)) then
-	(rest:rewrite(xdmp:get-server-field($rxq:server-field)), xdmp:log("cache hit"))
+	rest:rewrite(xdmp:get-server-field($rxq:server-field))
       else
 	let $options as element(rest:options) := rxq:rewrite-options($rxq:exclude-prefixes)
 	let $_ := xdmp:set-server-field( $rxq:server-field, $options)
 	return
 	  rest:rewrite($options)
    else
-     rest:rewrite( rxq:rewrite-options( $rxq:exclude-prefixes ) )
+	let $options as element(rest:options) := rxq:rewrite-options($rxq:exclude-prefixes)
+	return
+	  rest:rewrite($options)
   }
   catch($e){
        rest:report-error($e)
     }
 };
 
-
-declare function rxq:rewrite($prefixes as xs:string*) {
-  rxq:rewrite($prefixes,  $rxq:cache-flag )
-};
 
 (:~ rxq:mux - function invoke 
  :
@@ -218,7 +215,7 @@ declare function rxq:mux($content-type as xs:string, $function as function(*), $
       else
          ()
      }catch($e){
-         rxq:handle-error()
+         rxq:handle-error($e)
      }     
 };
 
@@ -263,28 +260,10 @@ declare function rxq:resource-functions() as element(rxq:resource-functions){
 };
 
 
-
-(:~ rxq:handle-error - 
- :
- : @param $mode
- :
- : @returns 
- :)    
-declare function rxq:handle-error($mode){
-  rxq:handle-error()
-};
-
-
 (:~ rxq:handle-error
  :
  : @returns html error response
  :)    
-declare function rxq:handle-error(){
-xdmp:set-response-content-type("text/html"),
-
-<html>
-<body>
-<h1>error</h1>
-</body>
-</html>
+declare function rxq:handle-error($e){
+  rest:report-error($e)
 };
