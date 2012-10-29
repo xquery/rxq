@@ -80,12 +80,13 @@ declare %rxq:produces('text/html') %rxq:GET %rxq:path('/') function ex1:entry-po
 <p> Its easy to create RESTful apis and applications with RXQ. To demonstrate, we have annotated all functions within the lib/address.xqy XQuery module library, which you can run curl against to test.
 <ul>
 <li>HTTP GET - All Addresses:  curl http://{xdmp:host-name(xdmp:host())}:{xdmp:get-request-port()}/address/all</li>
-<li>HTTP GET - Get single address with id=3:  curl http://{xdmp:host-name(xdmp:host())}:{xdmp:get-request-port()}/address/3</li>
-<li>HTTP GET - Get single address with id=22 (failure because it does not exist):  curl http://{xdmp:host-name(xdmp:host())}:{xdmp:get-request-port()}/address/22</li>
-<li>HTTP PUT - Insert document with id=9:  curl -i -H "Accept: application/xml" -X PUT -d "&lt;address&gt;&lt;name&gt;New&lt;/name&gt;&lt;email&gt;new@example.org&lt;/email&gt;&lt;/address&gt;" http://{xdmp:host-name(xdmp:host())}:{xdmp:get-request-port()}/address/9</li>
-<li>HTTP POST - Insert document with id=9:   curl -i -X POST -d "name=new&amp;email=new@example.org" http://{xdmp:host-name(xdmp:host())}:{xdmp:get-request-port()}/address/9</li>
-<li>HTTP DELETE - Remove document with id=9:  curl -i -X DELETE http://{xdmp:host-name(xdmp:host())}:{xdmp:get-request-port()}/address/1</li>
+<li>HTTP GET - Get single address with id=3:  curl --digest -u user:pass "http://{xdmp:host-name(xdmp:host())}:{xdmp:get-request-port()}/address/3"</li>
+<li>HTTP GET - Get single address with id=22 (failure because it does not exist):  curl --digest -u user:pass "http://{xdmp:host-name(xdmp:host())}:{xdmp:get-request-port()}/address/22"</li>
+<li>HTTP PUT - Insert document with id=9:  curl --digest -u user:pass -i -H "Accept: application/xml" -X PUT -d "&lt;address&gt;&lt;name&gt;New&lt;/name&gt;&lt;email&gt;new@example.org&lt;/email&gt;&lt;/address&gt;" "http://{xdmp:host-name(xdmp:host())}:{xdmp:get-request-port()}/address/9"</li>
+<li>HTTP POST - Insert document with id=9:   curl --digest -u user:pass -i -X POST -d "name=new&amp;email=new@example.org" "http://{xdmp:host-name(xdmp:host())}:{xdmp:get-request-port()}/address/9"</li>
+<li>HTTP DELETE - Remove document with id=9:  curl --digest -u user:pass -i -X DELETE "http://{xdmp:host-name(xdmp:host())}:{xdmp:get-request-port()}/address/1"</li>
 </ul>
+MarkLogic appservers have digest authentication as default so make sure you instruct curl to use digest and replace user:admin with your own username and password details.
 Note - The HTTP PUT, POST, and DELETE examples demonstrate only the HTTP plumbing ... this example makes no modifications to the database attached to the appserver.
 </p>
 
