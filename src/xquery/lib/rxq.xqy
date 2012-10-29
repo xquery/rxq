@@ -72,7 +72,7 @@ declare option xdmp:mapping "false";
 declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element(rest:options){
  <options xmlns="http://marklogic.com/appservices/rest">
   {
-  for $f in xdmp:functions()[not(fn:prefix-from-QName(fn:function-name(.)) = $exclude-prefixes)]
+  for $f in xdmp:functions()[fn:not(fn:prefix-from-QName(fn:function-name(.)) = $exclude-prefixes)]
   let $name as xs:string := fn:string(fn:function-name($f))
   let $arity as xs:integer := (fn:function-arity($f),0)[1]
   return

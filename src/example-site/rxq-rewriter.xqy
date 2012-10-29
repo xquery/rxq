@@ -51,17 +51,15 @@ let $perf := fn:false()
 let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE )
 return
  try{
- if ($mode eq $rxq:_REWRITE_MODE ) then
-   rxq:rewrite(  $rxq:cache-flag )
+ if ($mode eq $rxq:_REWRITE_MODE ) then rxq:rewrite(  $rxq:cache-flag )
  else if($mode eq $rxq:_MUX_MODE ) then
    (if($perf) then cprof:enable() else (),
    rxq:mux(xdmp:get-request-field("content-type",$rxq:default-content-type),
-           fn:function-lookup(xs:QName(xdmp:get-request-field("f")),xs:integer(xdmp:get-request-field("arity","0"))),
-           xs:integer(xdmp:get-request-field("arity","0")) ),
+   fn:function-lookup(xs:QName(xdmp:get-request-field("f")),xs:integer(xdmp:get-request-field("arity","0"))),
+   xs:integer(xdmp:get-request-field("arity","0")) ),
    if($perf) then xdmp:xslt-eval($cprof:report-xsl, cprof:report()) else ()	   
    )	   
- else
-   "no definition"
+ else "no definition" (: TODO - must handle error at some point :)
  }catch($e){  
    rxq:handle-error($e)
 }
