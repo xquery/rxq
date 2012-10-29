@@ -79,7 +79,8 @@ declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element
     if(xdmp:annotation($f,xs:QName('rxq:path'))) then
     <request uri="^{xdmp:annotation($f,xs:QName('rxq:path'))}$" endpoint="{$rxq:default-endpoint}">
       <uri-param name="f">{$name}</uri-param>
-      <uri-param name="output">{xdmp:annotation($f,xs:QName('rxq:method'))}</uri-param>
+      <uri-param name="produces">{xdmp:annotation($f,xs:QName('rxq:produces'))}</uri-param>
+      <uri-param name="consumes">{xdmp:annotation($f,xs:QName('rxq:consumes'))}</uri-param>
       <uri-param name="arity">{$arity}</uri-param>
       {if($arity eq 0) then
         ()
@@ -144,9 +145,9 @@ declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element
  :
  : @returns 
  :)    
-declare function rxq:mux($content-type as xs:string, $function as function(*), $arity as xs:integer) as item()*{
+declare function rxq:mux($produces as xs:string, $consumes as xs:string, $function as function(*), $arity as xs:integer) as item()*{
     try{
-     let $_  := xdmp:set-response-content-type($content-type)
+     let $_  := xdmp:set-response-content-type($produces)
      let $fn := $function
      return
        if($arity eq 0) then

@@ -26,6 +26,7 @@ import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/lib/rxq.xqy";
 
 (:~ rewriter for RXQ.
  :
+ : NOTE- This version of the rxq-rewriter is modified to take advantage of Michael Blakely excellent cprof profiling library
  :
  :)
 
@@ -42,15 +43,15 @@ import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/lib/rxq.xqy";
  :
  :)
 let $perf := fn:false()
-let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE )
+let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE)
 return
  try{
- if ($mode eq $rxq:_REWRITE_MODE ) then rxq:rewrite(  $rxq:cache-flag )
- else if($mode eq $rxq:_MUX_MODE ) then
-   rxq:mux(xdmp:get-request-field("content-type",$rxq:default-content-type),
-           fn:function-lookup(xs:QName(xdmp:get-request-field("f")),xs:integer(xdmp:get-request-field("arity","0"))),
-           xs:integer(xdmp:get-request-field("arity","0")) ),
-   )	   
+ if ($mode eq $rxq:_REWRITE_MODE) then rxq:rewrite($rxq:cache-flag)
+ else if($mode eq $rxq:_MUX_MODE) then
+   rxq:mux(xdmp:get-request-field("produces",$rxq:default-content-type),
+   xdmp:get-request-field("consumes",$rxq:default-content-type),
+   fn:function-lookup(xs:QName(xdmp:get-request-field("f")),xs:integer(xdmp:get-request-field("arity","0"))),
+   xs:integer(xdmp:get-request-field("arity","0")) )
  else "no definition" (: TODO - must handle error at some point :)
  }catch($e){  
    rxq:handle-error($e)
