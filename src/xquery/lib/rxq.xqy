@@ -65,7 +65,7 @@ declare option xdmp:mapping "false";
 
 (:~ rxq:rewrite-options - generates REST lib <rest:request/> based on restxq annotations
  : 
- : @param $prfixes
+ : @param $exclude-prefixes
  :
  : @return element(rest:options)
  :)    
@@ -111,7 +111,6 @@ declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element
 
 (:~ rxq:rewrite - creates rewritten URL string
  :
- : @param $exclude-prefixes - module prefixes to use (DEPRECATE)
  : @cache $cache - if set to true will cache rest:options in server field
  :
  : @returns rewrite url
@@ -139,11 +138,12 @@ declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element
 
 (:~ rxq:mux - function invoke 
  :
- : @param content-type
- : @param function
- : @param arity of function 
+ : @param $produces
+ : @param $consumes
+ : @param $function
+ : @param $arity 
  :
- : @returns 
+ : @returns result of function invokation
  :)    
 declare function rxq:mux($produces as xs:string, $consumes as xs:string, $function as function(*), $arity as xs:integer) as item()*{
     try{
