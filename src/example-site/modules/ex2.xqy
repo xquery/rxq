@@ -2,7 +2,7 @@ xquery version "1.0-ml";
 
 module namespace ex2="﻿http://example.org/ex2";
 
-import module namespace rxq="﻿http://exquery.org/ns/restxq" at "../lib/rxq.xqy";
+declare namespace rxq="﻿http://exquery.org/ns/restxq";
 
 declare %rxq:produces('text/html') %rxq:GET %rxq:path('/ex2/a') function ex2:b($var) {
 <html>
