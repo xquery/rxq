@@ -94,7 +94,7 @@ Note - The HTTP PUT, POST, and DELETE examples demonstrate only the HTTP plumbin
 <ul>
 {for $f in rxq:resource-functions()//rxq:identity
 return
-  <li> <a href="{string($f/@uri)}">http://{xdmp:host-name(xdmp:host())}:{xdmp:get-request-port()}{string($f/@uri)}</a> - {string($f/@local-name)}#{string($f/@arity)}</li>
+  <li> <a href="{fn:string($f/@uri)}">http://{xdmp:host-name(xdmp:host())}:{xdmp:get-request-port()}{fn:string($f/@uri)}</a> - {fn:string($f/@local-name)}#{fn:string($f/@arity)}</li>
 }
 </ul>
 {ex1:footer()}
