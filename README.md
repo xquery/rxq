@@ -124,7 +124,7 @@ With everything setup, you can now point your web browser to the created app (e.
 The RESTXQ spec is still in draft form; where things are currently unclear or in flux I made my own implementation decisions for the time being;
 
  * no `xdmp:eval` were hurt (or used) in the creation of RXQ ... all execution is done by first class function invokation available using XQuery 3.0
- * annotations are effectively mapped by reusing MarkLogic's own [rest functions](https://docs.marklogic.com/rest-lib)
+ * annotations are effectively mapping onto existing MarkLogic REST library functionality ( [rest functions](https://docs.marklogic.com/rest-lib))
  * RXQ is not pure XQuery 3.0 due to usage of xdmp: functions, such as [xdmp:annotation()](https://docs.marklogic.com/xdmp:annotation).
  * allow for full regex expressions within `%rxq:path`, instead of binding by variable names
  * its the responsibility of underlying function to grab hold of a PUT or POST content body
