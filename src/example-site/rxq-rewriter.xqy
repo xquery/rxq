@@ -54,7 +54,8 @@ return
  if ($mode eq $rxq:_REWRITE_MODE ) then rxq:rewrite(  $rxq:cache-flag )
  else if($mode eq $rxq:_MUX_MODE ) then
    (if($perf) then cprof:enable() else (),
-   rxq:mux(xdmp:get-request-field("content-type",$rxq:default-content-type),
+   rxq:mux(xdmp:get-request-field("produces",$rxq:default-content-type),
+   xdmp:get-request-field("consumes",$rxq:default-content-type),
    fn:function-lookup(xs:QName(xdmp:get-request-field("f")),xs:integer(xdmp:get-request-field("arity","0"))),
    xs:integer(xdmp:get-request-field("arity","0")) ),
    if($perf) then xdmp:xslt-eval($cprof:report-xsl, cprof:report()) else ()	   
