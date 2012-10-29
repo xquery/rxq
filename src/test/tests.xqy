@@ -10,11 +10,11 @@ import module namespace assert = "http://github.com/robwhitby/xray/assertions" a
 
 declare namespace http = "xdmp:http";
 
-declare variable $admin-auth := 
+declare variable $admin-auth := ()(:
     <authentication method="digest" xmlns="xdmp:http">
         <username>admin</username>
         <password>admin</password>
-    </authentication>;
+    </authentication>:);
 
 declare variable $base-url as xs:string := "http://localhost:9011";
 
@@ -35,6 +35,7 @@ $request as element(http:request)
 ) as item()*
 {
     let $method := map:get($methods, $request/http:method/text())
+      let $_ := xdmp:log(fn:function-name($method))
     let $auth := $request/http:authentication
     let $endpoint := $request/http:url/fn:string()
     let $headers := $request/http:headers
@@ -92,7 +93,89 @@ let $request :=
 return
   assert:equal( submit-request($request)//http:code, <code xmlns="xdmp:http">200</code> )
 };
+
+
+declare function test-http-get(){
+let $request := 
+  <request xmlns="xdmp:http" id="get1" description="">
+    <method>GET</method>
+    <url>{$base-url}/address/1</url>
+     <authentication method="digest">
+        <username>admin</username>
+        <password>admin</password>
+    </authentication>
+    <expected>
+      <code>200</code>
+    </expected>
+  </request>
+
+return
+  assert:equal( submit-request($request)//success, <success id="1" http-method="GET" xmlns="">
+	<address id="1">
+	  <name>Gabriela</name>
+	  <email>Gabriela@example.og</email>
+	</address>
+      </success>)
+};
+
+declare function test-http-delete(){
+let $request := 
+  <request xmlns="xdmp:http" id="delete1" description="">
+    <method>DELETE</method>
+    <url>{$base-url}/address/1</url>
+     <authentication method="digest">
+        <username>admin</username>
+        <password>admin</password>
+    </authentication>
+    <expected>
+      <code>200</code>
+    </expected>
+  </request>
+let $actual := submit-request($request)
+return
+  assert:equal( $actual[1]/http:code, <code xmlns="xdmp:http">200</code>)
+};
+
+declare function test-http-post(){
+let $request := 
+  <request xmlns="xdmp:http" id="base1" description="base1 - simple get with authh">
+    <method>POST</method>
+    <url>{$base-url}/address/1</url>
+     <authentication method="digest">
+        <username>admin</username>
+        <password>admin</password>
+    </authentication>
+    <expected>
+      <code>200</code>
+    </expected>
+  </request>
+let $actual := submit-request($request)
+
+return
+  assert:equal(    $actual//*:code, <code xmlns="xdmp:http">200</code>)
+};
+
+
+declare function test-http-put(){
+let $request := 
+  <request xmlns="xdmp:http" id="base1" description="base1 - simple get with authh">
+    <method>PUT</method>
+    <url>{$base-url}/address/1</url>
+     <authentication method="digest">
+        <username>admin</username>
+        <password>admin</password>
+    </authentication>
+    <expected>
+      <code>200</code>
+    </expected>
+  </request>
+
+return
+  assert:equal( submit-request($request)//*:code, <code xmlns="xdmp:http">200</code>)
+};
+
   
+
 declare function test-uri()
 {
     assert:equal(rxq:uri(), xs:anyURI("http://www.example.org"))
@@ -178,7 +261,7 @@ declare function test-rewriter()
 	  <uri-param name="content-type">text/xml</uri-param>
 	  <http method="GET" user-params="allow"></http>
 	</request>
-	<request uri="^/ex2/a/$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	<request uri="^/ex2/a$" endpoint="/rxq-rewriter.xqy?mode=mux">
 	  <uri-param name="f">ex2:b</uri-param>
 	  <uri-param name="output"></uri-param>
 	  <uri-param name="arity">1</uri-param>
@@ -250,12 +333,7 @@ declare function test-rewriter()
 	  <uri-param name="arity">1</uri-param>
 	  <uri-param name="var1">$1</uri-param>
 	  <uri-param name="content-type">*/*</uri-param>
-	  <http method="POST" user-params="allow">
-	    <param name="dir" as="string" required="false"/>
-	    <param name="modules" as="string" required="false"/>
-	    <param name="tests" as="string" required="false"/>
-	    <param name="format" as="string" required="false"/>
-	  </http>
+	  <http method="POST" user-params="allow"></http>
 	</request>
 	<request uri="*" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns:rest="http://marklogic.com/appservices/rest">
 	  <uri-param name="f">dummy to catch non existent pages</uri-param>
