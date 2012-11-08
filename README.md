@@ -9,6 +9,8 @@ RESTXQ is based on the annotations defined within [JSR-311](http://download.orac
 
 To understand what RESTXQ is and how it works with XQuery 3.0 annotations please [download](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf) Adam Retters excellent overview.
 
+Important Note - for those using OSX Mountain Lion you might find some issues, give me a shout if you are getting a 'no content' message.
+
 # For the Impatient
 
 To learn just [install](https://github.com/xquery/rxq#setting-up-the-example-site-on-marklogic-6) and review [src/example-site](https://github.com/xquery/rxq/tree/master/src/example-site), otherwise to use in your own project, follow these steps (you _need_ MarkLogic 6 or later);
