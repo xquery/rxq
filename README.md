@@ -1,6 +1,6 @@
 # RXQ v0.1 - RESTful MVC with XQuery 3.0 annotations for MarkLogic
 
-The recent release of [MarkLogic 6](http://www.marklogic.com) includes support for many cool [XQuery 3.0](http://www.w3.org/TR/xquery-30) features. 
+The release of [MarkLogic 6](http://www.marklogic.com) includes support for many cool [XQuery 3.0](http://www.w3.org/TR/xquery-30) features. 
 One such feature, [annotations](http://www.w3.org/TR/xquery-30/#id-annotations), provides an opportunity to implement Adam Retter's [RESTXQ](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation) draft (introduced at [XML Prague 2012](http://archive.xmlprague.cz/2012/sessions.html#RESTful-XQuery---Standardised-XQuery-3.0-Annotations-for-REST)).
 
 RESTXQ proposes an elegant approach for building RESTFul interfaces, in addition to full blown web applications using XQuery within a consistent MVC architecture.
@@ -137,7 +137,7 @@ The RESTXQ spec is still in draft form; where things are currently unclear or in
 
 RXQ is released under Apache License v2.0
 
-Copyright 2012 Jim Fuller
+Copyright 2012,2013 Jim Fuller
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
