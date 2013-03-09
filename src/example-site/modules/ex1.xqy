@@ -5,7 +5,14 @@ module namespace ex1="﻿http://example.org/ex1";
 import module namespace rxq="﻿http://exquery.org/ns/restxq" at "../lib/rxq.xqy";
 
 (:~ example of using 2 regex capture groups :)
-declare %rxq:produces('text/html') %rxq:GET %rxq:path('/ex1/c/(.*)/(.*)/') function ex1:regex-example($var1, $var2) {
+declare
+ %rxq:produces('text/html')
+ %rxq:GET
+ %rxq:path('/ex1/c/(.*)/(.*)/')
+ function ex1:regex-example(
+   $var1,
+   $var2
+) {
 <html>
 <body>
 {ex1:header()}
@@ -20,11 +27,20 @@ $var2: {$var2}<br/>
 </html>
 };
 
+
 (:~ example of using regex to constrain input e.g. http://localhost:{xdmp:get-request-port()}/ex1/c/b/c/999
 :   but
 :   http://localhost:{xdmp:get-request-port()}/ex1/c/b/c/9999 does not work as d{1,3} states maximum length of 3 numbers
 :)
-declare %rxq:produces('text/html') %rxq:GET %rxq:path('/ex1/c/(.*)/(.*)/(\d1)') function ex1:regex-example2($var1, $var2, $var3) {
+declare
+ %rxq:produces('text/html')
+ %rxq:GET
+ %rxq:path('/ex1/c/(.*)/(.*)/(\d1)')
+ function ex1:regex-example2(
+   $var1,
+   $var2,
+   $var3
+) {
 <html>
 <body>
 {ex1:header()}
@@ -41,7 +57,13 @@ $var3: {$var3}<br/>
 };
 
 
-declare %rxq:produces('text/html') %rxq:GET %rxq:path('/ex1/a/') function ex1:b($var1) {
+declare
+ %rxq:produces('text/html')
+ %rxq:GET
+ %rxq:path('/ex1/a/')
+ function ex1:b(
+   $var1
+) {
 <html>
 <body>
 {ex1:header()}
@@ -55,8 +77,15 @@ $var1 value: {$var1} <br/>
 </html>
 };
 
+
 (:~ example of using regex capture group to supply variable $var1 value :)
-declare %rxq:produces('text/html') %rxq:GET %rxq:path('/ex1/a/(.*)') function ex1:a($var1) {
+declare
+ %rxq:produces('text/html')
+ %rxq:GET
+ %rxq:path('/ex1/a/(.*)')
+ function ex1:a(
+   $var1
+) {
 <html>
 <body>
 {ex1:header()}
@@ -72,7 +101,11 @@ $var1 value: {$var1} <br/>
 
 
 (:~ lists out all endpoints :)
-declare %rxq:produces('text/html') %rxq:GET %rxq:path('/') function ex1:entry-point() {
+declare
+ %rxq:produces('text/html')
+ %rxq:GET
+ %rxq:path('/')
+ function ex1:entry-point() {
 <html>
 <body>
 {ex1:header()}

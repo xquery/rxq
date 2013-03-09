@@ -4,7 +4,13 @@ module namespace ex2="﻿http://example.org/ex2";
 
 declare namespace rxq="﻿http://exquery.org/ns/restxq";
 
-declare %rxq:produces('text/html') %rxq:GET %rxq:path('/ex2/a') function ex2:b($var) {
+declare
+ %rxq:produces('text/html')
+ %rxq:GET
+ %rxq:path('/ex2/a')
+ function ex2:b(
+  $var
+) {
 <html>
 <body>
 {ex2:header()}
@@ -18,7 +24,13 @@ produces: text/html <br/>
 };
 
 
-declare %rxq:produces('text/html') %rxq:GET %rxq:path('/ex2/a/(.*)') function ex2:a($var1) {
+declare
+ %rxq:produces('text/html')
+ %rxq:GET
+ %rxq:path('/ex2/a/(.*)')
+ function ex2:a(
+   $var1
+) {
 <html>
 <body>
 {ex2:header()}
