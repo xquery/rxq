@@ -52,9 +52,7 @@ declare variable $rxq:server-field as xs:string := "rxq-server-field";
 declare variable $rxq:default-content-type as xs:string := "*/*";
 
 (:~ define catch all endpoint :)
-declare variable $rxq:default-requests as element(rest:request) := <rest:request uri="*" endpoint="{$rxq:default-endpoint}">
-     <rest:uri-param name="f">dummy to catch non existent pages</rest:uri-param>
-   </rest:request>;
+declare variable $rxq:default-requests as element(rest:request)* := ();
 
 (:~ define list of prefixes for exclusion :)
 declare variable $rxq:exclude-prefixes as xs:string* := ("xdmp", "hof", "impl", "plugin", "amped-info", "debug", "cts", "json", "amped-common", "rest", "rest-impl", "fn", "math", "xs", "prof", "sc", "dbg", "xml", "magick", "map", "xp", "rxq", "idecl", "xsi");
@@ -115,7 +113,7 @@ declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element
  :
  : @returns rewrite url
  :)
- declare function rxq:rewrite($cache as xs:boolean) as xs:string {
+ declare function rxq:rewrite($cache as xs:boolean) {
   try{
     if($cache) then
       if(xdmp:get-server-field($rxq:server-field)) then
