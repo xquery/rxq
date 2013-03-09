@@ -127,7 +127,6 @@ declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element
 	  rest:rewrite($options)
    else
 	let $options as element(rest:options) := rxq:rewrite-options($rxq:exclude-prefixes)
-    let $_ := xdmp:log($options)  
 	return
 	  rest:rewrite($options)
   }
