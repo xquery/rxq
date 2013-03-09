@@ -206,19 +206,6 @@ declare function test-rewrite-options()
   let $result := rxq:rewrite-options(())
     return
     assert:equal($result,<options xmlns="http://marklogic.com/appservices/rest">
-	<request uri="*" endpoint="/rxq-rewriter.xqy?mode=mux">
-	  <uri-param name="f">dummy to catch non existent pages</uri-param>
-	</request>
-      </options>)
-};
-
-
-declare function test-rewrite-options2()
-{
-    assert:equal(rxq:rewrite-options(()),<options xmlns="http://marklogic.com/appservices/rest">
-	<request uri="*" endpoint="/rxq-rewriter.xqy?mode=mux">
-	  <uri-param name="f">dummy to catch non existent pages</uri-param>
-	</request>
       </options>)
 };
 
@@ -236,7 +223,7 @@ declare function test-rewriter()
     
     ')
     return
-    assert:equal($result, <options xmlns="http://marklogic.com/appservices/rest">
+    assert:equal($result,       <options xmlns="http://marklogic.com/appservices/rest">
 	<request uri="^/ex2/a/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
 	  <uri-param name="f">ex2:a</uri-param>
 	  <uri-param name="produces">text/html</uri-param>
@@ -273,7 +260,7 @@ declare function test-rewriter()
 	  <uri-param name="content-type">text/html</uri-param>
 	  <http method="GET" user-params="allow"></http>
 	</request>
-	<request uri="^/ex1/c/(.*)/(.*)/(\d{{1,3}})$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	<request uri="^/ex1/c/(.*)/(.*)/(\d{1})$" endpoint="/rxq-rewriter.xqy?mode=mux">
 	  <uri-param name="f">ex1:regex-example2</uri-param>
 	  <uri-param name="produces">text/html</uri-param>
 	  <uri-param name="consumes"></uri-param>
@@ -346,9 +333,6 @@ declare function test-rewriter()
 	  <uri-param name="var1">$1</uri-param>
 	  <uri-param name="content-type">*/*</uri-param>
 	  <http method="POST" user-params="allow"></http>
-	</request>
-	<request uri="*" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns:rest="http://marklogic.com/appservices/rest">
-	  <uri-param name="f">dummy to catch non existent pages</uri-param>
 	</request>
       </options>)
 };

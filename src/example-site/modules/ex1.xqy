@@ -24,7 +24,7 @@ $var2: {$var2}<br/>
 :   but
 :   http://localhost:{xdmp:get-request-port()}/ex1/c/b/c/9999 does not work as d{1,3} states maximum length of 3 numbers
 :)
-declare %rxq:produces('text/html') %rxq:GET %rxq:path('/ex1/c/(.*)/(.*)/(\d{1,3})') function ex1:regex-example2($var1, $var2, $var3) {
+declare %rxq:produces('text/html') %rxq:GET %rxq:path('/ex1/c/(.*)/(.*)/(\d1)') function ex1:regex-example2($var1, $var2, $var3) {
 <html>
 <body>
 {ex1:header()}
