@@ -2,7 +2,7 @@ xquery version "1.0-ml";
 (:
  : rxq.xqy
  :
- : Copyright (c) 2012 James Fuller - jim.fuller@webcomposite.com . All Rights Reserved.
+ : Copyright (c) 2012,2013 James Fuller - jim.fuller@webcomposite.com . All Rights Reserved.
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.

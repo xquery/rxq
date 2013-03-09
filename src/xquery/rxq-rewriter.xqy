@@ -2,7 +2,7 @@ xquery version "1.0-ml";
 (:
  : rxq-rewriter.xqy
  :
- : Copyright (c) 2012 James Fuller. All Rights Reserved.
+ : Copyright (c) 2012,2013 James Fuller. All Rights Reserved.
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/lib/rxq.xqy";
 
 (:~ STEP1 - import modules that contain annotation (controllers) here :)
 
+(:------------------------------------------------------------------- :)
 
 (:~ Rewriter routes between the following three conditions;
  : 
