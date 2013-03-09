@@ -223,9 +223,48 @@ declare function test-rewriter()
     
     ')
     return
-    assert:equal($result,       <options xmlns="http://marklogic.com/appservices/rest">
+    assert:equal($result, <options xmlns="http://marklogic.com/appservices/rest">
 	<request uri="^/ex2/a/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
 	  <uri-param name="f">ex2:a</uri-param>
+	  <uri-param name="produces">text/html</uri-param>
+	  <uri-param name="consumes"></uri-param>
+	  <uri-param name="arity">1</uri-param>
+	  <uri-param name="var1">$1</uri-param>
+	  <uri-param name="content-type">text/html</uri-param>
+	  <http method="GET" user-params="allow"></http>
+	</request>
+	<request uri="^/ex2/a$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">ex2:b</uri-param>
+	  <uri-param name="produces">text/html</uri-param>
+	  <uri-param name="consumes"></uri-param>
+	  <uri-param name="arity">1</uri-param>
+	  <uri-param name="var1">$1</uri-param>
+	  <uri-param name="content-type">text/html</uri-param>
+	  <http method="GET" user-params="allow"></http>
+	</request>
+	<request uri="^/ex1/c/(.*)/(.*)/(\d1)$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">ex1:regex-example2</uri-param>
+	  <uri-param name="produces">text/html</uri-param>
+	  <uri-param name="consumes"></uri-param>
+	  <uri-param name="arity">3</uri-param>
+	  <uri-param name="var1">$1</uri-param>
+	  <uri-param name="var2">$2</uri-param>
+	  <uri-param name="var3">$3</uri-param>
+	  <uri-param name="content-type">text/html</uri-param>
+	  <http method="GET" user-params="allow"></http>
+	</request>
+	<request uri="^/ex1/c/(.*)/(.*)/$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">ex1:regex-example</uri-param>
+	  <uri-param name="produces">text/html</uri-param>
+	  <uri-param name="consumes"></uri-param>
+	  <uri-param name="arity">2</uri-param>
+	  <uri-param name="var1">$1</uri-param>
+	  <uri-param name="var2">$2</uri-param>
+	  <uri-param name="content-type">text/html</uri-param>
+	  <http method="GET" user-params="allow"></http>
+	</request>
+	<request uri="^/ex1/a/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">ex1:a</uri-param>
 	  <uri-param name="produces">text/html</uri-param>
 	  <uri-param name="consumes"></uri-param>
 	  <uri-param name="arity">1</uri-param>
@@ -251,44 +290,6 @@ declare function test-rewriter()
 	  <uri-param name="content-type">text/xml</uri-param>
 	  <http method="GET" user-params="allow"></http>
 	</request>
-	<request uri="^/ex2/a$" endpoint="/rxq-rewriter.xqy?mode=mux">
-	  <uri-param name="f">ex2:b</uri-param>
-	  <uri-param name="produces">text/html</uri-param>
-	  <uri-param name="consumes"></uri-param>
-	  <uri-param name="arity">1</uri-param>
-	  <uri-param name="var1">$1</uri-param>
-	  <uri-param name="content-type">text/html</uri-param>
-	  <http method="GET" user-params="allow"></http>
-	</request>
-	<request uri="^/ex1/c/(.*)/(.*)/(\d{1})$" endpoint="/rxq-rewriter.xqy?mode=mux">
-	  <uri-param name="f">ex1:regex-example2</uri-param>
-	  <uri-param name="produces">text/html</uri-param>
-	  <uri-param name="consumes"></uri-param>
-	  <uri-param name="arity">3</uri-param>
-	  <uri-param name="var1">$1</uri-param>
-	  <uri-param name="var2">$2</uri-param>
-	  <uri-param name="var3">$3</uri-param>
-	  <uri-param name="content-type">text/html</uri-param>
-	  <http method="GET" user-params="allow"></http>
-	</request>
-	<request uri="^/$" endpoint="/rxq-rewriter.xqy?mode=mux">
-	  <uri-param name="f">ex1:entry-point</uri-param>
-	  <uri-param name="produces">text/html</uri-param>
-	  <uri-param name="consumes"></uri-param>
-	  <uri-param name="arity">0</uri-param>
-	  <uri-param name="content-type">text/html</uri-param>
-	  <http method="GET" user-params="allow"></http>
-	</request>
-	<request uri="^/ex1/c/(.*)/(.*)/$" endpoint="/rxq-rewriter.xqy?mode=mux">
-	  <uri-param name="f">ex1:regex-example</uri-param>
-	  <uri-param name="produces">text/html</uri-param>
-	  <uri-param name="consumes"></uri-param>
-	  <uri-param name="arity">2</uri-param>
-	  <uri-param name="var1">$1</uri-param>
-	  <uri-param name="var2">$2</uri-param>
-	  <uri-param name="content-type">text/html</uri-param>
-	  <http method="GET" user-params="allow"></http>
-	</request>
 	<request uri="^/address/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
 	  <uri-param name="f">address:insert-address</uri-param>
 	  <uri-param name="produces">text/xml</uri-param>
@@ -305,15 +306,6 @@ declare function test-rewriter()
 	  <uri-param name="arity">1</uri-param>
 	  <uri-param name="var1">$1</uri-param>
 	  <uri-param name="content-type">text/xml</uri-param>
-	  <http method="GET" user-params="allow"></http>
-	</request>
-	<request uri="^/ex1/a/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
-	  <uri-param name="f">ex1:a</uri-param>
-	  <uri-param name="produces">text/html</uri-param>
-	  <uri-param name="consumes"></uri-param>
-	  <uri-param name="arity">1</uri-param>
-	  <uri-param name="var1">$1</uri-param>
-	  <uri-param name="content-type">text/html</uri-param>
 	  <http method="GET" user-params="allow"></http>
 	</request>
 	<request uri="^/address/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
@@ -333,6 +325,14 @@ declare function test-rewriter()
 	  <uri-param name="var1">$1</uri-param>
 	  <uri-param name="content-type">*/*</uri-param>
 	  <http method="POST" user-params="allow"></http>
+	</request>
+	<request uri="^/$" endpoint="/rxq-rewriter.xqy?mode=mux">
+	  <uri-param name="f">ex1:entry-point</uri-param>
+	  <uri-param name="produces">text/html</uri-param>
+	  <uri-param name="consumes"></uri-param>
+	  <uri-param name="arity">0</uri-param>
+	  <uri-param name="content-type">text/html</uri-param>
+	  <http method="GET" user-params="allow"></http>
 	</request>
       </options>)
 };

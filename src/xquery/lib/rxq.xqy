@@ -71,6 +71,8 @@ declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element
  <options xmlns="http://marklogic.com/appservices/rest">
   {
   for $f in xdmp:functions()[fn:not(fn:prefix-from-QName(fn:function-name(.)) = $exclude-prefixes)]
+  order by xdmp:annotation($f,xs:QName('rxq:path')) descending
+  return
   let $name as xs:string := fn:string(fn:function-name($f))
   let $arity as xs:integer := (fn:function-arity($f),0)[1]
   return
@@ -125,6 +127,7 @@ declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element
 	  rest:rewrite($options)
    else
 	let $options as element(rest:options) := rxq:rewrite-options($rxq:exclude-prefixes)
+    let $_ := xdmp:log($options)  
 	return
 	  rest:rewrite($options)
   }
