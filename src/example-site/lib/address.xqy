@@ -15,34 +15,68 @@ declare variable $addresses := <addresses>
 
 
 (:~ demonstrates HTTP GET  :)
-declare %rxq:produces('text/xml') %rxq:GET %rxq:path('/address/all') function address:all-addresses($dummy) as element(){
+declare
+ %rxq:produces('text/xml')
+ %rxq:GET
+ %rxq:path('/address/all')
+ function address:all-addresses(
+   $dummy
+) as element(){
 <success http-method="GET">{$addresses}</success>
 };
 
+
 (:~ demonstrates HTTP GET  :)
-declare %rxq:produces('text/xml') %rxq:GET %rxq:path('/address/(.*)') function address:get-address($id) as element(){
+declare
+ %rxq:produces('text/xml')
+ %rxq:GET
+ %rxq:path('/address/(.*)')
+ function address:get-address(
+   $id
+) as element(){
  if($addresses/address[@id eq $id]) then
  <success id="{$id}" http-method="GET">{$addresses/address[@id eq $id]}</success>
  else
  <failure id="{$id}"  http-method="GET">problem accessing {$id}</failure>
 };
 
+
 (:~ demonstrates HTTP PUT  :)
-declare %rxq:produces('text/xml') %rxq:PUT %rxq:path('/address/(.*)') function address:insert-address($id) as element(){
+declare
+ %rxq:produces('text/xml')
+ %rxq:PUT
+ %rxq:path('/address/(.*)')
+ function address:insert-address(
+   $id
+) as element(){
 <success id="{$id}" http-method="PUT">{element address {
                                            attribute id {$id},
                                            (xdmp:get-request-body("xml")/.)/*} }</success>
 };
 
+
 (:~ demonstrates HTTP POST  :)
-declare %rxq:produces('*/*') %rxq:POST %rxq:path('/address/(.*)') function address:change-address($id) as element(){
+declare
+ %rxq:produces('*/*')
+ %rxq:POST
+ %rxq:path('/address/(.*)')
+ function address:change-address(
+   $id
+) as element(){
 <success id="{$id}" http-method="POST">{element address {
                                            attribute id {$id},
                                            (xdmp:get-request-body()/.)/*} }</success>
 };
 
+
 (:~ demonstrates HTTP DELETE  :)
-declare %rxq:produces('text/xml') %rxq:DELETE %rxq:path('/address/(.*)') function address:remove-address($id) as element(){
+declare
+ %rxq:produces('text/xml')
+ %rxq:DELETE
+ %rxq:path('/address/(.*)')
+ function address:remove-address(
+   $id
+) as element(){
    if($addresses/address[@id eq $id]) then
    <success id="{$id}" http-method="DELETE"></success>
    else
