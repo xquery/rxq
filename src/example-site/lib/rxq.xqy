@@ -266,5 +266,6 @@ declare function rxq:resource-functions() as element(rxq:resource-functions){
  : @returns html error response
  :)    
 declare function rxq:handle-error($e){
+  xdmp:set-response-code(500, $e/error:format-string),
   rest:report-error($e)
 };
