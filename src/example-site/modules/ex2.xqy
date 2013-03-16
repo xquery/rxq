@@ -10,7 +10,8 @@ declare
  %rxq:path('/ex2/a')
  function ex2:b(
   $var
-) {
+)
+{
 <html>
 <body>
 {ex2:header()}
@@ -30,7 +31,8 @@ declare
  %rxq:path('/ex2/a/(.*)')
  function ex2:a(
    $var1
-) {
+)
+{
 <html>
 <body>
 {ex2:header()}

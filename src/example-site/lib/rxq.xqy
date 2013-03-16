@@ -67,7 +67,10 @@ declare option xdmp:mapping "false";
  :
  : @return element(rest:options)
  :)    
-declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element(rest:options){
+declare function rxq:rewrite-options(
+  $exclude-prefixes as xs:string*
+) as element(rest:options)
+{
  <options xmlns="http://marklogic.com/appservices/rest">
   {
   for $f in xdmp:functions()[fn:not(fn:prefix-from-QName(fn:function-name(.)) = $exclude-prefixes)]
@@ -115,7 +118,10 @@ declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element
  :
  : @returns rewrite url
  :)
- declare function rxq:rewrite($cache as xs:boolean) {
+ declare function rxq:rewrite(
+   $cache as xs:boolean
+)
+{
   try{
     if($cache) then
       if(xdmp:get-server-field($rxq:server-field)) then
@@ -145,7 +151,13 @@ declare function rxq:rewrite-options($exclude-prefixes as xs:string*) as element
  :
  : @returns result of function invokation
  :)    
-declare function rxq:mux($produces as xs:string, $consumes as xs:string, $function as function(*), $arity as xs:integer) as item()*{
+declare function rxq:mux(
+  $produces as xs:string,
+  $consumes as xs:string,
+  $function as function(*),
+  $arity as xs:integer
+) as item()*
+{
     try{
      let $_  := xdmp:set-response-content-type($produces)
      let $fn := $function
@@ -265,7 +277,26 @@ declare function rxq:resource-functions() as element(rxq:resource-functions){
  :
  : @returns html error response
  :)    
-declare function rxq:handle-error($e){
+declare function rxq:handle-error()
+{
+  rxq:handle-error(<error:error xmlns:error="http://marklogic.com/xdmp/error" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <error:format-string>Incorrect RXQ mode</error:format-string>
+  <error:retryable>false</error:retryable>
+  <error:stack>
+  </error:stack>
+  </error:error>)
+};
+
+
+(:~ rxq:handle-error
+ :
+ : @returns html error response
+ :)    
+declare function rxq:handle-error(
+  $e
+)
+{
   xdmp:set-response-code(500, $e/error:format-string),
   rest:report-error($e)
 };

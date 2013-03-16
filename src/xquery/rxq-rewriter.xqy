@@ -24,18 +24,18 @@ xquery version "1.0-ml";
 (:~ RXQ MarkLogic RESTXQ implementation :)
 import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/lib/rxq.xqy";
 
-(:~ rewriter for RXQ.
- :
- : NOTE- This version of the rxq-rewriter is modified to take advantage of Michael Blakely excellent cprof profiling library
- :
- :)
 
 (:~ STEP1 - import modules that contain annotation (controllers) here :)
 
 (:------------------------------------------------------------------- :)
 
-(:~ Rewriter routes between the following three conditions;
- : 
+
+
+
+(:------------------------------------------------------------------- :)
+(:~ Rewriter routes between the following three conditions based on 
+ :  value of mode url param.
+ :
  :     rewrite - rewrites url using rxq:rewrite
  :
  :     mux - evaluates function for rewritten url using rxq:mux
@@ -43,20 +43,12 @@ import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/lib/rxq.xqy";
  :     error - provides http level error using rxq:handle-error
  :
  :)
-let $perf := fn:false()
 let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE)
 return
- try{
  if ($mode eq $rxq:_REWRITE_MODE) then rxq:rewrite($rxq:cache-flag)
  else if($mode eq $rxq:_MUX_MODE) then
    rxq:mux(xdmp:get-request-field("produces",$rxq:default-content-type),
    xdmp:get-request-field("consumes",$rxq:default-content-type),
    fn:function-lookup(xs:QName(xdmp:get-request-field("f")),xs:integer(xdmp:get-request-field("arity","0"))),
    xs:integer(xdmp:get-request-field("arity","0")) )
- else "no definition" (: TODO - must handle error at some point :)
- }catch($e){  
-   rxq:handle-error($e)
-}
-
-  
-
+ else rxq:handle-error()

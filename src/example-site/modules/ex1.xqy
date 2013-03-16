@@ -12,7 +12,8 @@ declare
  function ex1:regex-example(
    $var1,
    $var2
-) {
+)
+{
 <html>
 <body>
 {ex1:header()}
@@ -40,7 +41,8 @@ declare
    $var1,
    $var2,
    $var3
-) {
+)
+{
 <html>
 <body>
 {ex1:header()}
@@ -63,7 +65,8 @@ declare
  %rxq:path('/ex1/a/')
  function ex1:b(
    $var1
-) {
+)
+{
 <html>
 <body>
 {ex1:header()}
@@ -85,7 +88,8 @@ declare
  %rxq:path('/ex1/a/(.*)')
  function ex1:a(
    $var1
-) {
+)
+{
 <html>
 <body>
 {ex1:header()}
