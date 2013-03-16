@@ -36,12 +36,10 @@ To use RXQ in your own application emulate how the example-site is structured.
 
 To start basically you need these files in your project.
 
-*rxq-rewriter.xqy
-*lib/rxq.xqy
+* rxq-rewriter.xqy - simple rewriter and entry point for defining which modules you want to import
+* lib/rxq.xqy - the RXQ library 
 
-Then you will need to edit rxq-rewriter.xqy, importing the library modules containing your RESTXQ annotations.
-
-The next step is to setup your MarkLogic appserver, supplying the correct details for url and error rewriter.
+Then you will need setup a MarkLogic appserver (follow example site instructions), edit rxq-rewriter.xqy, importing the library modules containing your RESTXQ annotations.
 
 All the following code examples are included in the example application.
 
@@ -116,10 +114,9 @@ function addr:remove-address($id){
    .... 
 };
 ```
-This function could return some kind of success or failure text/html.
+This function could return some kind of success or failure text/html. 
 
-This usage of annotations turns out to be a very concise way of building up flexible RESTFul interfaces, as well as providing the basis from which to create MVC architectures for our XQuery web applications.
-
+It is the responsibility of your modules to return the correct HTTP status codes and the address library module provides some guidance of how to do this.
 
 # Points of interest & Limitations
 
@@ -151,3 +148,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 * [EXQuery RESTXQ Draft Specification](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation).
 * Adam Retters [RESTXQ](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf).
 * [JSR-311](http://download.oracle.com/otndocs/jcp/jaxrs-1.0-fr-eval-oth-JSpec/).
+
+* Lastly
+ 
+This usage of annotations turns out to be a very concise way of building up flexible RESTFul interfaces, as well as providing the basis from which to create MVC architectures for our XQuery web applications.
