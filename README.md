@@ -9,18 +9,17 @@ RESTXQ is based on the annotations defined within [JSR-311](http://download.orac
 
 To understand what RESTXQ is and how it works with XQuery 3.0 annotations please [download](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf) Adam Retters excellent overview.
 
-Important Note - for those using OSX Mountain Lion you might find some issues, give me a shout if you are getting a 'no content' message.
+# For the Impatient (set up example application)
 
-# For the Impatient
+The quickest way to see RXQ in action is to setup the example application under [src/example-site](https://github.com/xquery/rxq/tree/master/src/example-site).
 
-To learn just [install](https://github.com/xquery/rxq#setting-up-the-example-site-on-marklogic-6) and review [src/example-site](https://github.com/xquery/rxq/tree/master/src/example-site), otherwise to use in your own project, follow these steps (you _need_ MarkLogic 6 or later);
+First, you *need* to download and install [MarkLogic 6](https://developer.marklogic.com/products). Second, create an appserver, providing the following details;
 
-1. download RXQ [dist](https://github.com/xquery/rxq/zipball/master) and unzip
-2. copy [src/xquery/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/xquery/rxq-rewriter.xqy) and [src/xquery/lib/rxq.xqy](https://github.com/xquery/rxq/blob/master/src/xquery/lib/rxq.xqy) to your project
-3. setup MarkLogic 6 appserver with url rewriter set to _/rxq-rewriter.xqy?mode=rewrite_ and error handler to _/rxq-rewriter.xqy?mode=error_
-4. edit _rxq-rewriter.xqy_, by importing those (your application) xquery modules which have RESTXQ annotations embedded in function declarations
-5. test by using a browser (or [curl](http://curl.haxx.se/docs/manpage.html))  to navigate to your controller paths as defined by your functions %rxq:path annotation
+* _root_: provide directory where example-site resides on your filesystem
+* _error handler_: `/rxq-rewriter.xqy?mode=error`
+* _rewrite handler_: `/rxq-rewriter.xqy?mode=rewrite`
 
+With everything setup, you can now point your web browser to the created app (e.g. http://<host>:<port>/) and you should see html page.
 
 # Distribution
 
@@ -32,6 +31,17 @@ To learn just [install](https://github.com/xquery/rxq#setting-up-the-example-sit
 * [src/tests](https://github.com/xquery/rxq/tree/master/src/test) - used for testing
 
 # RXQ in action
+
+To use RXQ in your own application emulate how the example-site is structured. 
+
+To start basically you need these files in your project.
+
+*rxq-rewriter.xqy
+*lib/rxq.xqy
+
+Then you will need to edit rxq-rewriter.xqy, importing the library modules containing your RESTXQ annotations.
+
+The next step is to setup your MarkLogic appserver, supplying the correct details for url and error rewriter.
 
 All the following code examples are included in the example application.
 
@@ -110,18 +120,6 @@ This function could return some kind of success or failure text/html.
 
 This usage of annotations turns out to be a very concise way of building up flexible RESTFul interfaces, as well as providing the basis from which to create MVC architectures for our XQuery web applications.
 
-
-# Setting up the example-site on MarkLogic 6
-
-The quickest way to see RXQ in action is to setup the example application under [src/example-site](https://github.com/xquery/rxq/tree/master/src/example-site).
-
-First, you *need* to download and install [MarkLogic 6](https://developer.marklogic.com/products). Second, create an appserver, providing the following details;
-
-* _root_: provide directory where example-site resides on your filesystem
-* _error handler_: `/rxq-rewriter.xqy?mode=error`
-* _rewrite handler_: `/rxq-rewriter.xqy?mode=rewrite`
-
-With everything setup, you can now point your web browser to the created app (e.g. http://<host>:<port>/) and you should see html page.
 
 # Points of interest & Limitations
 
