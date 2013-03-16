@@ -22,7 +22,9 @@ declare
  function address:all-addresses(
    $dummy
 ) as element(){
-<success http-method="GET">{$addresses}</success>
+     ( xdmp:set-response-code(200, "Found"),
+     <success http-method="GET">{$addresses}</success>
+     )
 };
 
 
@@ -35,9 +37,13 @@ declare
    $id
 ) as element(){
  if($addresses/address[@id eq $id]) then
- <success id="{$id}" http-method="GET">{$addresses/address[@id eq $id]}</success>
+   ( xdmp:set-response-code(200, "Found"),
+   <success id="{$id}" http-method="GET">{$addresses/address[@id eq $id]}</success>
+   )
  else
- <failure id="{$id}"  http-method="GET">problem accessing {$id}</failure>
+   ( xdmp:set-response-code(404, "Not Found"),
+   <failure id="{$id}"  http-method="GET">{$id} does not exist</failure>
+   )
 };
 
 
@@ -49,9 +55,12 @@ declare
  function address:insert-address(
    $id
 ) as element(){
-<success id="{$id}" http-method="PUT">{element address {
-                                           attribute id {$id},
-                                           (xdmp:get-request-body("xml")/.)/*} }</success>
+   ( xdmp:set-response-code(201, "Created"),
+   <success id="{$id}" http-method="PUT">{
+     element address {attribute id {$id},
+     (xdmp:get-request-body("xml")/.)/*} }
+   </success>
+   )
 };
 
 
@@ -63,9 +72,12 @@ declare
  function address:change-address(
    $id
 ) as element(){
-<success id="{$id}" http-method="POST">{element address {
-                                           attribute id {$id},
-                                           (xdmp:get-request-body()/.)/*} }</success>
+     ( xdmp:set-response-code(200, "OK"),
+     <success id="{$id}" http-method="POST">{
+       element address {attribute id {$id},
+       (xdmp:get-request-body()/.)/*} }
+     </success>
+     )
 };
 
 
@@ -78,7 +90,11 @@ declare
    $id
 ) as element(){
    if($addresses/address[@id eq $id]) then
-   <success id="{$id}" http-method="DELETE"></success>
+    ( xdmp:set-response-code(200, "OK"),     
+     <success id="{$id}" http-method="DELETE"></success>
+     )
    else
-   <failure id="{$id}"  http-method="GET">problem accessing {$id}</failure>
+     ( xdmp:set-response-code(404, "Not Found"),
+     <failure id="{$id}"  http-method="GET">{$id} does not exist</failure>
+     )
 };
