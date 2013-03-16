@@ -33,7 +33,9 @@ To learn just [install](https://github.com/xquery/rxq#setting-up-the-example-sit
 
 # RXQ in action
 
-The following xquery module illustrates how to annotate your modules functions using RESTXQ, which in turn will map them to a URL so they can be invoked via an HTTP Request.
+All the following code examples are included in the example application.
+
+The following xquery module illustrates how to annotate your modules functions using RESTXQ, which in turn will map them to a URL so they can be invoked via an HTTP Request. 
 
 ```
 xquery version "1.0-ml";
