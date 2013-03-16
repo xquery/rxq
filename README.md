@@ -118,6 +118,14 @@ This function could return some kind of success or failure text/html.
 
 It is the responsibility of your modules to return the correct HTTP status codes and the address library module provides some guidance of how to do this.
 
+# Other functions
+
+These helper functions can be useful to introspect the current RXQ enviroment.
+
+_rxq:resource-functions()_ - returns all functions with RESTXQ annotations and their endpoint
+
+_rxq:raw-params() as map:map_ - returns all in scope url params.
+
 # Points of interest & Limitations
 
 The RESTXQ spec is still in draft form; where things are currently unclear or in flux I made my own implementation decisions for the time being;
