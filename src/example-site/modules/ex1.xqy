@@ -127,7 +127,9 @@ MarkLogic appservers have digest authentication as default so make sure you inst
 Note - The HTTP PUT, POST, and DELETE examples demonstrate only the HTTP plumbing ... this example makes no modifications to the database attached to the appserver.
 </p>
 
-<h3>Current endpoints</h3>
+<h3>Other Functions</h3>
+<h4>rxq:resource-functions()</h4>
+<p>returns all functions that have RESTXQ annotation</p>
 <p>list of all active endpoints, which are defined by RESTXQ annotations</p>
 <ul>
 {for $f in rxq:resource-functions()//rxq:identity
@@ -135,6 +137,11 @@ return
   <li> <a href="{fn:string($f/@uri)}">http://{xdmp:host-name(xdmp:host())}:{xdmp:get-request-port()}{fn:string($f/@uri)}</a> - {fn:string($f/@local-name)}#{fn:string($f/@arity)}</li>
 }
 </ul>
+<h4>rxq:raw-params() as map:map</h4>
+<p>returns all params as a map</p>
+<textarea rows="10" cols="80">
+{rxq:raw-params()}
+</textarea>
 {ex1:footer()}
 </body>
 </html>

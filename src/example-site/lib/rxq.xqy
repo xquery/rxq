@@ -251,6 +251,15 @@ declare function rxq:base-uri() as xs:anyURI{
 };
 
 
+(:~ rxq:base-uri - returns base uri
+ :
+ : @returns URI 
+ :)    
+declare function rxq:raw-params() as map:map{
+  rest:get-raw-query-params() 
+};
+
+
 (:~ rxq:resource-functions - returns all functions
  :
  : @returns element(rxq:resource-functions)
