@@ -7,7 +7,7 @@ RESTXQ proposes an elegant approach for building RESTFul interfaces, in addition
 
 RESTXQ is based on the annotations defined within [JSR-311](http://download.oracle.com/otndocs/jcp/jaxrs-1.0-fr-eval-oth-JSpec).
 
-To understand what RESTXQ is and how it works with XQuery 3.0 annotations please [download](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf) Adam Retters excellent overview.
+To understand what RESTXQ is and how it works with XQuery 3.0 annotations please [download](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf) Adam Retter's excellent overview.
 
 # For the Impatient (set up example application)
 
@@ -154,7 +154,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 * RXQ github [repository](https://github.com/xquery/rxq).
 * [EXQuery RESTXQ Draft Specification](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation).
-* Adam Retters [RESTXQ](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf).
+* Adam Retter's [RESTXQ](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf).
 * [JSR-311](http://download.oracle.com/otndocs/jcp/jaxrs-1.0-fr-eval-oth-JSpec/).
  
 The usage of RESTXQ annotations turns out to be a very concise way of building up flexible RESTFul interfaces, as well as providing the basis from which to create MVC architectures for our XQuery web applications.
