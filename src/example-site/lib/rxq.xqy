@@ -38,6 +38,7 @@ declare namespace rxq-error = "http://exquery.org/ns/restxq/error";
 (:~ declare constants:)
 declare variable $rxq:_REWRITE_MODE := "rewrite";
 declare variable $rxq:_MUX_MODE := "mux";
+declare variable $rxq:_PASSTHRU_MODE := "passthru";
 
 (:~ defines default evaluation endpoint :)
 declare variable $rxq:default-endpoint as xs:string := "/rxq-rewriter.xqy?mode=" ||  $rxq:_MUX_MODE;
@@ -50,9 +51,6 @@ declare variable $rxq:server-field as xs:string := "rxq-server-field";
 
 (:~ defines default content type :)
 declare variable $rxq:default-content-type as xs:string := "*/*";
-
-(:~ define catch all endpoint :)
-declare variable $rxq:default-requests as element(rest:request)* := ();
 
 (:~ define list of prefixes for exclusion :)
 declare variable $rxq:exclude-prefixes as xs:string* := ("xdmp", "hof", "impl", "plugin", "amped-info", "debug", "cts", "json", "amped-common", "rest", "rest-impl", "fn", "math", "xs", "prof", "sc", "dbg", "xml", "magick", "map", "xp", "rxq", "idecl", "xsi");
@@ -68,6 +66,7 @@ declare option xdmp:mapping "false";
  : @return element(rest:options)
  :)    
 declare function rxq:rewrite-options(
+  $default-requests,  
   $exclude-prefixes as xs:string*
 ) as element(rest:options)
 {
@@ -106,8 +105,8 @@ declare function rxq:rewrite-options(
     </request>
   else
     ()
-   }
-   {$rxq:default-requests}
+    }
+   {$default-requests} 
   </options>
  };
   
@@ -118,7 +117,8 @@ declare function rxq:rewrite-options(
  :
  : @returns rewrite url
  :)
- declare function rxq:rewrite(
+declare function rxq:rewrite(
+   $default-requests, 
    $cache as xs:boolean
 )
 {
@@ -127,12 +127,12 @@ declare function rxq:rewrite-options(
       if(xdmp:get-server-field($rxq:server-field)) then
 	rest:rewrite(xdmp:get-server-field($rxq:server-field))
       else
-	let $options as element(rest:options) := rxq:rewrite-options($rxq:exclude-prefixes)
+	let $options as element(rest:options) := rxq:rewrite-options($default-requests,$rxq:exclude-prefixes)
 	let $_ := xdmp:set-server-field( $rxq:server-field, $options)
 	return
 	  rest:rewrite($options)
    else
-	let $options as element(rest:options) := rxq:rewrite-options($rxq:exclude-prefixes)
+	let $options as element(rest:options) := rxq:rewrite-options($default-requests, $rxq:exclude-prefixes)
 	return
 	  rest:rewrite($options)
   }
@@ -230,6 +230,24 @@ declare function rxq:mux(
      }catch($e){
          rxq:handle-error($e)
      }     
+};
+
+
+(:~ rxq:passthru - handles passthru requests
+ :
+ : @param path - path to resource
+ :
+ : @returns 
+ :)    
+declare function rxq:passthru(
+  $path
+)
+{
+    xdmp:document-get( xdmp:modules-root() || $path,
+    <options xmlns="xdmp:document-get"
+                xmlns:http="xdmp:http">
+           <format>binary</format>
+       </options>)
 };
 
 

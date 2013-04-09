@@ -38,6 +38,14 @@ import module namespace ex1="﻿http://example.org/ex1" at "/modules/ex1.xqy";
 (: import module namespace ex2="﻿http://example.org/ex2" at "/modules/ex2.xqy"; :)
 import module namespace address="﻿http://example.org/address" at "/lib/address.xqy";
 
+(: define non-restxq REST requests, example illustrates passthru mode :)
+declare namespace rest = "http://marklogic.com/appservices/rest";
+declare variable $default-requests as element(rest:request)* := (
+    <request xmlns="http://marklogic.com/appservices/rest" uri="^/resources/(.*)$" endpoint="/rxq-rewriter.xqy?mode={$rxq:_PASSTHRU_MODE}" >
+    <http method="GET" user-params="allow"/>
+      <uri-param name="path">resources/$1</uri-param>
+    </request>);
+
 (:~ Rewriter routes between the following three conditions;
  : 
  :     rewrite - rewrites url using rxq:rewrite
@@ -50,7 +58,7 @@ import module namespace address="﻿http://example.org/address" at "/lib/address
 let $perf := fn:false()
 let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE)
 return
- if ($mode eq $rxq:_REWRITE_MODE) then rxq:rewrite($rxq:cache-flag)
+ if ($mode eq $rxq:_REWRITE_MODE) then rxq:rewrite($default-requests, $rxq:cache-flag)
  else if($mode eq $rxq:_MUX_MODE) then
    (
      if($perf) then cprof:enable() else (),
@@ -60,7 +68,8 @@ return
      xs:integer(xdmp:get-request-field("arity","0")) ),    
      if($perf) then xdmp:xslt-eval($cprof:report-xsl, cprof:report()) else ()	   
    )	   
- else
+else if ($mode eq $rxq:_PASSTHRU_MODE) then rxq:passthru(xdmp:get-request-field("path"))
+else
    rxq:handle-error()
 
 

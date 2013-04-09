@@ -31,6 +31,17 @@ import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/lib/rxq.xqy";
 
 
 
+(:------------------------------------------------------------------- :)
+
+(: define non-restxq REST requests :)
+declare namespace rest = "http://marklogic.com/appservices/rest";
+declare variable $default-requests as element(rest:request)* := (
+    <request xmlns="http://marklogic.com/appservices/rest" uri="^/resources/(.*)$" endpoint="/rxq-rewriter.xqy?mode={$rxq:_PASSTHRU_MODE}" >
+    <http method="GET" user-params="allow"/>
+      <uri-param name="path">resources/$1</uri-param>
+    </request>);
+(:------------------------------------------------------------------- :)
+
 
 (:------------------------------------------------------------------- :)
 (:~ Rewriter routes between the following three conditions based on 
@@ -45,10 +56,17 @@ import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/lib/rxq.xqy";
  :)
 let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE)
 return
- if ($mode eq $rxq:_REWRITE_MODE) then rxq:rewrite($rxq:cache-flag)
+ if ($mode eq $rxq:_REWRITE_MODE) then rxq:rewrite($default-requests, $rxq:cache-flag)
  else if($mode eq $rxq:_MUX_MODE) then
-   rxq:mux(xdmp:get-request-field("produces",$rxq:default-content-type),
-   xdmp:get-request-field("consumes",$rxq:default-content-type),
-   fn:function-lookup(xs:QName(xdmp:get-request-field("f")),xs:integer(xdmp:get-request-field("arity","0"))),
-   xs:integer(xdmp:get-request-field("arity","0")) )
- else rxq:handle-error()
+   (
+     if($perf) then cprof:enable() else (),
+     rxq:mux(xdmp:get-request-field("produces",$rxq:default-content-type),
+     xdmp:get-request-field("consumes",$rxq:default-content-type),
+     fn:function-lookup(xs:QName(xdmp:get-request-field("f")),xs:integer(xdmp:get-request-field("arity","0"))),
+     xs:integer(xdmp:get-request-field("arity","0")) ),    
+     if($perf) then xdmp:xslt-eval($cprof:report-xsl, cprof:report()) else ()	   
+   )	   
+else if ($mode eq $rxq:_PASSTHRU_MODE) then rxq:passthru(xdmp:get-request-field("path"))
+else
+rxq:handle-error()
+
