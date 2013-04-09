@@ -87,6 +87,18 @@ import module namespace addr="﻿http://example.org/addr at "modules/addr.xqy";
 
 This allows the RXQ implementation to scan for annotated functions and generate the neccessary url rewriting and evaluation.
 
+Lastly, you can augment RESTXQ annotations with regular MarkLogic REST requests. The example below illustrates how to define a 'passthru' url, which will resources as a normal web server.
+
+```
+(: define non-restxq REST requests, example illustrates passthru mode :)
+declare namespace rest = "http://marklogic.com/appservices/rest";
+declare variable $default-requests as element(rest:request)* := (
+    <request xmlns="http://marklogic.com/appservices/rest" uri="^/resources/(.*)$" endpoint="/rxq-rewriter.xqy?mode={$rxq:_PASSTHRU_MODE}" >
+    <http method="GET" user-params="allow"/>
+      <uri-param name="path">resources/$1</uri-param>
+    </request>);
+```    
+
 Please review the [src/example-site/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/example-site/rxq-rewriter.xqy) to see how to setup your own. Note that the example-site also has a facility for profiling (enable $perf to fn:true).
 
 To continue with our address example, lets add a function which inserts an address.
