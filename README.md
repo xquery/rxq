@@ -7,7 +7,7 @@ RESTXQ proposes an elegant approach for building RESTFul interfaces, in addition
 
 RESTXQ is based on the annotations defined within [JSR-311](http://download.oracle.com/otndocs/jcp/jaxrs-1.0-fr-eval-oth-JSpec).
 
-To understand what RESTXQ is and how it works with XQuery 3.0 annotations please [download](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf) Adam Retters excellent overview.
+To understand what RESTXQ is and how it works with XQuery 3.0 annotations please [download](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf) Adam Retter's excellent overview.
 
 # For the Impatient (set up example application)
 
@@ -118,6 +118,14 @@ This function could return some kind of success or failure text/html.
 
 It is the responsibility of your modules to return the correct HTTP status codes and the address library module provides some guidance of how to do this.
 
+# Other functions
+
+These helper functions can be useful to introspect the current RXQ enviroment.
+
+_rxq:resource-functions()_ - returns all functions with RESTXQ annotations and their endpoint
+
+_rxq:raw-params() as map:map_ - returns all in scope url params.
+
 # Points of interest & Limitations
 
 The RESTXQ spec is still in draft form; where things are currently unclear or in flux I made my own implementation decisions for the time being;
@@ -146,7 +154,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 * RXQ github [repository](https://github.com/xquery/rxq).
 * [EXQuery RESTXQ Draft Specification](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation).
-* Adam Retters [RESTXQ](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf).
+* Adam Retter's [RESTXQ](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf).
 * [JSR-311](http://download.oracle.com/otndocs/jcp/jaxrs-1.0-fr-eval-oth-JSpec/).
  
 The usage of RESTXQ annotations turns out to be a very concise way of building up flexible RESTFul interfaces, as well as providing the basis from which to create MVC architectures for our XQuery web applications.
