@@ -138,6 +138,10 @@ _rxq:resource-functions()_ - returns all functions with RESTXQ annotations and t
 
 _rxq:raw-params() as map:map_ - returns all in scope url params.
 
+# FAQ
+
+https://github.com/xquery/rxq/wiki#FAQ
+
 # Points of interest & Limitations
 
 The RESTXQ spec is still in draft form; where things are currently unclear or in flux I made my own implementation decisions for the time being;
