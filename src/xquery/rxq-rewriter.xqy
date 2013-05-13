@@ -44,12 +44,14 @@ declare variable $default-requests as element(rest:request)* := (
 
 
 (:------------------------------------------------------------------- :)
-(:~ Rewriter routes between the following three conditions based on 
+(:~ Rewriter routes between the following four conditions based on 
  :  value of mode url param.
  :
  :     rewrite - rewrites url using rxq:rewrite
  :
  :     mux - evaluates function for rewritten url using rxq:mux
+ :
+ :     passthru - passes request through without rewriting
  :
  :     error - provides http level error using rxq:handle-error
  :
