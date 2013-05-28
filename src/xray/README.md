@@ -1,17 +1,23 @@
 # xray
 
-**xray** is a framework for writing XQuery unit tests on MarkLogic Server. Test cases are written as standard XQuery functions like this:  
+**xray** is a framework for writing XQuery unit tests on MarkLogic Server. Version 2.0 uses function annotations to define tests, and requires MarkLogic 6 or above. For MarkLogic 5 support use the v1.1 branch.
+
+Test cases are written as standard XQuery functions like this:  
 
 ```xquery
-declare function string-equality-example()
+declare %test:case function string-equality-example ()
 {
   let $foo := "foo"
   return assert:equal($foo, "foo")
 };
 ```
 
+**xray** can output test results as HTML, XML, xUnit compatible XML, and plain text, so it should be simple to integrate with your favourite build/ci server.
+
 ## Getting Started
-* Clone/copy/symlink xray into the root directory of your project<br/>
+* Clone/copy/symlink xray into the root directory of your project e.g.<br/>
+`git clone git://github.com/robwhitby/xray.git`  
+or  
 `git submodule add git://github.com/robwhitby/xray.git` 
 * Create an HTTP app server pointing to the root directory of your project.
 * Check all is well at `http://server:port/xray/`
@@ -19,7 +25,7 @@ declare function string-equality-example()
 
 
 ## Writing Tests
-Tests are grouped into library modules in the xray test namespace, importing the xray assertions module along with the modules to be tested.
+Tests are grouped into library modules in the xray test namespace. Import the xray assertions module along with the modules to be tested.
 
 ```xquery
 xquery version "1.0-ml";
@@ -28,75 +34,113 @@ import module namespace assert = "http://github.com/robwhitby/xray/assertions" a
 
 import module namespace some-module = "http://some-module-to-test" at "/some-module-to-test.xqy";
 
-declare function string-equality-example()
+declare %test:case function string-equality-example ()
 {
   let $foo := some-module:foo()
   return assert:equal($foo, "foo")
 };
 
-declare function multiple-assert-example()
+declare %test:case function multiple-assert-example ()
 {
   let $foo := some-module:foo()
   let $bar := "bar"
   return (
-    assert:not-empty($foo),
+    assert:not-empty($foo, "an optional failure help message"),
     assert:equal($foo, "foo"),
-    assert:not-equal($foo, $bar)
+    assert:not-equal($foo, $bar),
+    assert:true(return-true())
   )
 };
 
-(: more tests :)
+declare %test:ignore function ignored-test-example ()
+{
+  let $foo := some-module:not-implemented-yet()
+  return fn:equal($foo, <foo/>)
+}
 ```
 
+
 ## Invoking Tests
-**xray** will find and execute all the test cases defined in a directory (including sub-directories), and can be told to execute a subset by specifying regex patterns to match tests by module name or test name.
+**xray** will find all functions with the `%test:case` annotation defined in library modules within a specific directory (including sub-directories), and can be told to execute a subset by specifying regex patterns to match tests by module name or test name.
 
 * browser - `http://server:port/xray/`
-* command line - test-runner.sh is a sample shell script, edit the default vars (tested on OSX only).
+* command line - call `test-runner.sh` with your project parameters (see below, tested on OSX only).
 * invoke from xquery - import `src/xray.xqy` and call `xray:run-tests()`. See `index.xqy` for example.
 
+By default, xray looks for a directory called `test` at the same level as the `xray` directory:
+<pre>
+project-root/
+├── src
+├── test
+│   └── tests.xqy
+└── xray
+</pre>
 
-## Parameters
-`dir` - test directory path relative from the app server modules root. Optional, defaults to "test".
+To invoke tests stored elsewhere, set the directory parameter.
 
-`modules` - regex match on module name. Optional, default to match all.
 
-`tests` - regex match on test name. Optional, defaults to match all.
+## Test Runner Command Line Parameters
+```shell
+usage: test-runner.sh [options...]
+Options:
+      -c <user:password>    Credential for HTTP authentication.
+      -d <path>             Look for tests in this directory.
+      -h                    This message.
+      -m <regex>            Test modules that match this pattern.
+      -t <regex>            Test functions that match this pattern.
+      -u <URL>              HTTP server location where index.xqy can be found.
+```
 
-`format` - set output format to html, xml or text. Optional, defaults to html.
+## Test Runner Shortcut
+Rather than modify test-runner.sh or always pass in custom parameters, it's handy to create a small wrapper script in the project root, something like this:
+
+```shell
+./xray/test-runner.sh -u http://localhost:8765/xray/ -c user:pass -d testdir $*
+```
+
+This still allows using `-t` and `-m` to select which tests to run but removes the need to constantly set the url and test directory.
+
+See `run-xray-tests.sh` for an example.
+
 
 ## Assertions
 ```xquery
-assert:equal($actual as item()*, $expected as item()*)
+assert:equal ($actual as item()*, $expected as item()*, [$message as xs:string?])
+
+assert:not-equal ($actual as item()*, $expected as item()*, [$message as xs:string?])
+
+assert:empty ($actual as item()*, [$message as xs:string?])
+
+assert:not-empty ($actual as item()*, [$message as xs:string?])
+
+assert:error ($actual as item()*, $expected-error-name as xs:string, [$message as xs:string?])
+
+assert:true ($actual as item()*, [$message as xs:string?])
+
+assert:false ($actual as item()*, [$message as xs:string?])
 ```
-```xquery
-assert:not-equal($actual as item()*, $expected as item()*)
-```
-```xquery
-assert:empty($actual as item()*)
-```
-```xquery
-assert:not-empty($actual as item()*)
-```
-```xquery
-assert:error($actual as item()*, $expected-error-name as xs:string)
-```
-See `src/assertions.xqy` for the assertion definitions.
+See `src/assertions.xqy` for the assertion definitions. All assertions are overloaded to accept an optional message parameter to provide more information of failures.
 
 ## Setup and teardown functions
-`setup()` and `teardown()` are special function signatures. If defined, `setup()` is invoked in a different transaction before any tests, so any database updates are visible to the tests. `teardown()` is executed after all tests in that module have finished.
+Use the annotations `%test:setup` and `%test:teardown`. If defined, the setup function is invoked before any tests, and in a different transaction so any database updates are visible to the tests. The teardown function is executed after all tests in that module have finished.
 
-See `test/tests.xqy` for an example.
+See `test/setup-teardown.xqy` for an example.
 
 ## Ignoring Tests 
-Tests can be ignored by addding the prefix `IGNORE` to the test function name.
+Tests can be ignored by adding the `%test:ignore` annotation
 
 ```xquery
-declare function IGNORE-this-test-will-be-ignored()
+declare %test:ignore function this-test-will-be-ignored()
 ```
 
-## Acknowledgements
-Thanks to [John Snelson](http://github.com/jpcs) for the XQuery parser lifted from https://github.com/xquery/xquerydoc
+## MarkLogic Configuration
+The app server user must belong to a role with the following execute privileges:
+`xdmp:eval`, `xdmp:filesystem-directory`, `xdmp:filesystem-file`, `xdmp:invoke`, `xdmp:xslt-invoke`
+
+To work with modules stored in a modules database, the additional privileges are required:
+`xdmp:eval-in`
+And the user must have read rights to files in the modules db.
+
 &nbsp;
 ## Screenshots
 ![screenshot of html output](https://github.com/robwhitby/xray/raw/master/screenshot-html.png)

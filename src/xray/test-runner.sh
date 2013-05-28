@@ -1,11 +1,14 @@
 #!/bin/bash
 
-#Sample test runner script, only tested on OSX
+# Rather than modify this script, consider creating a wrapper script with
+# better defaults for your project. See run-xray-tests.sh
 
-#Edit these default values
+#Default parameter values
 #####################################################################
-BASEURL=http://localhost:8889/xray/index.xqy
+BASEURL=http://localhost:8889/xray/
+CREDENTIALS=
 DIR=test
+FORMAT=text
 MODULES=
 TESTS=
 #####################################################################
@@ -18,21 +21,41 @@ CYELLOW=$(tput setaf 3)
 CDEFAULT=$(tput sgr0)       
 STATUS=0
 
-while getopts 'u:m:t:d:h' OPTION
+function usage() {
+      printf '
+usage: test-runner.sh [options...]
+Options:
+      -c <user:password>    Credential for HTTP authentication.
+      -d <path>             Look for tests in this directory.
+      -f <xml|html|text>    Set output format.
+      -h                    This message.
+      -m <regex>            Test modules that match this pattern.
+      -t <regex>            Test functions that match this pattern.
+      -u <URL>              HTTP server location where index.xqy can be found.
+'
+      exit 1
+}
+
+while getopts 'c:d:f:h:m:t:u:' OPTION
 do
   case $OPTION in
-    u) BASEURL="$OPTARG";;
+    c) CREDENTIAL="$OPTARG";;
+    d) DIR="$OPTARG";;
+    f) FORMAT="$OPTARG";;
+    h) usage;;
     m) MODULES="$OPTARG";;
     t) TESTS="$OPTARG";;
-    d) DIR="$OPTARG";;
-    *)
-      echo "usage: test-runner.sh [-u URL of index.xqy] [-m module name regex] [-t test name regex] [-d test directory]"
-      exit 1;;
+    u) BASEURL="$OPTARG";;
+    *) usage;;
   esac
 done
 
-URL="$BASEURL?format=text&modules=$MODULES&tests=$TESTS&dir=$DIR"
-RESPONSE=$(curl --silent "$URL")
+URL="$BASEURL?format=$FORMAT&modules=$MODULES&tests=$TESTS&dir=$DIR"
+CURL="curl --silent"
+if [ -n "$CREDENTIAL" ]; then
+    CURL="$CURL --anyauth --user $CREDENTIAL"
+fi
+RESPONSE=$($CURL "$URL")
 
 if [ "$RESPONSE" = "" ]; then
   echo "Error: No response from $URL"
@@ -41,17 +64,19 @@ fi
 
 while read -r LINE; do
   case $LINE in
-    Module*) echo -ne $CDEFAULT;;
-    *PASSED) echo -ne $CGREEN;;
-    *IGNORED) echo -ne $CYELLOW;;
-    *FAILED) STATUS=1; echo -ne $CRED;;
-    Finished*) echo -ne $CDEFAULT;;
+    Module*) printf $CDEFAULT;;
+    *PASSED) printf $CGREEN;;
+    *IGNORED) printf $CYELLOW;;
+    *FAILED) STATUS=1; printf $CRED;;
+    *ERROR) STATUS=1; printf $CRED;;
+    Finished*) echo && if [ $STATUS -eq 1 ]; then printf $CRED; else printf $CGREEN; fi;;
   esac
   echo $LINE
 done <<< "$RESPONSE"
 
 DIFF=$(( $(date +%s) - $START ))
-echo -ne $CDEFAULT
-#echo -e "Time: $DIFF seconds"
+if [ $FORMAT == "text" ]; then
+  printf $CDEFAULT
+fi
 
 exit $STATUS
