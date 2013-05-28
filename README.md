@@ -29,7 +29,7 @@ With everything setup, you can now point your web browser to the created app (e.
 * [api](https://github.com/xquery/rxq/tree/master/api) - contains api level docs of RXQ rewriter and module library
 * [src/example-site](https://github.com/xquery/rxq/tree/master/src/example-site) - contains example site which demonstrates how to use RXQ
 * [src/xquery](https://github.com/xquery/rxq/tree/master/src/xquery) - contains clean rxq-rewriter.xqy and lib/rxq.xqy you can use in your own projects
-* src/xray - RXQ uses Rob Whitby excellent [XRAY](https://github.com/robwhitby/xray) for xquery unit testing 
+* src/xray - RXQ uses Rob Whitby's excellent [XRAY](https://github.com/robwhitby/xray) for xquery unit testing
 * [src/tests](https://github.com/xquery/rxq/tree/master/src/test) - used for testing
 
 # RXQ in action

@@ -56,15 +56,12 @@ declare variable $default-requests as element(rest:request)* := (
  :)
 let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE)
 return
- if ($mode eq $rxq:_REWRITE_MODE) then rxq:rewrite($default-requests, $rxq:cache-flag)
- else if($mode eq $rxq:_MUX_MODE) then
-   (
-     rxq:mux(xdmp:get-request-field("produces",$rxq:default-content-type),
-             xdmp:get-request-field("consumes",$rxq:default-content-type),
-             fn:function-lookup(xs:QName(xdmp:get-request-field("f")),xs:integer(xdmp:get-request-field("arity","0"))),
-             xs:integer(xdmp:get-request-field("arity","0")) )
-   )	   
-else if ($mode eq $rxq:_PASSTHRU_MODE) then rxq:passthru(xdmp:get-request-field("path"))
-else
-rxq:handle-error()
+  if ($mode eq $rxq:_REWRITE_MODE) then (rxq:rewrite($default-requests, $rxq:cache-flag), xdmp:get-request-url())[1]
+  else if ($mode eq $rxq:_MUX_MODE) then
+    rxq:mux(xdmp:get-request-field("produces", $rxq:default-content-type),
+             xdmp:get-request-field("consumes", $rxq:default-content-type),
+             fn:function-lookup(xs:QName(xdmp:get-request-field("f")), xs:integer(xdmp:get-request-field("arity","0"))),
+             xs:integer(xdmp:get-request-field("arity", "0")) )
+  else if ($mode eq $rxq:_PASSTHRU_MODE) then rxq:passthru(xdmp:get-request-field("path"))
+  else rxq:handle-error()
 

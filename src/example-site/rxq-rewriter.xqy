@@ -24,12 +24,12 @@ xquery version "1.0-ml";
 (:~ RXQ MarkLogic RESTXQ implementation :)
 import module namespace rxq="http://exquery.org/ns/restxq" at "/lib/rxq.xqy";
 
-(:~ cprof - Michael Blakely excellent profiling tool :)
+(:~ cprof - Michael Blakeley's excellent profiling tool :)
 import module namespace cprof="com.blakeley.cprof" at "/lib/cprof.xqy";
 
 (:~ rewriter for RXQ.
  :
- : NOTE- This version of the rxq-rewriter is modified to take advantage of Michael Blakely excellent cprof profiling library
+ : NOTE- This version of the rxq-rewriter is modified to take advantage of Michael Blakeley's excellent cprof profiling library
  :
  :)
 
@@ -58,19 +58,21 @@ declare variable $default-requests as element(rest:request)* := (
 let $perf := fn:false()
 let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE)
 return
- if ($mode eq $rxq:_REWRITE_MODE) then rxq:rewrite($default-requests, $rxq:cache-flag)
- else if($mode eq $rxq:_MUX_MODE) then
-   (
+  if ($mode eq $rxq:_REWRITE_MODE) then (rxq:rewrite($default-requests, $rxq:cache-flag), xdmp:get-request-url())[1]
+  else if($mode eq $rxq:_MUX_MODE) then (
      if($perf) then cprof:enable() else (),
-     rxq:mux(xdmp:get-request-field("produces",$rxq:default-content-type),
-     xdmp:get-request-field("consumes",$rxq:default-content-type),
-     fn:function-lookup(xs:QName(xdmp:get-request-field("f")),xs:integer(xdmp:get-request-field("arity","0"))),
-     xs:integer(xdmp:get-request-field("arity","0")) ),    
-     if($perf) then xdmp:xslt-eval($cprof:report-xsl, cprof:report()) else ()	   
-   )	   
-else if ($mode eq $rxq:_PASSTHRU_MODE) then rxq:passthru(xdmp:get-request-field("path"))
-else
-   rxq:handle-error()
+
+     rxq:mux(
+      xdmp:get-request-field("produces", $rxq:default-content-type),
+      xdmp:get-request-field("consumes", $rxq:default-content-type),
+      fn:function-lookup(xs:QName(xdmp:get-request-field("f")), xs:integer(xdmp:get-request-field("arity","0"))),
+      xs:integer(xdmp:get-request-field("arity", "0"))
+     ),
+
+     if($perf) then xdmp:xslt-eval($cprof:report-xsl, cprof:report()) else ()
+  )
+  else if ($mode eq $rxq:_PASSTHRU_MODE) then rxq:passthru(xdmp:get-request-field("path"))
+  else rxq:handle-error()
 
 
   

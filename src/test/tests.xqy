@@ -58,9 +58,6 @@ let $request :=
     <method>GET</method>
     <url>{$base-url}</url>
     {$admin-auth}
-    <expected>
-      <code>200</code>
-    </expected>
   </request>
 
 return
@@ -74,9 +71,6 @@ declare %test:case function test-http-get(){
       <method>GET</method>
       <url>{$base-url}/address/1</url>
       {$admin-auth}
-      <expected>
-        <code>200</code>
-      </expected>
     </request>
 
   let $expected :=
@@ -98,9 +92,6 @@ declare %test:case function test-http-delete()
       <method>DELETE</method>
       <url>{$base-url}/address/1</url>
       {$admin-auth}
-      <expected>
-        <code>200</code>
-      </expected>
     </request>
   let $actual := submit-request($request)
   return
@@ -114,9 +105,6 @@ declare %test:case function test-http-post()
       <method>POST</method>
       <url>{$base-url}/address/1</url>
       {$admin-auth}
-      <expected>
-        <code>200</code>
-      </expected>
     </request>
   let $actual := submit-request($request)
   return
@@ -131,9 +119,6 @@ declare %test:case function test-http-put()
       <method>PUT</method>
       <url>{$base-url}/address/1</url>
       {$admin-auth}
-      <expected>
-        <code>201</code>
-      </expected>
     </request>
 
   return
@@ -308,4 +293,33 @@ declare %test:case function test-rewriter()
   return assert:equal($actual[$i], $expected[$i], fn:string($i))
 };
 
+
+declare %test:case function url-not-matching-a-route-should-be-passed-through-to-main-module ()
+{
+  let $request :=
+    <request xmlns="xdmp:http" id="get1" description="">
+      <method>GET</method>
+       <url>{$base-url}/non-rxq-main-module.xqy</url>
+       {$admin-auth}
+    </request>
+
+  let $actual := submit-request($request)
+
+  return assert:equal($actual//http:code/fn:string(), "200", "http status code")
+};
+
+
+declare %test:case function url-not-matching-a-route-or-main-module-should-return-404 ()
+{
+  let $request :=
+    <request xmlns="xdmp:http" id="get1" description="">
+      <method>GET</method>
+       <url>{$base-url}/foo-bar.xqy</url>
+       {$admin-auth}
+    </request>
+
+  let $actual := submit-request($request)
+
+  return assert:equal($actual//http:code/fn:string(), "404", "http status code")
+};
 
