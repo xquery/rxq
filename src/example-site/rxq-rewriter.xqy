@@ -22,7 +22,7 @@ xquery version "1.0-ml";
  :)
 
 (:~ RXQ MarkLogic RESTXQ implementation :)
-import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/lib/rxq.xqy";
+import module namespace rxq="http://exquery.org/ns/restxq" at "/lib/rxq.xqy";
 
 (:~ cprof - Michael Blakely excellent profiling tool :)
 import module namespace cprof="com.blakeley.cprof" at "/lib/cprof.xqy";
@@ -34,9 +34,9 @@ import module namespace cprof="com.blakeley.cprof" at "/lib/cprof.xqy";
  :)
 
 (:~ STEP1 - import modules that contain annotation (controllers) here :)
-import module namespace ex1="﻿http://example.org/ex1" at "/modules/ex1.xqy";
-(: import module namespace ex2="﻿http://example.org/ex2" at "/modules/ex2.xqy"; :)
-import module namespace address="﻿http://example.org/address" at "/lib/address.xqy";
+import module namespace ex1="http://example.org/ex1" at "/modules/ex1.xqy";
+(: import module namespace ex2="http://example.org/ex2" at "/modules/ex2.xqy"; :)
+import module namespace address="http://example.org/address" at "/lib/address.xqy";
 
 (: define non-restxq REST requests, example illustrates passthru mode :)
 declare namespace rest = "http://marklogic.com/appservices/rest";

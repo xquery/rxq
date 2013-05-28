@@ -136,8 +136,8 @@ declare function run-module(
   }
   catch($ex) {
     switch ($ex/error:code)
-      case "XDMP-IMPMODNS" return () (: ignore - module not in test namespace :)
-      case "XDMP-IMPORTMOD" return () (: ignore - main module :)
+      case "xXDMP-IMPMODNS" return () (: ignore - module not in test namespace :)
+      case "xXDMP-IMPORTMOD" return () (: ignore - main module :)
       default return $ex (: return all other errors :)
   }
 };

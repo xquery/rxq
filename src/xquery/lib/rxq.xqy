@@ -21,7 +21,7 @@ xquery version "1.0-ml";
  :
  :)
  
-module namespace rxq="﻿http://exquery.org/ns/restxq";
+module namespace rxq="http://exquery.org/ns/restxq";
 
 (:~ RXQ- MarkLogic RESTXQ implementation
  :

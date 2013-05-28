@@ -22,7 +22,7 @@ xquery version "1.0-ml";
  :)
 
 (:~ RXQ MarkLogic RESTXQ implementation :)
-import module namespace rxq="﻿http://exquery.org/ns/restxq" at "/lib/rxq.xqy";
+import module namespace rxq="http://exquery.org/ns/restxq" at "/lib/rxq.xqy";
 
 
 (:~ STEP1 - import modules that contain annotation (controllers) here :)
