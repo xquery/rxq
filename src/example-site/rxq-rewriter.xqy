@@ -65,7 +65,7 @@ return
      rxq:mux(
       xdmp:get-request-field("produces", $rxq:default-content-type),
       xdmp:get-request-field("consumes", $rxq:default-content-type),
-      fn:function-lookup(xs:QName(xdmp:get-request-field("f")), xs:integer(xdmp:get-request-field("arity","0"))),
+      fn:function-lookup(fn:QName(xdmp:get-request-field("f-ns"), xdmp:get-request-field("f-name")), xs:integer(xdmp:get-request-field("arity","0"))),
       xs:integer(xdmp:get-request-field("arity", "0"))
      ),
 

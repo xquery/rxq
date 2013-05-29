@@ -174,8 +174,18 @@ declare %test:case function test-rewriter()
 
   let $expected :=
     <options xmlns="http://marklogic.com/appservices/rest">
-      <request uri="^/ex2/a/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
-        <uri-param name="f">ex2:a</uri-param>
+      <request uri="^/without-ns-prefix$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
+        <uri-param name="f-ns">http://example.org/ex1</uri-param>
+        <uri-param name="f-name">without-ns-prefix</uri-param>
+        <uri-param name="produces">text/plain</uri-param>
+        <uri-param name="consumes"></uri-param>
+        <uri-param name="arity">0</uri-param>
+        <uri-param name="content-type">text/plain</uri-param>
+        <http method="GET" user-params="allow"></http>
+      </request>
+      <request uri="^/ex2/a/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
+        <uri-param name="f-ns">http://example.org/ex2</uri-param>
+        <uri-param name="f-name">a</uri-param>
         <uri-param name="produces">text/html</uri-param>
         <uri-param name="consumes"></uri-param>
         <uri-param name="arity">1</uri-param>
@@ -183,8 +193,9 @@ declare %test:case function test-rewriter()
         <uri-param name="content-type">text/html</uri-param>
         <http method="GET" user-params="allow"></http>
       </request>
-      <request uri="^/ex2/a$" endpoint="/rxq-rewriter.xqy?mode=mux">
-        <uri-param name="f">ex2:b</uri-param>
+      <request uri="^/ex2/a$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
+        <uri-param name="f-ns">http://example.org/ex2</uri-param>
+        <uri-param name="f-name">b</uri-param>
         <uri-param name="produces">text/html</uri-param>
         <uri-param name="consumes"></uri-param>
         <uri-param name="arity">1</uri-param>
@@ -192,8 +203,9 @@ declare %test:case function test-rewriter()
         <uri-param name="content-type">text/html</uri-param>
         <http method="GET" user-params="allow"></http>
       </request>
-      <request uri="^/ex1/c/(.*)/(.*)/(\d1)$" endpoint="/rxq-rewriter.xqy?mode=mux">
-        <uri-param name="f">ex1:regex-example2</uri-param>
+      <request uri="^/ex1/c/(.*)/(.*)/(\d1)$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
+        <uri-param name="f-ns">http://example.org/ex1</uri-param>
+        <uri-param name="f-name">regex-example2</uri-param>
         <uri-param name="produces">text/html</uri-param>
         <uri-param name="consumes"></uri-param>
         <uri-param name="arity">3</uri-param>
@@ -203,8 +215,9 @@ declare %test:case function test-rewriter()
         <uri-param name="content-type">text/html</uri-param>
         <http method="GET" user-params="allow"></http>
       </request>
-      <request uri="^/ex1/c/(.*)/(.*)/$" endpoint="/rxq-rewriter.xqy?mode=mux">
-        <uri-param name="f">ex1:regex-example</uri-param>
+      <request uri="^/ex1/c/(.*)/(.*)/$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
+        <uri-param name="f-ns">http://example.org/ex1</uri-param>
+        <uri-param name="f-name">regex-example</uri-param>
         <uri-param name="produces">text/html</uri-param>
         <uri-param name="consumes"></uri-param>
         <uri-param name="arity">2</uri-param>
@@ -213,8 +226,9 @@ declare %test:case function test-rewriter()
         <uri-param name="content-type">text/html</uri-param>
         <http method="GET" user-params="allow"></http>
       </request>
-      <request uri="^/ex1/a/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
-        <uri-param name="f">ex1:a</uri-param>
+      <request uri="^/ex1/a/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
+        <uri-param name="f-ns">http://example.org/ex1</uri-param>
+        <uri-param name="f-name">a</uri-param>
         <uri-param name="produces">text/html</uri-param>
         <uri-param name="consumes"></uri-param>
         <uri-param name="arity">1</uri-param>
@@ -222,8 +236,9 @@ declare %test:case function test-rewriter()
         <uri-param name="content-type">text/html</uri-param>
         <http method="GET" user-params="allow"></http>
       </request>
-      <request uri="^/ex1/a/$" endpoint="/rxq-rewriter.xqy?mode=mux">
-        <uri-param name="f">ex1:b</uri-param>
+      <request uri="^/ex1/a/$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
+        <uri-param name="f-ns">http://example.org/ex1</uri-param>
+        <uri-param name="f-name">b</uri-param>
         <uri-param name="produces">text/html</uri-param>
         <uri-param name="consumes"></uri-param>
         <uri-param name="arity">1</uri-param>
@@ -231,8 +246,9 @@ declare %test:case function test-rewriter()
         <uri-param name="content-type">text/html</uri-param>
         <http method="GET" user-params="allow"></http>
       </request>
-      <request uri="^/address/all$" endpoint="/rxq-rewriter.xqy?mode=mux">
-        <uri-param name="f">address:all-addresses</uri-param>
+      <request uri="^/address/all$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
+        <uri-param name="f-ns">http://example.org/address</uri-param>
+        <uri-param name="f-name">all-addresses</uri-param>
         <uri-param name="produces">text/xml</uri-param>
         <uri-param name="consumes"></uri-param>
         <uri-param name="arity">1</uri-param>
@@ -240,8 +256,9 @@ declare %test:case function test-rewriter()
         <uri-param name="content-type">text/xml</uri-param>
         <http method="GET" user-params="allow"></http>
       </request>
-      <request uri="^/address/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
-        <uri-param name="f">address:get-address</uri-param>
+      <request uri="^/address/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
+        <uri-param name="f-ns">http://example.org/address</uri-param>
+        <uri-param name="f-name">get-address</uri-param>
         <uri-param name="produces">text/xml</uri-param>
         <uri-param name="consumes"></uri-param>
         <uri-param name="arity">1</uri-param>
@@ -249,17 +266,19 @@ declare %test:case function test-rewriter()
         <uri-param name="content-type">text/xml</uri-param>
         <http method="GET" user-params="allow"></http>
       </request>
-      <request uri="^/address/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
-        <uri-param name="f">address:remove-address</uri-param>
+      <request uri="^/address/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
+        <uri-param name="f-ns">http://example.org/address</uri-param>
+        <uri-param name="f-name">remove-address</uri-param>
         <uri-param name="produces">text/xml</uri-param>
         <uri-param name="consumes"></uri-param>
         <uri-param name="arity">1</uri-param>
         <uri-param name="var1">$1</uri-param>
         <uri-param name="content-type">text/xml</uri-param>
         <http method="DELETE"></http>
-       </request>
-       <request uri="^/address/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
-        <uri-param name="f">address:insert-address</uri-param>
+      </request>
+      <request uri="^/address/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
+        <uri-param name="f-ns">http://example.org/address</uri-param>
+        <uri-param name="f-name">insert-address</uri-param>
         <uri-param name="produces">text/xml</uri-param>
         <uri-param name="consumes"></uri-param>
         <uri-param name="arity">1</uri-param>
@@ -267,17 +286,9 @@ declare %test:case function test-rewriter()
         <uri-param name="content-type">text/xml</uri-param>
         <http method="PUT" user-params="allow"></http>
       </request>
-      <request uri="^/address/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux">
-        <uri-param name="f">address:change-address</uri-param>
-        <uri-param name="produces">*/*</uri-param>
-        <uri-param name="consumes"></uri-param>
-        <uri-param name="arity">1</uri-param>
-        <uri-param name="var1">$1</uri-param>
-        <uri-param name="content-type">*/*</uri-param>
-        <http method="POST" user-params="allow"></http>
-      </request>
-      <request uri="^/$" endpoint="/rxq-rewriter.xqy?mode=mux">
-        <uri-param name="f">ex1:entry-point</uri-param>
+      <request uri="^/$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
+        <uri-param name="f-ns">http://example.org/ex1</uri-param>
+        <uri-param name="f-name">entry-point</uri-param>
         <uri-param name="produces">text/html</uri-param>
         <uri-param name="consumes"></uri-param>
         <uri-param name="arity">0</uri-param>
@@ -323,3 +334,26 @@ declare %test:case function url-not-matching-a-route-or-main-module-should-retur
   return assert:equal($actual//http:code/fn:string(), "404", "http status code")
 };
 
+
+declare %test:case function should-handle-functions-declared-without-namespace-prefix ()
+{
+let $request :=
+    <request xmlns="xdmp:http" id="get1" description="">
+      <method>GET</method>
+       <url>{$base-url}/without-ns-prefix</url>
+       {$admin-auth}
+    </request>
+
+  let $actual := submit-request($request)
+  let $actual-status-code := $actual//http:code/fn:string()
+  let $actual-body := $actual[2]/fn:string()
+
+  let $expected-status-code := "200"
+  let $expected-body := "foo"
+
+  return (
+    assert:equal($actual-body, $expected-body, "body"),
+    assert:equal($actual-status-code, $expected-status-code, "http status code")
+  )
+
+};

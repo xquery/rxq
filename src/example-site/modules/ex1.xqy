@@ -164,3 +164,13 @@ declare function ex1:footer(){
   <div style="font-size:85%;float:right;">{fn:current-dateTime()} | <a href="https://github.com/xquery/rxq">RXQ github</a></div>
   )
 };
+
+
+(:~ example of a function declared without the namespace prefix :)
+declare
+  %rxq:produces('text/plain')
+  %rxq:GET
+  %rxq:path('/without-ns-prefix')
+function without-ns-prefix(){
+  "foo"
+};
