@@ -1,8 +1,8 @@
 xquery version "1.0-ml";
 
-module namespace ex1="﻿http://example.org/ex1";
+module namespace ex1="http://example.org/ex1";
 
-import module namespace rxq="﻿http://exquery.org/ns/restxq" at "../lib/rxq.xqy";
+import module namespace rxq="http://exquery.org/ns/restxq" at "../lib/rxq.xqy";
 
 (:~ example of using 2 regex capture groups :)
 declare
@@ -163,4 +163,14 @@ declare function ex1:footer(){
   <hr/>,
   <div style="font-size:85%;float:right;">{fn:current-dateTime()} | <a href="https://github.com/xquery/rxq">RXQ github</a></div>
   )
+};
+
+
+(:~ example of a function declared without the namespace prefix :)
+declare
+  %rxq:produces('text/plain')
+  %rxq:GET
+  %rxq:path('/without-ns-prefix')
+function without-ns-prefix(){
+  "foo"
 };
