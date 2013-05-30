@@ -21,7 +21,7 @@ xquery version "1.0-ml";
  :
  :)
  
-module namespace rxq="﻿http://exquery.org/ns/restxq";
+module namespace rxq="http://exquery.org/ns/restxq";
 
 (:~ RXQ- MarkLogic RESTXQ implementation
  :
@@ -75,12 +75,15 @@ declare function rxq:rewrite-options(
   for $f in xdmp:functions()[fn:not(fn:prefix-from-QName(fn:function-name(.)) = $exclude-prefixes)]
   order by xdmp:annotation($f,xs:QName('rxq:path')) descending
   return
-  let $name as xs:string := fn:string(fn:function-name($f))
+  let $qname := fn:function-name($f)
+  let $ns := fn:namespace-uri-from-QName($qname)
+  let $local-name := fn:local-name-from-QName($qname)
   let $arity as xs:integer := (fn:function-arity($f),0)[1]
   return
     if(xdmp:annotation($f,xs:QName('rxq:path'))) then
     <request uri="^{xdmp:annotation($f,xs:QName('rxq:path'))}$" endpoint="{$rxq:default-endpoint}">
-      <uri-param name="f">{$name}</uri-param>
+      <uri-param name="f-ns">{$ns}</uri-param>
+      <uri-param name="f-name">{$local-name}</uri-param>
       <uri-param name="produces">{xdmp:annotation($f,xs:QName('rxq:produces'))}</uri-param>
       <uri-param name="consumes">{xdmp:annotation($f,xs:QName('rxq:consumes'))}</uri-param>
       <uri-param name="arity">{$arity}</uri-param>

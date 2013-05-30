@@ -1,8 +1,8 @@
 xquery version "1.0-ml";
 
-module namespace ex2="﻿http://example.org/ex2";
+module namespace ex2="http://example.org/ex2";
 
-declare namespace rxq="﻿http://exquery.org/ns/restxq";
+declare namespace rxq="http://exquery.org/ns/restxq";
 
 declare
  %rxq:produces('text/html')
