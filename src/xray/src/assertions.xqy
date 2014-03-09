@@ -3,6 +3,11 @@ xquery version "1.0-ml";
 module namespace assert="http://github.com/robwhitby/xray/assertions";
 import module namespace xray = "http://github.com/robwhitby/xray" at "xray.xqy";
 
+import module namespace sch = "http://marklogic.com/validate"
+  at "/MarkLogic/appservices/utils/validate.xqy";
+
+declare namespace svrl="http://purl.oclc.org/dsdl/svrl";
+declare namespace s="http://purl.oclc.org/dsdl/schematron";
 
 declare function assert:equal(
   $actual as item()*,
@@ -131,6 +136,26 @@ declare function assert:false(
   return xray:assert-response("false", $status, $actual, "false", $message)
 };
 
+declare function assert:schema-validate(
+    $message as xs:string,
+    $node as item()*
+)
+{
+    let $result := try { validate { $node } }
+        catch ($e) { <FAIL test="{$message}">{$e}</FAIL> }
+    return if (fn:local-name($result) eq 'FAIL')
+           then $result
+           else ()
+};
+
+declare function assert:schematron-validate(
+    $message as xs:string,
+    $schema as item(),
+    $xml as item()*
+)
+{
+    sch:schematron(document{$xml}, $schema, <FAIL/>, <report/>)
+};    
 
 declare private function deep-equal(
   $a as item()*,
@@ -141,3 +166,5 @@ declare private function deep-equal(
   then fn:deep-equal(<q>{$a}</q>, <q>{$b}</q>)
   else fn:deep-equal($a, $b)
 };
+
+

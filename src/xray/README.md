@@ -12,7 +12,7 @@ declare %test:case function string-equality-example ()
 };
 ```
 
-**xray** can output test results as HTML, XML, xUnit compatible XML, and plain text, so it should be simple to integrate with your favourite build/ci server.
+**xray** can output test results as HTML, XML, xUnit compatible XML, JSON, and plain text, so it should be simple to integrate with your favourite build/ci server.
 
 ## Getting Started
 * Clone/copy/symlink xray into the root directory of your project e.g.<br/>
@@ -55,7 +55,7 @@ declare %test:case function multiple-assert-example ()
 declare %test:ignore function ignored-test-example ()
 {
   let $foo := some-module:not-implemented-yet()
-  return fn:equal($foo, <foo/>)
+  return assert:equal($foo, <foo/>)
 }
 ```
 

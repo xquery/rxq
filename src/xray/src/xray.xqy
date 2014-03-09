@@ -3,6 +3,11 @@ xquery version "1.0-ml";
 module namespace xray = "http://github.com/robwhitby/xray";
 declare namespace test = "http://github.com/robwhitby/xray/test";
 import module namespace modules = "http://github.com/robwhitby/xray/modules" at "modules.xqy";
+import module namespace sch = "http://marklogic.com/validate" at "/MarkLogic/appservices/utils/validate.xqy";
+
+declare namespace svrl="http://purl.oclc.org/dsdl/svrl";
+declare namespace s="http://purl.oclc.org/dsdl/schematron";
+
 declare default element namespace "http://github.com/robwhitby/xray";
 
 declare variable $XRAY-VERSION := "2.0";
@@ -55,9 +60,10 @@ declare function run-test(
   $path as xs:string
 ) as element(test)
 {
-  let $start-time as xs:dayTimeDuration := xdmp:elapsed-time()
   let $ignore := has-test-annotation($fn, "ignore")
-  let $test := if ($ignore) then () else xray:apply($fn, $path)
+  let $map := if ($ignore) then () else xray:apply($fn, $path)
+  let $test := map:get($map, "results")
+  let $time := map:get($map, "time")
   return element test {
     attribute name { fn-local-name($fn) },
     attribute result {
@@ -66,7 +72,7 @@ declare function run-test(
       else if ($test//descendant-or-self::assert[@result="failed"]) then "failed"
       else "passed"
     },
-    attribute time { xdmp:elapsed-time() - $start-time },
+    attribute time { ($time, "PT0S")[1] },
     $test
   }
 };
@@ -110,7 +116,16 @@ declare private function apply(
     xdmp:eval('
       xquery version "1.0-ml";
       import module namespace test = "http://github.com/robwhitby/xray/test" at "' || $path || '";
-      test:' || fn-local-name($fn) || '()
+
+      let $start := xdmp:elapsed-time()
+      let $results := try { test:' || fn-local-name($fn) || '() } catch($err) { $err }
+      let $duration := xdmp:elapsed-time() - $start
+      let $map := map:map()
+      let $_ := (
+        map:put($map, "results", $results),
+        map:put($map, "time", $duration)
+      )
+      return $map
     ')
   }
   catch * { $err:additional }
@@ -136,8 +151,8 @@ declare function run-module(
   }
   catch($ex) {
     switch ($ex/error:code)
-      case "xXDMP-IMPMODNS" return () (: ignore - module not in test namespace :)
-      case "xXDMP-IMPORTMOD" return () (: ignore - main module :)
+      case "XDMP-IMPMODNS" return () (: ignore - module not in test namespace :)
+      case "XDMP-IMPORTMOD" return () (: ignore - main module :)
       default return $ex (: return all other errors :)
   }
 };
@@ -148,13 +163,18 @@ declare function run-module-tests(
   $test-pattern as xs:string
 ) as element()*
 {
-  let $fns := xdmp:functions()[
-    has-test-annotation(., ("case", "ignore", "setup", "teardown")) and fn:matches(fn-local-name(.), $test-pattern)
-  ]
+  let $fns :=
+    for $f in xdmp:functions()
+    let $name := fn-local-name($f)
+    where 
+      has-test-annotation($f, ("setup", "teardown")) or 
+      has-test-annotation($f, ("case", "ignore")) and fn:matches($name, $test-pattern)
+    order by $name
+    return $f
   return (
-    apply($fns[has-test-annotation(., "setup")], $path),
+    map:get(apply($fns[has-test-annotation(., "setup")], $path), "results"),
     run-test($fns[has-test-annotation(., "case") or has-test-annotation(., "ignore")], $path),
-    apply($fns[has-test-annotation(., "teardown")], $path)
+    map:get(apply($fns[has-test-annotation(., "teardown")], $path), "results")
   )
 };
 
@@ -184,6 +204,7 @@ declare private function transform(
 ) as document-node()
 {
   if ($format eq "text") then xdmp:set-response-content-type("text/plain") else (),
+  if ($format eq "json") then xdmp:set-response-content-type("application/json") else (),
   if ($format ne "xml")
   then
     let $params := map:map()
