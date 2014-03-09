@@ -49,7 +49,7 @@ All the following code examples are included in the example application.
 
 The following xquery module illustrates how to annotate your modules functions using RESTXQ, which in turn will map them to a URL so they can be invoked via an HTTP Request. 
 
-```
+```xquery
 xquery version "1.0-ml";
 module namespace addr="﻿http://example.org/address";
 declare namespace rxq="﻿http://exquery.org/ns/restxq";
@@ -93,7 +93,7 @@ This allows the RXQ implementation to scan for annotated functions and generate 
 
 Lastly, you can augment RESTXQ annotations with regular MarkLogic REST requests. The example below illustrates how to define a 'passthru' url, which will resources as a normal web server.
 
-```
+```xquery
 (: define non-restxq REST requests, example illustrates passthru mode :)
 declare namespace rest = "http://marklogic.com/appservices/rest";
 declare variable $default-requests as element(rest:request)* := (
@@ -107,7 +107,7 @@ Please review the [src/example-simple/rxq-rewriter.xqy](https://github.com/xquer
 
 To continue with our address example, lets add a function which inserts an address.
 
-```
+```xquery
 declare 
    %rxq:PUT
    %rxq:path('/address/id/(.*)')
@@ -121,7 +121,7 @@ we are not interested in the actual implementation details of inserting the addr
 
 Lastly, if we wanted to remove an address we need to support the HTTP DELETE method.
 
-```
+```xquery
 declare 
    %rxq:DELETE
    %rxq:path('/address/id/(.*)')
