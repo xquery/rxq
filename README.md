@@ -84,7 +84,7 @@ RXQ supports four RESTXQ annotations at this time;
 
 When you deploy these modules in a MarkLogic appserver you must then import those modules into the rxq-rewriter.xqy. for example if you wanted to use the addr:get-address() function, you would import the module in the rxq-rewriter.xqy 
 
-```
+```xquery
 (:~ STEP1 - import modules that contain annotation (controllers) here :)
 import module namespace addr="﻿http://example.org/addr at "modules/addr.xqy";
 ```
