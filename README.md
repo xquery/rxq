@@ -10,7 +10,7 @@ RESTXQ is based on the annotations defined within [JSR-311](http://download.orac
 
 To understand what RESTXQ is and how it works with XQuery 3.0 annotations please [download](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf) Adam Retter's excellent overview.
 
-# For the Impatient (set up example application)
+## For the Impatient (set up example application)
 
 MarkLogic 6.0-3 is reccomended version for use with RXQ.
 
@@ -24,7 +24,7 @@ First, you *need* to download and install [MarkLogic 6](https://developer.marklo
 
 With everything setup, you can now point your web browser to the created app (e.g. http://<host>:<port>/) and you should see html page.
 
-# Distribution
+## Distribution
 
 * [README.md](https://github.com/xquery/rxq) - This document
 * [api](https://github.com/xquery/rxq/tree/master/api) - contains api level docs of RXQ rewriter and module library
@@ -34,7 +34,7 @@ With everything setup, you can now point your web browser to the created app (e.
 * src/xray - RXQ uses Rob Whitby's excellent [XRAY](https://github.com/robwhitby/xray) for xquery unit testing
 * [src/tests](https://github.com/xquery/rxq/tree/master/src/test) - used for testing
 
-# RXQ in action
+## RXQ in action
 
 To use RXQ in your own application emulate how the example-simple is structured. 
 
@@ -134,7 +134,7 @@ This function could return some kind of success or failure text/html.
 
 It is the responsibility of your modules to return the correct HTTP status codes and the address library module provides some guidance of how to do this.
 
-# Other functions
+## Other functions
 
 These helper functions can be useful to introspect the current RXQ enviroment.
 
@@ -142,7 +142,7 @@ _rxq:resource-functions()_ - returns all functions with RESTXQ annotations and t
 
 _rxq:raw-params() as map:map_ - returns all in scope url params.
 
-# FAQ
+## FAQ
 
 https://github.com/xquery/rxq/wiki#FAQ
 
@@ -158,7 +158,7 @@ The RESTXQ spec is still in draft form; where things are currently unclear or in
  * added some more metadata to the output of `rxq:resource-function()` 
  * 2 separate files e.g. at some point would like to merge rxq-rewriter.xqy into the rxq library module itself
 
-# License
+## License
 
 RXQ is released under Apache License v2.0
 
@@ -170,7 +170,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions.
 
-# More Info
+## More Info
 
 * RXQ github [repository](https://github.com/xquery/rxq).
 * [EXQuery RESTXQ Draft Specification](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation).
