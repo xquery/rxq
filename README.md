@@ -3,7 +3,7 @@
 The release of [MarkLogic 6](http://www.marklogic.com) includes support for many cool [XQuery 3.0](http://www.w3.org/TR/xquery-30) features. 
 One such feature, [annotations](http://www.w3.org/TR/xquery-30/#id-annotations), provides an opportunity to implement Adam Retter's [RESTXQ](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation) draft (introduced at [XML Prague 2012](http://archive.xmlprague.cz/2012/sessions.html#RESTful-XQuery---Standardised-XQuery-3.0-Annotations-for-REST)).
 
-RESTXQ proposes an elegant approach for building RESTFul interfaces, in addition to full blown web applications using XQuery within a consistent MVC architecture.
+RESTXQ is an elegant approach for costructing RESTFul interfaces, in addition, to full blown web applications using XQuery within a consistent MVC architecture.
 
 RESTXQ is based on the annotations defined within [JSR-311](http://download.oracle.com/otndocs/jcp/jaxrs-1.0-fr-eval-oth-JSpec).
 
@@ -13,11 +13,11 @@ To understand what RESTXQ is and how it works with XQuery 3.0 annotations please
 
 MarkLogic 6.0-3 is reccomended version for use with RXQ.
 
-The quickest way to see RXQ in action is to setup the example application under [src/example-site](https://github.com/xquery/rxq/tree/master/src/example-site).
+The quickest way to see RXQ in action is to setup the example application under [src/simple-example](https://github.com/xquery/rxq/tree/master/src/example-simple).
 
 First, you *need* to download and install [MarkLogic 6](https://developer.marklogic.com/products). Second, create an appserver, providing the following details;
 
-* _root_: provide directory where example-site resides on your filesystem
+* _root_: provide directory where example-simple resides on your filesystem
 * _error handler_: `/rxq-rewriter.xqy?mode=error`
 * _rewrite handler_: `/rxq-rewriter.xqy?mode=rewrite`
 
@@ -27,21 +27,22 @@ With everything setup, you can now point your web browser to the created app (e.
 
 * [README.md](https://github.com/xquery/rxq) - This document
 * [api](https://github.com/xquery/rxq/tree/master/api) - contains api level docs of RXQ rewriter and module library
-* [src/example-site](https://github.com/xquery/rxq/tree/master/src/example-site) - contains example site which demonstrates how to use RXQ
+* [src/example-simple](https://github.com/xquery/rxq/tree/master/src/example-simple) - contains example site which demonstrates how to use RXQ
+*  [src/dashML](https://github.com/xquery/rxq/tree/master/src/dashML) - non trivial application (dashboard metrics) using RXQ.
 * [src/xquery](https://github.com/xquery/rxq/tree/master/src/xquery) - contains clean rxq-rewriter.xqy and lib/rxq.xqy you can use in your own projects
 * src/xray - RXQ uses Rob Whitby's excellent [XRAY](https://github.com/robwhitby/xray) for xquery unit testing
 * [src/tests](https://github.com/xquery/rxq/tree/master/src/test) - used for testing
 
 # RXQ in action
 
-To use RXQ in your own application emulate how the example-site is structured. 
+To use RXQ in your own application emulate how the example-simple is structured. 
 
-To start basically you need these files in your project.
+Essentially, you need these files in your project.
 
-* rxq-rewriter.xqy - simple rewriter and entry point for defining which modules you want to import
+* rxq-rewriter.xqy - simple rewriter and entry point where you import modules which include RESTXQ annotations
 * lib/rxq.xqy - the RXQ library 
 
-Then you will need setup a MarkLogic appserver (follow example site instructions), edit rxq-rewriter.xqy, importing the library modules containing your RESTXQ annotations.
+Then you will need setup a MarkLogic appserver (follow example simple instructions), edit rxq-rewriter.xqy to import the library modules containing your RESTXQ annotations.
 
 All the following code examples are included in the example application.
 
@@ -101,7 +102,7 @@ declare variable $default-requests as element(rest:request)* := (
     </request>);
 ```    
 
-Please review the [src/example-site/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/example-site/rxq-rewriter.xqy) to see how to setup your own. Note that the example-site also has a facility for profiling (enable $perf to fn:true).
+Please review the [src/example-simple/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/example-site/rxq-rewriter.xqy) to see how to setup your own. Note that the example-simple also has a facility for profiling (enable $perf to fn:true).
 
 To continue with our address example, lets add a function which inserts an address.
 
