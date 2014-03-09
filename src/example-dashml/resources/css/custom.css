@@ -1,0 +1,151 @@
+body {
+background:#FFF;
+}
+
+
+.make-live{
+    color:#fff;
+    float:right;
+    padding:5px;
+}
+
+.units{
+    padding:4px;
+    font-size:50%;
+    color:#ddd
+}
+
+.maxminavg{
+    padding:2px;
+    color:#eee;
+}
+
+span.small {
+    line-height:90%
+}
+
+.category {
+     border-style:solid;
+    float:left;
+    font-size:80%;
+    margin-left:4px;
+    color:gray;
+    background:white;
+}
+
+.resource {
+    float:right;
+    font-size:80%;
+    margin:0px;
+    padding-right:4px;
+    color:#eee
+}
+
+.resource a:link {color:#dddddd;}      /* unvisited link */
+.resource a:visited {color:#dddddd;}  /* visited link */
+.resource a:hover {color:#dddddd;}  /* mouse over link */
+.resource a:active {color:#dddddd;}  /* selected link */
+
+.xml {
+    padding:2px;
+    color:#fff;
+}
+
+.xml a:link {color:#dddddd;}      /* unvisited link */
+.xml a:visited {color:#dddddd;}  /* visited link */
+.xml a:hover {color:#dddddd;}  /* mouse over link */
+.xml a:active {color:#dddddd;}  /* selected link */
+
+iframe{
+    width:100%;
+    height:100%;
+    border:0px;
+    background:#ddd;
+}
+
+.builder-div {
+    width:40%;
+    margin-left:5px;
+}
+
+.render-div {
+    padding-left:10px;
+    width:55%;
+}
+
+.splash {
+    margin: 2em auto 0;
+    padding: 3em 0.5em;
+    background: #eee;
+}
+
+.splash .splash-head {
+    font-size: 300%;
+    margin: 0em 0;
+    line-height: 1.2em;
+}
+
+.splash .splash-subhead {
+    color: #999;
+    font-weight: 300;
+    line-height: 1.4em;
+}
+
+.splash .primary-button {
+    font-size: 150%;
+}
+
+.content .content-subhead {
+    color: #999;
+    padding-bottom: 0.3em;
+    text-transform: uppercase;
+    margin: 0;
+    border-bottom: 2px solid #eee;
+    display: inline-block;
+}
+
+.content .content-ribbon {
+    margin: 3em;
+    border-bottom: 1px solid #eee;
+}
+
+.ribbon {
+    background: #eee;
+    text-align: center;
+    padding: 2em;
+    color: #999;
+}
+.ribbon h2 {
+    display: inline;
+    font-weight: normal;
+}
+
+body .primary-button {
+    background: #02a6eb;
+    color: #fff;
+}
+
+.log-table {
+    min-width:50px;
+    }
+
+.log-display {
+    background:#fff;
+    overflow:auto;
+    max-height:280px;
+    min-width:50px;
+    color:black;
+    }
+
+.dashboard-metric-log {
+    text-transform: uppercase;
+    font-size: 2.5em;
+    line-height: 1;
+    margin-top:5px;
+    margin-bottom:0px;
+}
+
+.red{
+color:#E73F3F;
+ }
+
