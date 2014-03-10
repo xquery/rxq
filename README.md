@@ -1,4 +1,4 @@
-# RXQ v1.0 - MVC RESTful MarkLogic apps 
+# RXQ v1.0 - RESTXQ MVC RESTful  
 ## Overview
 
 [MarkLogic 6 and 7](http://www.marklogic.com) includes support for annotations [XQuery 3.0](http://www.w3.org/TR/xquery-30). 
