@@ -2,7 +2,7 @@ xquery version "1.0-ml";
 
 module namespace address="http://example.org/address";
        
-declare namespace rxq="﻿http://exquery.org/ns/restxq";
+declare namespace rxq="http://exquery.org/ns/restxq";
 
 declare variable $addresses := <addresses>
  <address id="1"><name>Gabriela</name><email>Gabriela@example.og</email></address>
