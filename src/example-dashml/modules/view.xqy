@@ -12,8 +12,8 @@ import module namespace dash-model = "https://github.com/dashML/model/dash"
   import module namespace history-model = "https://github.com/dashML/model/history"
   at "history-model.xqy";
 
-declare namespace rxq="﻿http://exquery.org/ns/restxq";
-declare namespace html="﻿http://www.w3.org/1999/xhtml";
+declare namespace rxq="http://exquery.org/ns/restxq";
+declare namespace html="http://www.w3.org/1999/xhtml";
 declare namespace meter="http://marklogic.com/manage/meters";
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
