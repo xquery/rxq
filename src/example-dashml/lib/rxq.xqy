@@ -38,11 +38,9 @@ declare namespace rxq-error="http://exquery.org/ns/restxq/error";
 (:~ declare constants:)
 declare variable $rxq:_REWRITE_MODE := "rewrite";
 declare variable $rxq:_MUX_MODE := "mux";
-declare variable $rxq:_PASSTHRU_MODE := "passthru";
 
 (:~ defines default evaluation endpoint :)
-declare variable $rxq:default-endpoint
-  as xs:string := "/rxq-rewriter.xqy?mode=" ||  $rxq:_MUX_MODE;
+declare variable $rxq:default-endpoint as xs:string := "/rxq-rewriter.xqy?mode=" ||  $rxq:_MUX_MODE;
 
 (:~ cache REST mapping to server-field :)
 declare variable $rxq:cache-flag as xs:boolean := fn:false();
@@ -65,6 +63,28 @@ declare option xdmp:mapping "false";
 
 declare option xdmp:update "true";
 
+
+declare function rxq:process-request(
+  $cache as xs:boolean
+)
+{
+  let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE)
+  let $arity := xs:integer(xdmp:get-request-field("arity", "0"))
+  return
+    if ($mode eq $rxq:_REWRITE_MODE)
+    then (rxq:rewrite($cache), xdmp:get-request-url())[1]
+    else if($mode eq $rxq:_MUX_MODE) then
+      rxq:mux(
+        xdmp:get-request-field("produces", $rxq:default-content-type),
+        xdmp:get-request-field("consumes", $rxq:default-content-type),
+        fn:function-lookup(fn:QName(xdmp:get-request-field("f-ns"), xdmp:get-request-field("f-name")), $arity),
+        $arity
+      )
+    else
+      rxq:handle-error()
+};
+
+
 (:~ rxq:rewrite-options - generate <rest:request/> based on restxq annotations
  :
  : @param $exclude-prefixes
@@ -72,58 +92,42 @@ declare option xdmp:update "true";
  : @return element(rest:options)
  :)
 declare function rxq:rewrite-options(
-  $default-requests,
   $exclude-prefixes as xs:string*
 ) as element(rest:options)
 {
- <options xmlns="http://marklogic.com/appservices/rest">
+  <options xmlns="http://marklogic.com/appservices/rest">
   {
-  for $f in xdmp:functions()
-      [fn:not(fn:prefix-from-QName(fn:function-name(.)) = $exclude-prefixes)]
+  for $f in xdmp:functions()[fn:not(fn:prefix-from-QName(fn:function-name(.)) = $exclude-prefixes)]
   order by xdmp:annotation($f,xs:QName('rxq:path')) descending
   return
-  let $qname := fn:function-name($f)
-  let $ns := fn:namespace-uri-from-QName($qname)
-  let $local-name := fn:local-name-from-QName($qname)
-  let $arity as xs:integer := (fn:function-arity($f),0)[1]
-  return
-    if(xdmp:annotation($f,xs:QName('rxq:path'))) then
-    <request uri="^{xdmp:annotation($f,xs:QName('rxq:path'))}$"
-      endpoint="{$rxq:default-endpoint}">
-      <uri-param name="f-ns">{$ns}</uri-param>
-      <uri-param name="f-name">{$local-name}</uri-param>
-      <uri-param name="produces">{xdmp:annotation($f,xs:QName('rxq:produces'))}</uri-param>
-      <uri-param name="consumes">{xdmp:annotation($f,xs:QName('rxq:consumes'))}</uri-param>
-      <uri-param name="arity">{$arity}</uri-param>
-      {if($arity eq 0) then
-        ()
-      else
-        for $var in 1 to $arity
-          return
-          <uri-param name="var{$var}">${$var}</uri-param>
-      }
-      <uri-param name="content-type">{xdmp:annotation($f,xs:QName('rxq:produces'))}</uri-param>
-      {if (xdmp:annotation($f,xs:QName('rxq:GET')))
-        then <http method="GET"  user-params="allow"/>
-        else ()}
-      {if (xdmp:annotation($f,xs:QName('rxq:POST')))
-        then <http method="POST" user-params="allow">
-             {for $field in xdmp:get-request-field-names()
-	         return <param name="{$field}" as="string" required="false"/>
-             }
-           </http>
-       else ()}
-      {if (xdmp:annotation($f,xs:QName('rxq:PUT')))
-        then <http method="PUT" user-params="allow"/>
-        else ()}
-      {if (xdmp:annotation($f,xs:QName('rxq:DELETE')))
-        then <http method="DELETE"/>
-        else ()}
-    </request>
-  else
-    ()
-    }
-   {$default-requests}
+    let $qname := fn:function-name($f)
+    let $ns := fn:namespace-uri-from-QName($qname)
+    let $local-name := fn:local-name-from-QName($qname)
+    let $arity as xs:integer := (fn:function-arity($f),0)[1]
+    return
+      if(xdmp:annotation($f,xs:QName('rxq:path'))) then
+        <request uri="^{xdmp:annotation($f,xs:QName('rxq:path'))}$"
+          endpoint="{$rxq:default-endpoint}">
+          <uri-param name="f-ns">{$ns}</uri-param>
+          <uri-param name="f-name">{$local-name}</uri-param>
+          <uri-param name="produces">{xdmp:annotation($f,xs:QName('rxq:produces'))}</uri-param>
+          <uri-param name="consumes">{xdmp:annotation($f,xs:QName('rxq:consumes'))}</uri-param>
+          <uri-param name="arity">{$arity}</uri-param>
+          { for $var in 1 to $arity return <uri-param name="var{$var}">${$var}</uri-param> }
+          <uri-param name="content-type">{xdmp:annotation($f,xs:QName('rxq:produces'))}</uri-param>
+          {
+            if (xdmp:annotation($f,xs:QName('rxq:GET'))) then <http method="GET"  user-params="allow"/> else (),
+            if (xdmp:annotation($f,xs:QName('rxq:POST'))) then
+              <http method="POST" user-params="allow">
+                { xdmp:get-request-field-names() ! <param name="{.}" as="string" required="false"/> }
+              </http>
+            else (),
+            if (xdmp:annotation($f,xs:QName('rxq:PUT'))) then <http method="PUT" user-params="allow"/> else (),
+            if (xdmp:annotation($f,xs:QName('rxq:DELETE'))) then <http method="DELETE"/> else ()
+          }
+        </request>
+      else ()
+  }
   </options>
  };
 
@@ -135,29 +139,24 @@ declare function rxq:rewrite-options(
  : @returns rewrite url
  :)
 declare function rxq:rewrite(
-   $default-requests,
-   $cache as xs:boolean
+  $cache as xs:boolean
 )
 {
-  try{
-    if($cache) then
-      if(xdmp:get-server-field($rxq:server-field)) then
-	rest:rewrite(xdmp:get-server-field($rxq:server-field))
+  try {
+    if ($cache) then
+      if (xdmp:get-server-field($rxq:server-field))
+      then rest:rewrite(xdmp:get-server-field($rxq:server-field))
       else
-	let $options as element(rest:options) :=
-        rxq:rewrite-options($default-requests,$rxq:exclude-prefixes)
-	let $_ := xdmp:set-server-field( $rxq:server-field, $options)
-	return
-	  rest:rewrite($options)
-   else
-	let $options as element(rest:options) :=
-        rxq:rewrite-options($default-requests, $rxq:exclude-prefixes)
-	return
-	  rest:rewrite($options)
+	     let $options as element(rest:options) := rxq:rewrite-options($rxq:exclude-prefixes)
+	     let $_ := xdmp:set-server-field($rxq:server-field, $options)
+	     return rest:rewrite($options)
+    else
+	   let $options as element(rest:options) := rxq:rewrite-options($rxq:exclude-prefixes)
+	   return rest:rewrite($options)
   }
-  catch($e){
-       rest:report-error($e)
-    }
+  catch($e) {
+    rest:report-error($e)
+  }
 };
 
 
@@ -249,42 +248,6 @@ declare function rxq:mux(
      }catch($e){
          rxq:handle-error($e)
      }
-};
-
-
-(:~ rxq:passthru - handles passthru requests
- :
- : @param path - path to resource
- :
- : @returns
- :)
-declare function rxq:passthru(
-  $path
-)
-{
-    xdmp:document-get( xdmp:modules-root() || $path,
-    <options xmlns="xdmp:document-get"
-                xmlns:http="xdmp:http">
-           <format>binary</format>
-       </options>)
-};
-
-
-(:~ rxq:uri - returns uri
- :
- : @returns URI
- :)
-declare function rxq:uri() as xs:anyURI{
-  xs:anyURI('http://www.example.org')
-};
-
-
-(:~ rxq:base-uri - returns base uri
- :
- : @returns URI
- :)
-declare function rxq:base-uri() as xs:anyURI{
-  xs:anyURI('http://www.example.org')
 };
 
 

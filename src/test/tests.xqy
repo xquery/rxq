@@ -126,18 +126,6 @@ declare %test:case function test-http-put()
 };
 
 
-declare %test:case function test-uri()
-{
-  assert:equal(rxq:uri(), xs:anyURI("http://www.example.org"))
-};
-
-
-declare %test:case function test-base-uri()
-{
-  assert:equal(rxq:base-uri(), xs:anyURI("http://www.example.org"))
-};
-
-
 declare %test:case function test-resource-functions()
 {
   let $result  := xdmp:eval('
@@ -155,7 +143,7 @@ declare %test:case function test-resource-functions()
 
 declare %test:case function test-rewrite-options()
 {
-  let $result := rxq:rewrite-options((), $rxq:exclude-prefixes)
+  let $result := rxq:rewrite-options($rxq:exclude-prefixes)
   return
     assert:equal($result, <options xmlns="http://marklogic.com/appservices/rest"></options>)
 };
@@ -169,7 +157,7 @@ declare %test:case function test-rewriter()
     import module namespace ex2="http://example.org/ex2" at "/example-simple/modules/ex2.xqy";
     import module namespace address="http://example.org/address" at "/example-simple/lib/address.xqy";
 
-    rxq:rewrite-options((), $rxq:exclude-prefixes)
+    rxq:rewrite-options($rxq:exclude-prefixes)
   ')
 
   let $expected :=
