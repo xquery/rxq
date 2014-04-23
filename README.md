@@ -13,17 +13,17 @@ To understand what RESTXQ is and how it works with XQuery 3.0 annotations please
 
 ## For the Impatient (set up example application)
 
-MarkLogic 6.0-3 and higher is reccomended version for use with RXQ.
+MarkLogic 6.0-3 and higher is required version for use with RXQ.
 
 The quickest way to see RXQ in action is to setup the example application under [src/example-simple](https://github.com/xquery/rxq/tree/master/src/example-simple).
 
-First, you *need* to download and install [MarkLogic 6](https://developer.marklogic.com/products). Second, create an appserver, providing the following details;
+First, you *need* to download and install [MarkLogic](https://developer.marklogic.com/products). Second, create an appserver, providing the following details;
 
 * _root_: provide directory where example-simple resides on your filesystem
 * _error handler_: `/rxq-rewriter.xqy?mode=error`
 * _rewrite handler_: `/rxq-rewriter.xqy?mode=rewrite`
 
-With everything setup, you can now point your web browser to the created app (e.g. http://<host>:<port>/) and you should see html page.
+You can now point your web browser to the created app (e.g. http://&lt;host&gt;:&lt;port&gt;/) and you should see an html page which is the example-simple application.
 
 ## Distribution
 
