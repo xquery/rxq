@@ -25,21 +25,21 @@ xquery version "1.0-ml";
 import module namespace rxq="http://exquery.org/ns/restxq" at "/lib/rxq.xqy";
 
 (:~ rewriter for RXQ.
- :  
+ :
  :  Import modules containing REST XQ annotations here
  :)
- 
- import module namespace ex1="http://example.org/ex1" 
+
+ import module namespace ex1="http://example.org/ex1"
     at "modules/ex1.xqy";
-    
-import module namespace ex2="http://example.org/ex2" 
+
+import module namespace ex2="http://example.org/ex2"
     at "modules/ex2.xqy" ;
 
-import module namespace address="http://example.org/address" 
+import module namespace address="http://example.org/address"
     at "lib/address.xqy";
-    
+
 (:
-    
+
 :)
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
@@ -69,17 +69,15 @@ let $cache := fn:false()
 let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE)
 return
  if ($mode eq $rxq:_REWRITE_MODE)
-     then rxq:rewrite($default-requests,$cache)
+     then (rxq:rewrite($default-requests,$cache), xdmp:get-request-url())[1]
      else if($mode eq $rxq:_MUX_MODE) then
      rxq:mux(
          xdmp:get-request-field("produces",$rxq:default-content-type),
          xdmp:get-request-field("consumes",$rxq:default-content-type),
-         fn:function-lookup(xs:QName(xdmp:get-request-field("f")),
-         xs:integer(xdmp:get-request-field("arity","0"))),
+         fn:function-lookup(fn:QName(xdmp:get-request-field("f-ns"), xdmp:get-request-field("f-name")), xs:integer(xdmp:get-request-field("arity","0"))),
          xs:integer(xdmp:get-request-field("arity","0"))
      )
      else if ($mode eq $rxq:_PASSTHRU_MODE)
          then rxq:passthru(xdmp:get-request-field("path"))
      else
-     ("test",
-         rxq:handle-error())
+         rxq:handle-error()

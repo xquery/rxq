@@ -20,7 +20,7 @@ xquery version "1.0-ml";
  : affiliated with the Apache Software Foundation.
  :
  :)
- 
+
 module namespace rxq="http://exquery.org/ns/restxq";
 
 (:~ RXQ- MarkLogic RESTXQ implementation
@@ -29,7 +29,7 @@ module namespace rxq="http://exquery.org/ns/restxq";
  :
  :)
 
-import module namespace rest = "http://marklogic.com/appservices/rest" 
+import module namespace rest = "http://marklogic.com/appservices/rest"
     at "/MarkLogic/appservices/utils/rest.xqy";
 
 declare namespace rxq-output="http://www.w3.org/2010/xslt-xquery-serialization";
@@ -66,13 +66,13 @@ declare option xdmp:mapping "false";
 declare option xdmp:update "true";
 
 (:~ rxq:rewrite-options - generate <rest:request/> based on restxq annotations
- : 
+ :
  : @param $exclude-prefixes
  :
  : @return element(rest:options)
- :)    
+ :)
 declare function rxq:rewrite-options(
-  $default-requests,  
+  $default-requests,
   $exclude-prefixes as xs:string*
 ) as element(rest:options)
 {
@@ -82,13 +82,16 @@ declare function rxq:rewrite-options(
       [fn:not(fn:prefix-from-QName(fn:function-name(.)) = $exclude-prefixes)]
   order by xdmp:annotation($f,xs:QName('rxq:path')) descending
   return
-  let $name as xs:string := fn:string(fn:function-name($f))
+  let $qname := fn:function-name($f)
+  let $ns := fn:namespace-uri-from-QName($qname)
+  let $local-name := fn:local-name-from-QName($qname)
   let $arity as xs:integer := (fn:function-arity($f),0)[1]
   return
     if(xdmp:annotation($f,xs:QName('rxq:path'))) then
     <request uri="^{xdmp:annotation($f,xs:QName('rxq:path'))}$"
       endpoint="{$rxq:default-endpoint}">
-      <uri-param name="f">{$name}</uri-param>
+      <uri-param name="f-ns">{$ns}</uri-param>
+      <uri-param name="f-name">{$local-name}</uri-param>
       <uri-param name="produces">{xdmp:annotation($f,xs:QName('rxq:produces'))}</uri-param>
       <uri-param name="consumes">{xdmp:annotation($f,xs:QName('rxq:consumes'))}</uri-param>
       <uri-param name="arity">{$arity}</uri-param>
@@ -99,7 +102,7 @@ declare function rxq:rewrite-options(
           return
           <uri-param name="var{$var}">${$var}</uri-param>
       }
-      <uri-param name="content-type">{xdmp:annotation($f,xs:QName('rxq:produces'))}</uri-param>  
+      <uri-param name="content-type">{xdmp:annotation($f,xs:QName('rxq:produces'))}</uri-param>
       {if (xdmp:annotation($f,xs:QName('rxq:GET')))
         then <http method="GET"  user-params="allow"/>
         else ()}
@@ -120,10 +123,10 @@ declare function rxq:rewrite-options(
   else
     ()
     }
-   {$default-requests} 
+   {$default-requests}
   </options>
  };
-  
+
 
 (:~ rxq:rewrite - creates rewritten URL string
  :
@@ -132,7 +135,7 @@ declare function rxq:rewrite-options(
  : @returns rewrite url
  :)
 declare function rxq:rewrite(
-   $default-requests, 
+   $default-requests,
    $cache as xs:boolean
 )
 {
@@ -158,15 +161,15 @@ declare function rxq:rewrite(
 };
 
 
-(:~ rxq:mux - function invoke 
+(:~ rxq:mux - function invoke
  :
  : @param $produces
  : @param $consumes
  : @param $function
- : @param $arity 
+ : @param $arity
  :
  : @returns result of function invokation
- :)    
+ :)
 declare function rxq:mux(
   $produces as xs:string,
   $consumes as xs:string,
@@ -239,13 +242,13 @@ declare function rxq:mux(
          xdmp:get-request-field("var6","null"),
          xdmp:get-request-field("var7","null"),
          xdmp:get-request-field("var8","null"),
-         xdmp:get-request-field("var9","null")        
-         )              
+         xdmp:get-request-field("var9","null")
+         )
       else
          ()
      }catch($e){
          rxq:handle-error($e)
-     }     
+     }
 };
 
 
@@ -253,8 +256,8 @@ declare function rxq:mux(
  :
  : @param path - path to resource
  :
- : @returns 
- :)    
+ : @returns
+ :)
 declare function rxq:passthru(
   $path
 )
@@ -270,7 +273,7 @@ declare function rxq:passthru(
 (:~ rxq:uri - returns uri
  :
  : @returns URI
- :)    
+ :)
 declare function rxq:uri() as xs:anyURI{
   xs:anyURI('http://www.example.org')
 };
@@ -278,8 +281,8 @@ declare function rxq:uri() as xs:anyURI{
 
 (:~ rxq:base-uri - returns base uri
  :
- : @returns URI 
- :)    
+ : @returns URI
+ :)
 declare function rxq:base-uri() as xs:anyURI{
   xs:anyURI('http://www.example.org')
 };
@@ -287,30 +290,30 @@ declare function rxq:base-uri() as xs:anyURI{
 
 (:~ rxq:base-uri - returns base uri
  :
- : @returns URI 
- :)    
+ : @returns URI
+ :)
 declare function rxq:raw-params() as map:map{
-  rest:get-raw-query-params() 
+  rest:get-raw-query-params()
 };
 
 
 (:~ rxq:resource-functions - returns all functions
  :
  : @returns element(rxq:resource-functions)
- :)     
+ :)
 declare function rxq:resource-functions() as element(rxq:resource-functions){
   element rxq:resource-functions{
     for $f in xdmp:functions()
       order by xdmp:annotation($f,xs:QName('rxq:path'))
       return
-	if(xdmp:annotation($f,xs:QName('rxq:path'))) then  
+	if(xdmp:annotation($f,xs:QName('rxq:path'))) then
 	<rxq:resource-function xquery-uri="">
 	  <rxq:identity
 	  namespace = ""
 	  local-name = "{fn:function-name($f)}"
 	  arity = "{fn:function-arity($f)}"
 	  uri="{xdmp:annotation($f,xs:QName('rxq:path'))}"
-	  />   
+	  />
     </rxq:resource-function>
     else ()}
 };
@@ -319,10 +322,10 @@ declare function rxq:resource-functions() as element(rxq:resource-functions){
 (:~ rxq:handle-error
  :
  : @returns html error response
- :)    
+ :)
 declare function rxq:handle-error()
 {
-  rxq:handle-error(<error:error xmlns:error="http://marklogic.com/xdmp/error" 
+  rxq:handle-error(<error:error xmlns:error="http://marklogic.com/xdmp/error"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <error:format-string>Incorrect RXQ mode</error:format-string>
   <error:retryable>false</error:retryable>
@@ -335,7 +338,7 @@ declare function rxq:handle-error()
 (:~ rxq:handle-error
  :
  : @returns html error response
- :)    
+ :)
 declare function rxq:handle-error(
   $e
 )
