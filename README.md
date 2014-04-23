@@ -145,7 +145,6 @@ The RESTXQ spec is still in draft form; where things are currently unclear or in
  * allow for full regex expressions within `%rxq:path`, instead of binding by variable names
  * its the responsibility of underlying function to grab hold of a PUT or POST content body
  * added some more metadata to the output of `rxq:resource-function()`
- * 2 separate files e.g. at some point would like to merge rxq-rewriter.xqy into the rxq library module itself
 
 ## License
 
