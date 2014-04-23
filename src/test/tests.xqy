@@ -24,7 +24,7 @@ declare variable $methods :=
   let $put := map:put($map, "HEAD", xdmp:function(xs:QName("xdmp:http-head")))
   return $map;
 
-      
+
 declare option xdmp:mapping "false";
 
 declare private function submit-request(
@@ -53,7 +53,7 @@ declare %test:case function test-default-vars()
 };
 
 declare %test:case function test-site(){
-let $request := 
+let $request :=
   <request xmlns="xdmp:http" id="base1" description="base1 - simple get with auth">
     <method>GET</method>
     <url>{$base-url}</url>
@@ -125,18 +125,6 @@ declare %test:case function test-http-put()
     assert:equal(submit-request($request)//http:code/fn:string(), "201")
 };
 
-  
-declare %test:case function test-uri()
-{
-  assert:equal(rxq:uri(), xs:anyURI("http://www.example.org"))
-};
-
-
-declare %test:case function test-base-uri()
-{
-  assert:equal(rxq:base-uri(), xs:anyURI("http://www.example.org"))
-};
-
 
 declare %test:case function test-resource-functions()
 {
@@ -155,7 +143,7 @@ declare %test:case function test-resource-functions()
 
 declare %test:case function test-rewrite-options()
 {
-  let $result := rxq:rewrite-options((), $rxq:exclude-prefixes)
+  let $result := rxq:rewrite-options($rxq:exclude-prefixes)
   return
     assert:equal($result, <options xmlns="http://marklogic.com/appservices/rest"></options>)
 };
@@ -169,7 +157,7 @@ declare %test:case function test-rewriter()
     import module namespace ex2="http://example.org/ex2" at "/example-simple/modules/ex2.xqy";
     import module namespace address="http://example.org/address" at "/example-simple/lib/address.xqy";
 
-    rxq:rewrite-options((), $rxq:exclude-prefixes)
+    rxq:rewrite-options($rxq:exclude-prefixes)
   ')
 
   let $expected :=
@@ -310,7 +298,7 @@ declare %test:case function url-not-matching-a-route-should-be-passed-through-to
   let $request :=
     <request xmlns="xdmp:http" id="get1" description="">
       <method>GET</method>
-       <url>{$base-url}/non-rxq-main-module.xqy</url>
+       <url>{$base-url}/resources/test.txt</url>
        {$admin-auth}
     </request>
 

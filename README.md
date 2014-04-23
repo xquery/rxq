@@ -1,7 +1,7 @@
-# RXQ v1.0 - RESTXQ MVC RESTful  
+# RXQ v1.0 - RESTXQ MVC RESTful
 ## Overview
 
-[MarkLogic 6 and 7](http://www.marklogic.com) includes support for annotations [XQuery 3.0](http://www.w3.org/TR/xquery-30). 
+[MarkLogic 6 and 7](http://www.marklogic.com) includes support for annotations [XQuery 3.0](http://www.w3.org/TR/xquery-30).
 
 One such feature, [annotations](http://www.w3.org/TR/xquery-30/#id-annotations), provides the opportunity to implement Adam Retter's [RESTXQ](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation) draft (introduced at [XML Prague 2012](http://archive.xmlprague.cz/2012/sessions.html#RESTful-XQuery---Standardised-XQuery-3.0-Annotations-for-REST)).
 
@@ -37,30 +37,30 @@ With everything setup, you can now point your web browser to the created app (e.
 
 ## RXQ in action
 
-To use RXQ in your own application emulate how the example-simple is structured. 
+To use RXQ in your own application emulate how the example-simple is structured.
 
 Essentially, you need these files in your project.
 
 * rxq-rewriter.xqy - simple rewriter and entry point where you import modules which include RESTXQ annotations
-* lib/rxq.xqy - the RXQ library 
+* lib/rxq.xqy - the RXQ library
 
 Then you will need setup a MarkLogic appserver (follow example simple instructions), edit rxq-rewriter.xqy to import the library modules containing your RESTXQ annotations.
 
 All the following code examples are included in the example application.
 
-The following xquery module illustrates how to annotate your modules functions using RESTXQ, which in turn will map them to a URL so they can be invoked via an HTTP Request. 
+The following xquery module illustrates how to annotate your modules functions using RESTXQ, which in turn will map them to a URL so they can be invoked via an HTTP Request.
 
 ```xquery
 xquery version "1.0-ml";
 module namespace addr="﻿http://example.org/address";
 declare namespace rxq="﻿http://exquery.org/ns/restxq";
 
-declare 
+declare
    %rxq:GET
    %rxq:path('/address/id/(.*)')
    %rxq:produces('text/html')
-function addr:get-address($id){ 
-   .... 
+function addr:get-address($id){
+   ....
 };
 ```
 
@@ -70,7 +70,7 @@ The `addr:get-address($id)` function has defined 3 RESTXQ annotations;
 * _%rxq:path('/address/id/(.*)')_: maps the url /address/id/(.*) to this function, note the usage of regex matching group to capture `$id`
 * _%rxq:produces('text/html')_: the output of this function, when returned by HTTP RESPONSE will have a content type of 'text/html'.
 
-The `addr:get-address()` function is invoked when there is an HTTP GET Request on URL /address/id/(.*). 
+The `addr:get-address()` function is invoked when there is an HTTP GET Request on URL /address/id/(.*).
 
 The routing 'magic' is taken care of by [src/xquery/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/xquery/rxq-rewriter.xqy) (which you attach to MarkLogic appserver). The `%rxq:GET` annotation specifies the HTTP method and the `%rxq:path` annotation value specifies the concrete URL.
 
@@ -78,12 +78,12 @@ The value for the `addr:get-address` function's `$id` variable is taken from the
 
 RXQ supports four RESTXQ annotations at this time;
 
-* HTTP method annotation - `%rxq:GET` | `%rxq:PUT` | `%rxq:DELET`E | `%rxq:POST`
+* HTTP method annotation - `%rxq:GET` | `%rxq:PUT` | `%rxq:DELETE` | `%rxq:POST`
 * Path annotation (maping url path) - `%rxq:path('/some/path/(.*)')`
 * Produces annotation (output content-type) - `%rxq:produces('text/html')`
 * Consumes annotation (ACCEPT) -
 
-When you deploy these modules in a MarkLogic appserver you must then import those modules into the rxq-rewriter.xqy. for example if you wanted to use the addr:get-address() function, you would import the module in the rxq-rewriter.xqy 
+When you deploy these modules in a MarkLogic appserver you must then import those modules into the rxq-rewriter.xqy. for example if you wanted to use the addr:get-address() function, you would import the module in the rxq-rewriter.xqy
 
 ```xquery
 (:~ STEP1 - import modules that contain annotation (controllers) here :)
@@ -92,30 +92,18 @@ import module namespace addr="﻿http://example.org/addr at "modules/addr.xqy";
 
 This allows the RXQ implementation to scan for annotated functions and generate the neccessary url rewriting and evaluation.
 
-Lastly, you can augment RESTXQ annotations with regular MarkLogic REST requests. The example below illustrates how to define a 'passthru' url, which will resources as a normal web server.
-
-```xquery
-(: define non-restxq REST requests, example illustrates passthru mode :)
-declare namespace rest = "http://marklogic.com/appservices/rest";
-declare variable $default-requests as element(rest:request)* := (
-    <request xmlns="http://marklogic.com/appservices/rest" uri="^/resources/(.*)$" endpoint="/rxq-rewriter.xqy?mode={$rxq:_PASSTHRU_MODE}" >
-    <http method="GET" user-params="allow"/>
-      <uri-param name="path">resources/$1</uri-param>
-    </request>);
-```    
-
 Please review the [src/example-simple/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/example-site/rxq-rewriter.xqy) to see how to setup your own. Note that the example-simple also has a facility for profiling (enable $perf to fn:true).
 
 To continue with our address example, lets add a function which inserts an address.
 
 ```xquery
-declare 
+declare
    %rxq:PUT
    %rxq:path('/address/id/(.*)')
    %rxq:produces('text/html')
    %rxq:consumes('application/xml')
-function addr:insert-address($id){ 
-   .... 
+function addr:insert-address($id){
+   ....
 };
 ```
 we are not interested in the actual implementation details of inserting the address (which could even be delegated to another xquery module, reinforcing the M in MVC). The `addr:insert-address` function would be invoked when an HTTP PUT Request is received.
@@ -123,15 +111,15 @@ we are not interested in the actual implementation details of inserting the addr
 Lastly, if we wanted to remove an address we need to support the HTTP DELETE method.
 
 ```xquery
-declare 
+declare
    %rxq:DELETE
    %rxq:path('/address/id/(.*)')
    %rxq:produces('text/html')
-function addr:remove-address($id){ 
-   .... 
+function addr:remove-address($id){
+   ....
 };
 ```
-This function could return some kind of success or failure text/html. 
+This function could return some kind of success or failure text/html.
 
 It is the responsibility of your modules to return the correct HTTP status codes and the address library module provides some guidance of how to do this.
 
@@ -156,7 +144,7 @@ The RESTXQ spec is still in draft form; where things are currently unclear or in
  * RXQ is not pure XQuery 3.0 due to usage of xdmp: functions, such as [xdmp:annotation()](https://docs.marklogic.com/xdmp:annotation).
  * allow for full regex expressions within `%rxq:path`, instead of binding by variable names
  * its the responsibility of underlying function to grab hold of a PUT or POST content body
- * added some more metadata to the output of `rxq:resource-function()` 
+ * added some more metadata to the output of `rxq:resource-function()`
  * 2 separate files e.g. at some point would like to merge rxq-rewriter.xqy into the rxq library module itself
 
 ## License
@@ -177,5 +165,5 @@ Unless required by applicable law or agreed to in writing, software distributed 
 * [EXQuery RESTXQ Draft Specification](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation).
 * Adam Retter's [RESTXQ](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf).
 * [JSR-311](http://download.oracle.com/otndocs/jcp/jaxrs-1.0-fr-eval-oth-JSpec/).
- 
+
 The usage of RESTXQ annotations turns out to be a very concise way of building up flexible RESTFul interfaces, as well as providing the basis from which to create MVC architectures for our XQuery web applications.

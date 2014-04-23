@@ -25,61 +25,24 @@ xquery version "1.0-ml";
 import module namespace rxq="http://exquery.org/ns/restxq" at "/lib/rxq.xqy";
 
 (:~ rewriter for RXQ.
- :  
+ :
  :  Import modules containing REST XQ annotations here
  :)
- 
- import module namespace ex1="http://example.org/ex1" 
+
+ import module namespace ex1="http://example.org/ex1"
     at "modules/ex1.xqy";
-    
-import module namespace ex2="http://example.org/ex2" 
+
+import module namespace ex2="http://example.org/ex2"
     at "modules/ex2.xqy" ;
 
-import module namespace address="http://example.org/address" 
+import module namespace address="http://example.org/address"
     at "lib/address.xqy";
-    
-(:
-    
-:)
-declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
-(: define non-restxq REST requests, example illustrates passthru mode :)
-declare namespace rest = "http://marklogic.com/appservices/rest";
-declare variable $default-requests as element(rest:request)* := (
-    <request xmlns="http://marklogic.com/appservices/rest"
-      uri="^/resources/(.*)$"
-      endpoint="/rxq-rewriter.xqy?mode={$rxq:_PASSTHRU_MODE}">
-      <http method="GET" user-params="allow"/>
-      <uri-param name="path">resources/$1</uri-param>
-    </request>
-);
+
+declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
 declare option xdmp:mapping "false";
 
-(:~ Rewriter routes between the following three conditions;
- :
- :     rewrite - rewrites url using rxq:rewrite
- :
- :     mux - evaluates function for rewritten url using rxq:mux
- :
- :     error - provides http level error using rxq:handle-error
- :
- :)
-let $cache := fn:false()
-let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE)
-return
- if ($mode eq $rxq:_REWRITE_MODE)
-     then rxq:rewrite($default-requests,$cache)
-     else if($mode eq $rxq:_MUX_MODE) then
-     rxq:mux(
-         xdmp:get-request-field("produces",$rxq:default-content-type),
-         xdmp:get-request-field("consumes",$rxq:default-content-type),
-         fn:function-lookup(xs:QName(xdmp:get-request-field("f")),
-         xs:integer(xdmp:get-request-field("arity","0"))),
-         xs:integer(xdmp:get-request-field("arity","0"))
-     )
-     else if ($mode eq $rxq:_PASSTHRU_MODE)
-         then rxq:passthru(xdmp:get-request-field("path"))
-     else
-     ("test",
-         rxq:handle-error())
+declare variable $ENABLE-CACHE as xs:boolean := fn:false();
+
+rxq:process-request($ENABLE-CACHE)
