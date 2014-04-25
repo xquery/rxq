@@ -150,7 +150,7 @@ The RESTXQ spec is still in draft form; where things are currently unclear or in
 
 RXQ is released under Apache License v2.0
 
-Copyright 2012,2013 Jim Fuller
+Copyright 2013,2014 Jim Fuller
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
