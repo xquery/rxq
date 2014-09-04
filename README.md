@@ -3,6 +3,8 @@
 
 [MarkLogic 6 and 7](http://www.marklogic.com) includes support for annotations [XQuery 3.0](http://www.w3.org/TR/xquery-30).
 
+Until RXQ has a release version, we list significant changes [here](https://github.com/xquery/rxq/wiki/FAQ)
+
 One such feature, [annotations](http://www.w3.org/TR/xquery-30/#id-annotations), provides the opportunity to implement Adam Retter's [RESTXQ](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation) draft (introduced at [XML Prague 2012](http://archive.xmlprague.cz/2012/sessions.html#RESTful-XQuery---Standardised-XQuery-3.0-Annotations-for-REST)).
 
 RESTXQ is an elegant approach for costructing RESTFul interfaces; full blown web applications using XQuery within a consistent MVC architecture.
@@ -133,7 +135,7 @@ _rxq:raw-params() as map:map_ - returns all in scope url params.
 
 ## FAQ
 
-https://github.com/xquery/rxq/wiki#FAQ
+https://github.com/xquery/rxq/wiki/FAQ
 
 # Points of interest & Limitations
 
