@@ -77,9 +77,9 @@ declare function rxq:process-request(
 {
   let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE)
   let $arity := xs:integer(xdmp:get-request-field("arity", "0"))
-  let $use-custom-serializer := xdmp:get-request-field("use-rxq-serializer")
+  let $use-custom-serializer := xdmp:get-request-field("use-rxq-serializer", "false")
   let $filter :=
-    if($use-custom-serializer) then
+    if($use-custom-serializer eq "true") then
       fn:function-lookup(xs:QName("rxq:serialize"), 1)
     else
       function($item) { $item } (: filter that does nothing :)
@@ -203,18 +203,34 @@ declare function rxq:serialize(
   $output
 ) as item()*
 {
-  let $quote-options :=
-    <options xmlns="xdmp:quote"> {
-      for $parameter in $rxq:output-parameters
-      let $value := xdmp:get-request-field($parameter)
-      where $value
-      return
-        element { fn:QName("xdmp:quote", $parameter) } {
-        $value
-      }
-    }</options>
+  xdmp:set-response-encoding(
+    xdmp:get-request-field("encoding", "UTF-8")
+  ),
 
-  return xdmp:quote($output, $quote-options)
+  (: Tried MarkLogic's xdmp:quote function, however it has some flaws, for
+     instance, it won't serialize DOCTYPE information, where as running an
+     identify transform with the serialization information in the xsl:output
+     properties DOES serialize correctly. :)
+  xdmp:xslt-eval(
+    <xsl:stylesheet version="2.0"
+                    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+      <xsl:output>{
+        for $parameter in $rxq:output-parameters
+        let $value := xdmp:get-request-field($parameter)
+        where $value
+        return attribute { $parameter } { $value }
+      }</xsl:output>
+
+      <xsl:template match="@*|node()">
+        <xsl:copy-of select="." validation="preserve" />
+      </xsl:template>
+    </xsl:stylesheet>,
+    $output, (), 
+    <options xmlns="xdmp:eval">
+      <isolation>same-statement</isolation>
+    </options>
+  )
 };
 
   

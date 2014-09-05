@@ -58,11 +58,18 @@ declare variable $rxq:exclude-prefixes as xs:string* := ("xdmp", "hof", "impl",
      "xs", "prof", "sc", "dbg", "xml", "magick", "map",
      "xp", "rxq", "idecl", "xsi");
 
+(:~ XSLT and XQuery Serialization 3.0 parameter names :)
+declare variable $rxq:output-parameters as xs:string+ := (
+  "method", "version", "html-version", "encoding", "indent",
+  "suppress-indentation", "cdata-section-elements", "omit-xml-declaration",
+  "standalone", "doctype-system", "doctype-public", "undeclare-prefixes",
+  "normalization-form", "media-type", "use-character-maps", "byte-order-mark",
+  "escape-uri-attributes", "include-content-type", "item-separator");
+
 (:~ define options :)
 declare option xdmp:mapping "false";
 
 declare option xdmp:update "true";
-
 
 declare function rxq:process-request(
   $cache as xs:boolean
@@ -70,20 +77,26 @@ declare function rxq:process-request(
 {
   let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE)
   let $arity := xs:integer(xdmp:get-request-field("arity", "0"))
+  let $use-custom-serializer := xdmp:get-request-field("use-rxq-serializer", "false")
+  let $filter :=
+    if($use-custom-serializer eq "true") then
+      fn:function-lookup(xs:QName("rxq:serialize"), 1)
+    else
+      function($item) { $item } (: filter that does nothing :)
+
   return
     if ($mode eq $rxq:_REWRITE_MODE)
     then (rxq:rewrite($cache), xdmp:get-request-url())[1]
     else if($mode eq $rxq:_MUX_MODE) then
-      rxq:mux(
+      $filter(rxq:mux(
         xdmp:get-request-field("produces", $rxq:default-content-type),
         xdmp:get-request-field("consumes", $rxq:default-content-type),
         fn:function-lookup(fn:QName(xdmp:get-request-field("f-ns"), xdmp:get-request-field("f-name")), $arity),
         $arity
-      )
+      ))
     else
       rxq:handle-error()
 };
-
 
 (:~ rxq:rewrite-options - generate <rest:request/> based on restxq annotations
  :
@@ -123,8 +136,29 @@ declare function rxq:rewrite-options(
               </http>
             else (),
             if (xdmp:annotation($f,xs:QName('rxq:PUT'))) then <http method="PUT" user-params="allow"/> else (),
-            if (xdmp:annotation($f,xs:QName('rxq:DELETE'))) then <http method="DELETE"/> else ()
+            if (xdmp:annotation($f,xs:QName('rxq:DELETE'))) then <http method="DELETE"/> else (),
+
+            let $serialization-uri-params as element(uri-param)* :=
+              fn:map(
+                function($parameter) {
+                  let $value :=
+                    xdmp:annotation($f,
+                    fn:QName("http://www.w3.org/2010/xslt-xquery-serialization",
+                      $parameter))
+                    return if($value) then
+                      <uri-param name="{$parameter}">{$value}</uri-param>
+                  else ()
+                }, $rxq:output-parameters
+              )
+
+            return (
+              $serialization-uri-params,
+              <uri-param name="use-rxq-serializer">{
+                fn:exists($serialization-uri-params)
+              }</uri-param>
+            )
           }
+
         </request>
       else ()
   }
@@ -159,6 +193,47 @@ declare function rxq:rewrite(
   }
 };
 
+(:~ rxq:serialize - custom serializer for functions with %output:* annotations
+ :
+ : @output   the output of the user's target function which will be serialized
+ : @returns  a reserialized output according to the %output:* annotations
+ : @author Charles Foster
+ :)
+declare function rxq:serialize(
+  $output
+) as item()*
+{
+  xdmp:set-response-encoding(
+    xdmp:get-request-field("encoding", "UTF-8")
+  ),
+
+  (: Tried MarkLogic's xdmp:quote function, however it has some flaws, for
+     instance, it won't serialize DOCTYPE information, where as running an
+     identify transform with the serialization information in the xsl:output
+     properties DOES serialize correctly. :)
+  xdmp:xslt-eval(
+    <xsl:stylesheet version="2.0"
+                    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+      <xsl:output>{
+        for $parameter in $rxq:output-parameters
+        let $value := xdmp:get-request-field($parameter)
+        where $value
+        return attribute { $parameter } { $value }
+      }</xsl:output>
+
+      <xsl:template match="@*|node()">
+        <xsl:copy-of select="." validation="preserve" />
+      </xsl:template>
+    </xsl:stylesheet>,
+    $output, (), 
+    <options xmlns="xdmp:eval">
+      <isolation>same-statement</isolation>
+    </options>
+  )
+};
+
+  
 
 (:~ rxq:mux - function invoke
  :

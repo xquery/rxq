@@ -163,6 +163,22 @@ declare %test:case function test-rewriter()
 
   let $expected :=
     <options xmlns="http://marklogic.com/appservices/rest">
+      <request uri="^/xhtml-with-doctype$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
+        <uri-param name="f-ns">http://example.org/ex1</uri-param>
+        <uri-param name="f-name">xhtml-with-doctype</uri-param>
+        <uri-param name="produces">text/html</uri-param>
+        <uri-param name="consumes"></uri-param>
+        <uri-param name="arity">0</uri-param>
+        <uri-param name="content-type">text/html</uri-param>
+        <http method="GET" user-params="allow"></http>
+        <uri-param name="method">xhtml</uri-param>
+        <uri-param name="indent">no</uri-param>
+        <uri-param name="omit-xml-declaration">no</uri-param>
+        <uri-param name="standalone">no</uri-param>
+        <uri-param name="doctype-system">http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</uri-param>
+        <uri-param name="doctype-public">-//W3C//DTD XHTML 1.0 Strict//EN</uri-param>
+        <uri-param name="use-rxq-serializer">true</uri-param>
+      </request>
       <request uri="^/without-ns-prefix$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
         <uri-param name="f-ns">http://example.org/ex1</uri-param>
         <uri-param name="f-name">without-ns-prefix</uri-param>
@@ -171,6 +187,21 @@ declare %test:case function test-rewriter()
         <uri-param name="arity">0</uri-param>
         <uri-param name="content-type">text/plain</uri-param>
         <http method="GET" user-params="allow"></http>
+        <uri-param name="use-rxq-serializer">false</uri-param>
+      </request>
+      <request uri="^/text-serialization-iso-8859-1$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
+        <uri-param name="f-ns">http://example.org/ex1</uri-param>
+        <uri-param name="f-name">text-serialization-iso-8859-1</uri-param>
+        <uri-param name="produces">text/plain</uri-param>
+        <uri-param name="consumes"></uri-param>
+        <uri-param name="arity">0</uri-param>
+        <uri-param name="content-type">text/plain</uri-param>
+        <http method="GET" user-params="allow"></http>
+        <uri-param name="method">text</uri-param>
+        <uri-param name="encoding">iso-8859-1</uri-param>
+        <uri-param name="indent">no</uri-param>
+        <uri-param name="omit-xml-declaration">no</uri-param>
+        <uri-param name="use-rxq-serializer">true</uri-param>
       </request>
       <request uri="^/ex2/a/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
         <uri-param name="f-ns">http://example.org/ex2</uri-param>
@@ -181,6 +212,7 @@ declare %test:case function test-rewriter()
         <uri-param name="var1">$1</uri-param>
         <uri-param name="content-type">text/html</uri-param>
         <http method="GET" user-params="allow"></http>
+        <uri-param name="use-rxq-serializer">false</uri-param>
       </request>
       <request uri="^/ex2/a$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
         <uri-param name="f-ns">http://example.org/ex2</uri-param>
@@ -191,6 +223,7 @@ declare %test:case function test-rewriter()
         <uri-param name="var1">$1</uri-param>
         <uri-param name="content-type">text/html</uri-param>
         <http method="GET" user-params="allow"></http>
+        <uri-param name="use-rxq-serializer">false</uri-param>
       </request>
       <request uri="^/ex1/c/(.*)/(.*)/(\d1)$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
         <uri-param name="f-ns">http://example.org/ex1</uri-param>
@@ -203,6 +236,7 @@ declare %test:case function test-rewriter()
         <uri-param name="var3">$3</uri-param>
         <uri-param name="content-type">text/html</uri-param>
         <http method="GET" user-params="allow"></http>
+        <uri-param name="use-rxq-serializer">false</uri-param>
       </request>
       <request uri="^/ex1/c/(.*)/(.*)/$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
         <uri-param name="f-ns">http://example.org/ex1</uri-param>
@@ -214,6 +248,7 @@ declare %test:case function test-rewriter()
         <uri-param name="var2">$2</uri-param>
         <uri-param name="content-type">text/html</uri-param>
         <http method="GET" user-params="allow"></http>
+        <uri-param name="use-rxq-serializer">false</uri-param>
       </request>
       <request uri="^/ex1/a/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
         <uri-param name="f-ns">http://example.org/ex1</uri-param>
@@ -224,6 +259,7 @@ declare %test:case function test-rewriter()
         <uri-param name="var1">$1</uri-param>
         <uri-param name="content-type">text/html</uri-param>
         <http method="GET" user-params="allow"></http>
+        <uri-param name="use-rxq-serializer">false</uri-param>
       </request>
       <request uri="^/ex1/a/$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
         <uri-param name="f-ns">http://example.org/ex1</uri-param>
@@ -234,6 +270,19 @@ declare %test:case function test-rewriter()
         <uri-param name="var1">$1</uri-param>
         <uri-param name="content-type">text/html</uri-param>
         <http method="GET" user-params="allow"></http>
+        <uri-param name="use-rxq-serializer">false</uri-param>
+      </request>
+      <request uri="^/basic-html-document$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
+        <uri-param name="f-ns">http://example.org/ex1</uri-param>
+        <uri-param name="f-name">basic-html-document</uri-param>
+        <uri-param name="produces">text/html</uri-param>
+        <uri-param name="consumes"></uri-param>
+        <uri-param name="arity">0</uri-param>
+        <uri-param name="content-type">text/html</uri-param>
+        <http method="GET" user-params="allow"></http>
+        <uri-param name="method">html</uri-param>
+        <uri-param name="indent">no</uri-param>
+        <uri-param name="use-rxq-serializer">true</uri-param>
       </request>
       <request uri="^/address/all$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
         <uri-param name="f-ns">http://example.org/address</uri-param>
@@ -244,6 +293,7 @@ declare %test:case function test-rewriter()
         <uri-param name="var1">$1</uri-param>
         <uri-param name="content-type">text/xml</uri-param>
         <http method="GET" user-params="allow"></http>
+        <uri-param name="use-rxq-serializer">false</uri-param>
       </request>
       <request uri="^/address/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
         <uri-param name="f-ns">http://example.org/address</uri-param>
@@ -254,6 +304,7 @@ declare %test:case function test-rewriter()
         <uri-param name="var1">$1</uri-param>
         <uri-param name="content-type">text/xml</uri-param>
         <http method="GET" user-params="allow"></http>
+        <uri-param name="use-rxq-serializer">false</uri-param>
       </request>
       <request uri="^/address/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
         <uri-param name="f-ns">http://example.org/address</uri-param>
@@ -264,6 +315,7 @@ declare %test:case function test-rewriter()
         <uri-param name="var1">$1</uri-param>
         <uri-param name="content-type">text/xml</uri-param>
         <http method="DELETE"></http>
+        <uri-param name="use-rxq-serializer">false</uri-param>
       </request>
       <request uri="^/address/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
         <uri-param name="f-ns">http://example.org/address</uri-param>
@@ -274,6 +326,7 @@ declare %test:case function test-rewriter()
         <uri-param name="var1">$1</uri-param>
         <uri-param name="content-type">text/xml</uri-param>
         <http method="PUT" user-params="allow"></http>
+        <uri-param name="use-rxq-serializer">false</uri-param>
       </request>
       <request uri="^/$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
         <uri-param name="f-ns">http://example.org/ex1</uri-param>
@@ -283,6 +336,7 @@ declare %test:case function test-rewriter()
         <uri-param name="arity">0</uri-param>
         <uri-param name="content-type">text/html</uri-param>
         <http method="GET" user-params="allow"></http>
+        <uri-param name="use-rxq-serializer">false</uri-param>
       </request>
     </options>
 
@@ -341,6 +395,92 @@ let $request :=
   let $expected-body := "foo"
 
   return (
+    assert:equal($actual-body, $expected-body, "body"),
+    assert:equal($actual-status-code, $expected-status-code, "http status code")
+  )
+
+};
+
+(: -------------------------------------------------------------------------- :)
+(: XSLT and XQuery Serialization 3.0                                          :)
+(: -------------------------------------------------------------------------- :)
+declare %test:case function basic-html-document()
+{
+let $request :=
+    <request xmlns="xdmp:http" id="get1" description="">
+      <method>GET</method>
+       <url>{$base-url}/basic-html-document</url>
+       {$admin-auth}
+    </request>
+
+  let $actual := submit-request($request)
+  let $actual-status-code := $actual//http:code/fn:string()
+  let $actual-body := $actual[2]/fn:string()
+  let $actual-content-type := $actual//http:content-type/fn:string()
+
+  let $expected-status-code := "200"
+  let $expected-content-type := "text/html; charset=UTF-8"
+  let $expected-body := '<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link href="no-destination"><script src="no-script"></script></head><body></body></html>
+'
+
+  return (
+    assert:equal($actual-content-type, $expected-content-type, "content-type"),
+    assert:equal($actual-body, $expected-body, "body"),
+    assert:equal($actual-status-code, $expected-status-code, "http status code")
+  )
+
+};
+
+declare %test:case function test-text-serialization-iso-8859-1()
+{
+let $request :=
+    <request xmlns="xdmp:http" id="get1" description="">
+      <method>GET</method>
+       <url>{$base-url}/text-serialization-iso-8859-1</url>
+       {$admin-auth}
+    </request>
+
+  let $actual := submit-request($request)
+  let $v := xdmp:log($actual)
+  let $actual-status-code := $actual//http:code/fn:string()
+  let $actual-body := $actual[2]/fn:string()
+  let $actual-content-type := $actual//http:content-type/fn:string()
+
+  let $expected-content-type := "text/plain; charset=iso-8859-1"
+  let $expected-status-code := "200"
+  let $expected-body := 'Hello World
+'
+
+  return (
+    assert:equal($actual-content-type, $expected-content-type, "content-type"),
+    assert:equal($actual-body, $expected-body, "body"),
+    assert:equal($actual-status-code, $expected-status-code, "http status code")
+  )
+
+};
+
+declare %test:case function test-doctype()
+{
+let $request :=
+    <request xmlns="xdmp:http" id="get1" description="">
+      <method>GET</method>
+       <url>{$base-url}/xhtml-with-doctype</url>
+       {$admin-auth}
+    </request>
+
+  let $actual := submit-request($request)
+  let $v := xdmp:log($actual)
+  let $actual-status-code := $actual//http:code/fn:string()
+  let $actual-body := $actual[2]/fn:string()
+  let $actual-content-type := $actual//http:content-type/fn:string()
+
+  let $expected-content-type := "text/html; charset=UTF-8"
+  let $expected-status-code := "200"
+  let $expected-body := '<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><?xml version="1.0" encoding="UTF-8" standalone="no"?><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body><p>Hello World</p></body></html>
+'
+
+  return (
+    assert:equal($actual-content-type, $expected-content-type, "content-type"),
     assert:equal($actual-body, $expected-body, "body"),
     assert:equal($actual-status-code, $expected-status-code, "http status code")
   )
