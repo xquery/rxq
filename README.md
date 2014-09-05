@@ -74,7 +74,7 @@ The `addr:get-address($id)` function has defined 4 RESTXQ annotations;
 * _%rxq:GET_: indicates to select when HTTP REQUEST uses GET method
 * _%rxq:path('/address/id/(.*)')_: maps the url /address/id/(.*) to this function, note the usage of regex matching group to capture `$id`
 * _%rxq:produces('text/html')_: the output of this function, when returned by HTTP RESPONSE will have a content type of 'text/html'.
-* _%%output:method('html')_: makes sure that MarkLogic serializes a HTML document and not an "HTML unaware" XML document.
+* _%output:method('html')_: makes sure that MarkLogic serializes a HTML document and not an "HTML unaware" XML document.
 
 The `addr:get-address()` function is invoked when there is an HTTP GET Request on URL /address/id/(.*).
 
@@ -88,6 +88,7 @@ RXQ supports four RESTXQ annotations at this time;
 * Path annotation (maping url path) - `%rxq:path('/some/path/(.*)')`
 * Produces annotation (output content-type) - `%rxq:produces('text/html')`
 * Consumes annotation (ACCEPT) -
+* XSLT and XQuery Serialization 3.0 annotations, `%output:method`, `%output:byte-order-mark`, `%output:indent` etc
 
 When you deploy these modules in a MarkLogic appserver you must then import those modules into the rxq-rewriter.xqy. for example if you wanted to use the addr:get-address() function, you would import the module in the rxq-rewriter.xqy
 
