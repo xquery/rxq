@@ -37,5 +37,6 @@ declare default function namespace "http://www.w3.org/2005/xpath-functions";
 declare option xdmp:mapping "false";
 
 declare variable $ENABLE-CACHE as xs:boolean := fn:false();
+declare variable $ENABLE-GZIP as xs:boolean := fn:false();
 
-rxq:process-request($ENABLE-CACHE)
+rxq:process-request($ENABLE-CACHE,$ENABLE-GZIP)

@@ -71,7 +71,8 @@ declare variable $rxq:output-parameters as xs:string+ := (
 (:~ define options :)
 declare option xdmp:mapping "false";
 
-declare option xdmp:update "true";
+(:~ If you have read only modules then you can set xdmp:update to 'false':)
+declare option xdmp:update "true"; 
 
 
 (:~ rxq:process-request - processes request
@@ -81,34 +82,51 @@ declare option xdmp:update "true";
  : @return 
  :)
  declare function rxq:process-request(
-  $cache as xs:boolean
+  $enable-cache as xs:boolean,
+  $enable-gzip as xs:boolean
 )
 {
   let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE)
   let $arity := xs:integer(xdmp:get-request-field("arity", "0"))
   let $use-custom-serializer := xdmp:get-request-field(
       "use-rxq-serializer", "false")
+      
   let $filter :=
     if($use-custom-serializer eq "true") then
       fn:function-lookup(xs:QName("rxq:serialize"), 1)
     else
       function($item) { $item } (: filter that does nothing :)
+      
+  let $gzip :=
+    if($enable-gzip) then
+      fn:function-lookup(xs:QName("rxq:gzip"), 1)
+    else
+      function($item) { $item } (: filter that does nothing :)
 
   return
     if ($mode eq $rxq:_REWRITE_MODE)
-    then (rxq:rewrite($cache), xdmp:get-request-url())[1]
+    then (rxq:rewrite($enable-cache), xdmp:get-request-url())[1]
     else if($mode eq $rxq:_MUX_MODE) then
-      $filter(rxq:mux(
-        xdmp:get-request-field("produces", $rxq:default-content-type),
-        xdmp:get-request-field("consumes", $rxq:default-content-type),
-        fn:function-lookup(fn:QName(
-            xdmp:get-request-field("f-ns"),
-            xdmp:get-request-field("f-name")), $arity),
-        $arity
-      ))
+     $gzip(   
+      $filter(
+          rxq:mux(
+              xdmp:get-request-field("produces", $rxq:default-content-type),
+              xdmp:get-request-field("consumes", $rxq:default-content-type),
+              fn:function-lookup(fn:QName(
+                  xdmp:get-request-field("f-ns"),
+                  xdmp:get-request-field("f-name")), $arity),
+                  $arity)))
     else
       rxq:handle-error()
 };
+
+(:~ rxq:process-request - process request with all options disabled
+ :
+ : @return element(rest:options)
+ :)
+ declare function rxq:process-request(){
+     rxq:process-request(false(),false())
+};    
 
 
 (:~ rxq:rewrite-options - generate <rest:request/> based on restxq annotations
@@ -259,6 +277,20 @@ declare function rxq:serialize(
 };
 
 
+(:~ rxq:gzip - custom gzip 
+ :
+ : @output   the output of the user's target function
+ : @returns  gzip output 
+ :)
+declare function rxq:gzip(
+  $output
+) as item()*
+{
+  xdmp:add-response-header("Content-encoding", "gzip"),       
+  xdmp:gzip($output)
+};
+
+
 (:~ rxq:mux - function invoke
  :
  : @param $produces
@@ -276,7 +308,7 @@ declare function rxq:mux(
 ) as item()*
 {
     try{
-     let $_  := xdmp:set-response-content-type($produces)
+     let $_ := xdmp:set-response-content-type($produces)
      let $fn := $function
      return
        if($arity eq 0) then
