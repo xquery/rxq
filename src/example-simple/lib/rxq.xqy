@@ -2,7 +2,7 @@ xquery version "1.0-ml";
 (:
  : rxq.xqy
  :
- : Copyright (c) 2012,2013 James Fuller - jim.fuller@webcomposite.com . All Rights Reserved.
+ : Copyright (c) 2012-2014 James Fuller - jim.fuller@webcomposite.com . All Rights Reserved.
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -23,14 +23,16 @@ xquery version "1.0-ml";
 
 module namespace rxq="http://exquery.org/ns/restxq";
 
-(:~ RXQ- MarkLogic RESTXQ implementation
+(:~ RXQ- RESTXQ implementation for MarkLogic
+ :
+ : @website https://github.com/xquery/rxq
  :
  : @spec http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html
  :
  :)
 
 import module namespace rest = "http://marklogic.com/appservices/rest"
-    at "/MarkLogic/appservices/utils/rest.xqy";
+  at "/MarkLogic/appservices/utils/rest.xqy";
 
 declare namespace rxq-output="http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace rxq-error="http://exquery.org/ns/restxq/error";
@@ -71,13 +73,21 @@ declare option xdmp:mapping "false";
 
 declare option xdmp:update "true";
 
-declare function rxq:process-request(
+
+(:~ rxq:process-request - processes request
+ :
+ : @param $cache
+ :
+ : @return 
+ :)
+ declare function rxq:process-request(
   $cache as xs:boolean
 )
 {
   let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE)
   let $arity := xs:integer(xdmp:get-request-field("arity", "0"))
-  let $use-custom-serializer := xdmp:get-request-field("use-rxq-serializer", "false")
+  let $use-custom-serializer := xdmp:get-request-field(
+      "use-rxq-serializer", "false")
   let $filter :=
     if($use-custom-serializer eq "true") then
       fn:function-lookup(xs:QName("rxq:serialize"), 1)
@@ -91,12 +101,15 @@ declare function rxq:process-request(
       $filter(rxq:mux(
         xdmp:get-request-field("produces", $rxq:default-content-type),
         xdmp:get-request-field("consumes", $rxq:default-content-type),
-        fn:function-lookup(fn:QName(xdmp:get-request-field("f-ns"), xdmp:get-request-field("f-name")), $arity),
+        fn:function-lookup(fn:QName(
+            xdmp:get-request-field("f-ns"),
+            xdmp:get-request-field("f-name")), $arity),
         $arity
       ))
     else
       rxq:handle-error()
 };
+
 
 (:~ rxq:rewrite-options - generate <rest:request/> based on restxq annotations
  :
@@ -123,20 +136,29 @@ declare function rxq:rewrite-options(
           endpoint="{$rxq:default-endpoint}">
           <uri-param name="f-ns">{$ns}</uri-param>
           <uri-param name="f-name">{$local-name}</uri-param>
-          <uri-param name="produces">{xdmp:annotation($f,xs:QName('rxq:produces'))}</uri-param>
-          <uri-param name="consumes">{xdmp:annotation($f,xs:QName('rxq:consumes'))}</uri-param>
+          <uri-param name="produces">{
+              xdmp:annotation($f,xs:QName('rxq:produces'))}</uri-param>
+          <uri-param name="consumes">{
+              xdmp:annotation($f,xs:QName('rxq:consumes'))}</uri-param>
           <uri-param name="arity">{$arity}</uri-param>
-          { for $var in 1 to $arity return <uri-param name="var{$var}">${$var}</uri-param> }
-          <uri-param name="content-type">{xdmp:annotation($f,xs:QName('rxq:produces'))}</uri-param>
+          { for $var in 1 to $arity
+            return <uri-param name="var{$var}">${$var}</uri-param> }
+          <uri-param name="content-type">{
+              xdmp:annotation($f,xs:QName('rxq:produces'))}</uri-param>
           {
-            if (xdmp:annotation($f,xs:QName('rxq:GET'))) then <http method="GET"  user-params="allow"/> else (),
-            if (xdmp:annotation($f,xs:QName('rxq:POST'))) then
-              <http method="POST" user-params="allow">
-                { xdmp:get-request-field-names() ! <param name="{.}" as="string" required="false"/> }
-              </http>
-            else (),
-            if (xdmp:annotation($f,xs:QName('rxq:PUT'))) then <http method="PUT" user-params="allow"/> else (),
-            if (xdmp:annotation($f,xs:QName('rxq:DELETE'))) then <http method="DELETE"/> else (),
+            if (xdmp:annotation($f,xs:QName('rxq:GET')))
+                then <http method="GET"  user-params="allow"/>
+                else (),
+            if (xdmp:annotation($f,xs:QName('rxq:POST')))
+                then <http method="POST" user-params="allow">{
+                      xdmp:get-request-field-names()
+                      ! <param name="{.}" as="string" required="false"/>
+                    }</http>
+                 else (),
+            if (xdmp:annotation($f,xs:QName('rxq:PUT')))
+                then <http method="PUT" user-params="allow"/> else (),
+            if (xdmp:annotation($f,xs:QName('rxq:DELETE')))
+                then <http method="DELETE"/> else (),
 
             let $serialization-uri-params as element(uri-param)* :=
               fn:map(
@@ -181,17 +203,20 @@ declare function rxq:rewrite(
       if (xdmp:get-server-field($rxq:server-field))
       then rest:rewrite(xdmp:get-server-field($rxq:server-field))
       else
-	     let $options as element(rest:options) := rxq:rewrite-options($rxq:exclude-prefixes)
+	     let $options as element(rest:options) := rxq:rewrite-options(
+             $rxq:exclude-prefixes)
 	     let $_ := xdmp:set-server-field($rxq:server-field, $options)
 	     return rest:rewrite($options)
     else
-	   let $options as element(rest:options) := rxq:rewrite-options($rxq:exclude-prefixes)
+	   let $options as element(rest:options) := rxq:rewrite-options(
+           $rxq:exclude-prefixes)
 	   return rest:rewrite($options)
   }
   catch($e) {
     rest:report-error($e)
   }
 };
+
 
 (:~ rxq:serialize - custom serializer for functions with %output:* annotations
  :
@@ -233,7 +258,6 @@ declare function rxq:serialize(
   )
 };
 
-  
 
 (:~ rxq:mux - function invoke
  :
@@ -326,16 +350,16 @@ declare function rxq:mux(
 };
 
 
-(:~ rxq:base-uri - returns base uri
+(:~ rxq:raw-params - returns query params
  :
- : @returns URI
+ : @returns
  :)
 declare function rxq:raw-params() as map:map{
   rest:get-raw-query-params()
 };
 
 
-(:~ rxq:resource-functions - returns all functions
+(:~ rxq:resource-functions - returns all annotated functions
  :
  : @returns element(rxq:resource-functions)
  :)

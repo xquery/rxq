@@ -42,7 +42,9 @@ declare
    )
  else
    ( xdmp:set-response-code(404, "Not Found"),
-   <failure id="{$id}"  http-method="GET">{$id} does not exist</failure>
+   <failure id="{$id}"
+   http-status="404"
+   http-method="GET">{$id} does not exist</failure>
    )
 };
 
