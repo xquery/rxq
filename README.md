@@ -57,7 +57,7 @@ Then you will need setup a MarkLogic appserver (follow example simple instructio
 
 You can enable the following options via setting variable in rxq-rewriter.xqy
 * enable-caching - performs simple caching of your annotated function outputs
-* enable-gzip - will output gzip encoding as default
+* post processing function - you can supply a function (with single variable for input) which will process output ... I provide an example using rxq:gzip
 
 All the following code examples are included in the example application.
 
