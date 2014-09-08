@@ -83,7 +83,7 @@ declare option xdmp:update "true";
  :)
  declare function rxq:process-request(
   $enable-cache as xs:boolean,
-  $enable-gzip as xs:boolean
+  $post-process-func as function(*)?
 )
 {
   let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE)
@@ -96,18 +96,18 @@ declare option xdmp:update "true";
       fn:function-lookup(xs:QName("rxq:serialize"), 1)
     else
       function($item) { $item } (: filter that does nothing :)
-      
-  let $gzip :=
-    if($enable-gzip) then
-      fn:function-lookup(xs:QName("rxq:gzip"), 1)
+
+  let $post-process-f :=
+    if(exists($post-process-func)) then
+        $post-process-func
     else
       function($item) { $item } (: filter that does nothing :)
-
+            
   return
     if ($mode eq $rxq:_REWRITE_MODE)
     then (rxq:rewrite($enable-cache), xdmp:get-request-url())[1]
     else if($mode eq $rxq:_MUX_MODE) then
-     $gzip(   
+     $post-process-f(   
       $filter(
           rxq:mux(
               xdmp:get-request-field("produces", $rxq:default-content-type),

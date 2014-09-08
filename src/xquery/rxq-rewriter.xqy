@@ -40,7 +40,11 @@ declare default function namespace "http://www.w3.org/2005/xpath-functions";
 declare option xdmp:mapping "false";
 
 declare variable $ENABLE-CACHE as xs:boolean := fn:false();
-declare variable $ENABLE-GZIP  as xs:boolean := fn:false();
+declare variable $GZIP-FUNCTION := rxq:gzip#1;
 
-rxq:process-request($ENABLE-CACHE, $ENABLE-GZIP)
+rxq:process-request($ENABLE-CACHE, ())
+
+(: alternately to enable post processing ex. gzip encoding use the following :)
+
+(: rxq:process-request($ENABLE-CACHE, $GZIP-FUNCTION) :)
 
