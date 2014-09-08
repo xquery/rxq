@@ -4,6 +4,8 @@ Use RXQ to build MVC/RESTful apps with MarkLogic XQuery.
 
 Until RXQ has a release version, we list significant changes [here](https://github.com/xquery/rxq/wiki/Changes)
 
+[Applications built with RXQ](https://github.com/xquery/rxq/wiki/Applications-using-RXQ)
+
 ## What is RESTXQ/RXQ ?
 
 [MarkLogic 6 and 7](http://www.marklogic.com) includes support for annotations [XQuery 3.0](http://www.w3.org/TR/xquery-30).
