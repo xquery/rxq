@@ -4,6 +4,8 @@ module namespace ex1="http://example.org/ex1";
 
 import module namespace rxq="http://exquery.org/ns/restxq" at "../lib/rxq.xqy";
 
+declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
+
 (:~ example of using 2 regex capture groups :)
 declare
  %rxq:produces('text/html')
@@ -174,3 +176,57 @@ declare
 function without-ns-prefix(){
   "foo"
 };
+
+
+(: -------------------------------------------------------------------------- :)
+(: XSLT and XQuery Serialization 3.0                                          :)
+(: -------------------------------------------------------------------------- :)
+
+declare
+  %rxq:produces('text/html')
+  %output:method('html')
+  %output:indent('no')
+  %rxq:GET
+  %rxq:path('/basic-html-document')
+function basic-html-document(){
+  <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+      <link href="no-destination" />
+      <script src="no-script"></script>
+    </head>
+    <body />
+  </html>
+};
+
+declare
+  %rxq:produces('text/plain')
+  %output:method('text')
+  %output:encoding('iso-8859-1')
+  %output:omit-xml-declaration('no')
+  %output:indent('no')
+  %rxq:GET
+  %rxq:path('/text-serialization-iso-8859-1')
+function text-serialization-iso-8859-1(){
+  <e>Hello World</e>
+};
+
+declare
+  %rxq:produces('text/html')
+  %output:method('xhtml')
+  %output:indent('no')
+  %output:doctype-system('http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd')
+  %output:doctype-public('-//W3C//DTD XHTML 1.0 Strict//EN')
+  %output:omit-xml-declaration('no')
+  %output:standalone('no')
+  %rxq:GET
+  %rxq:path('/xhtml-with-doctype')
+function xhtml-with-doctype(){
+  <html xmlns="http://www.w3.org/1999/xhtml">
+    <head />
+    <body>
+      <p>Hello World</p>
+    </body>
+  </html>
+};
+
