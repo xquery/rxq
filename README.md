@@ -4,6 +4,8 @@ Use RXQ to build MVC/RESTful apps with MarkLogic XQuery.
 
 Until RXQ has a release version, we list significant changes [here](https://github.com/xquery/rxq/wiki/Changes)
 
+[Applications built with RXQ](https://github.com/xquery/rxq/wiki/Applications-using-RXQ)
+
 ## What is RESTXQ/RXQ ?
 
 [MarkLogic 6 and 7](http://www.marklogic.com) includes support for annotations [XQuery 3.0](http://www.w3.org/TR/xquery-30).
@@ -104,7 +106,7 @@ import module namespace addr="﻿http://example.org/addr at "modules/addr.xqy";
 
 This allows the RXQ implementation to scan for annotated functions and generate the neccessary url rewriting and evaluation.
 
-Please review the [src/example-simple/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/example-site/rxq-rewriter.xqy) to see how to setup your own. Note that the example-simple also has a facility for profiling (enable $perf to fn:true).
+Please review the [src/example-simple/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/example-site/rxq-rewriter.xqy) to see how to setup your own.
 
 To continue with our address example, lets add a function which inserts an address.
 
@@ -152,7 +154,7 @@ https://github.com/xquery/rxq/wiki/FAQ
 The RESTXQ spec is still in draft form; where things are currently unclear or in flux I made my own implementation decisions for the time being;
 
  * no `xdmp:eval` were hurt (or used) in the creation of RXQ ... all execution is done by first class function invokation available using XQuery 3.0
- * annotations are effectively mapping onto existing MarkLogic REST library functionality ( [rest functions](https://docs.marklogic.com/rest-lib))
+ * annotations are mapped onto MarkLogic existing REST library functionality ( [rest functions](https://docs.marklogic.com/rest-lib))
  * RXQ is not pure XQuery 3.0 due to usage of xdmp: functions, such as [xdmp:annotation()](https://docs.marklogic.com/xdmp:annotation).
  * allow for full regex expressions within `%rxq:path`, instead of binding by variable names
  * its the responsibility of underlying function to grab hold of a PUT or POST content body
@@ -162,7 +164,7 @@ The RESTXQ spec is still in draft form; where things are currently unclear or in
 
 RXQ is released under Apache License v2.0
 
-Copyright 2013,2014 Jim Fuller
+Copyright 2012-2014 Jim Fuller
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
