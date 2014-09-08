@@ -1,9 +1,12 @@
-# RXQ v1.0 - RESTXQ MVC RESTful
-## Overview
+# RXQ v1.0 - RESTXQ for MarkLogic
 
-[MarkLogic 6 and 7](http://www.marklogic.com) includes support for annotations [XQuery 3.0](http://www.w3.org/TR/xquery-30).
+Use RXQ to build MVC/RESTful apps with MarkLogic XQuery.
 
 Until RXQ has a release version, we list significant changes [here](https://github.com/xquery/rxq/wiki/Changes)
+
+## What is RESTXQ/RXQ ?
+
+[MarkLogic 6 and 7](http://www.marklogic.com) includes support for annotations [XQuery 3.0](http://www.w3.org/TR/xquery-30).
 
 One such feature, [annotations](http://www.w3.org/TR/xquery-30/#id-annotations), provides the opportunity to implement Adam Retter's [RESTXQ](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation) draft (introduced at [XML Prague 2012](http://archive.xmlprague.cz/2012/sessions.html#RESTful-XQuery---Standardised-XQuery-3.0-Annotations-for-REST)).
 
@@ -12,6 +15,8 @@ RESTXQ is an elegant approach for costructing RESTFul interfaces; full blown web
 RESTXQ is based on the annotations defined within [JSR-311](http://download.oracle.com/otndocs/jcp/jaxrs-1.0-fr-eval-oth-JSpec).
 
 To understand what RESTXQ is and how it works with XQuery 3.0 annotations please [download](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf) Adam Retter's excellent overview.
+
+RXQ is an implementation of RESTXQ for the MarkLogic server.
 
 ## For the Impatient (set up example application)
 
