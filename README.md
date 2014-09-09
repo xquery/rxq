@@ -100,6 +100,7 @@ RXQ supports the following RESTXQ annotations at this time;
 * Produces annotation (output content-type) - `%rxq:produces('text/html')`
 * Consumes annotation (ACCEPT) -
 * [XSLT and XQuery Serialization 3.0 annotations](http://www.w3.org/TR/xslt-xquery-serialization-30), e.g. `%output:method`, `%output:byte-order-mark`, `%output:indent` etc
+* Custom GZIP annotation to compress the response - `%xdmp:gzip`
 
 When you deploy these modules in a MarkLogic appserver you must then import those modules into the rxq-rewriter.xqy. for example if you wanted to use the addr:get-address() function, you would import the module in the rxq-rewriter.xqy
 

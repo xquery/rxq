@@ -230,3 +230,18 @@ function xhtml-with-doctype(){
   </html>
 };
 
+(: -------------------------------------------------------------------------- :)
+(: xdmp annotations, e.g. xdmp:gzip, maybe multipart etc                      :)
+(: -------------------------------------------------------------------------- :)
+
+declare
+  %rxq:produces('text/plain')
+  %output:method('text')
+  %rxq:GET
+  %xdmp:gzip
+  %rxq:path('/text-content-gzipped')
+function text-content-gzipped(){
+  text { "Hello World, gzipped" }
+};
+
+
