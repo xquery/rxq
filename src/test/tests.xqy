@@ -1,3 +1,4 @@
+
 xquery version "1.0-ml";
 module namespace test = "http://github.com/robwhitby/xray/test";
 
@@ -202,6 +203,18 @@ declare %test:case function test-rewriter()
         <uri-param name="indent">no</uri-param>
         <uri-param name="omit-xml-declaration">no</uri-param>
         <uri-param name="use-rxq-serializer">true</uri-param>
+      </request>
+      <request uri="^/text-content-gzipped$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
+        <uri-param name="f-ns">http://example.org/ex1</uri-param>
+        <uri-param name="f-name">text-content-gzipped</uri-param>
+        <uri-param name="produces">text/plain</uri-param>
+        <uri-param name="consumes"></uri-param>
+        <uri-param name="arity">0</uri-param>
+        <uri-param name="content-type">text/plain</uri-param>
+        <http method="GET" user-params="allow"></http>
+        <uri-param name="method">text</uri-param>
+        <uri-param name="use-rxq-serializer">true</uri-param>
+        <uri-param name="xdmp-gzip">true</uri-param>
       </request>
       <request uri="^/ex2/a/(.*)$" endpoint="/rxq-rewriter.xqy?mode=mux" xmlns="http://marklogic.com/appservices/rest">
         <uri-param name="f-ns">http://example.org/ex2</uri-param>
@@ -441,7 +454,6 @@ let $request :=
     </request>
 
   let $actual := submit-request($request)
-  let $v := xdmp:log($actual)
   let $actual-status-code := $actual//http:code/fn:string()
   let $actual-body := $actual[2]/fn:string()
   let $actual-content-type := $actual//http:content-type/fn:string()
@@ -469,7 +481,6 @@ let $request :=
     </request>
 
   let $actual := submit-request($request)
-  let $v := xdmp:log($actual)
   let $actual-status-code := $actual//http:code/fn:string()
   let $actual-body := $actual[2]/fn:string()
   let $actual-content-type := $actual//http:content-type/fn:string()
@@ -486,3 +497,24 @@ let $request :=
   )
 
 };
+
+(: -------------------------------------------------------------------------- :)
+(: xdmp annotations, e.g. xdmp:gzip, maybe multipart etc                      :)
+(: -------------------------------------------------------------------------- :)
+
+(:  
+  testing the %xdmp:gzip annotation
+
+  unfortunately, the xdmp:http-get function does not support calling content
+  where the response where both the following headers exist:
+
+  Content-type: */*; charset=UTF-8 
+  Content-encoding: gzip
+
+  xdmp:http-get throws:
+
+    Invalid UTF-8 escape sequence at http://localhost:9012/text-content-gzipped
+    line 1 -- document is not UTF-8 encoded
+:)
+
+(: -------------------------------------------------------------------------- :)

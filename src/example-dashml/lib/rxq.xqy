@@ -72,8 +72,7 @@ declare variable $rxq:output-parameters as xs:string+ := (
 declare option xdmp:mapping "false";
 
 (:~ If you have read only modules then you can set xdmp:update to 'false':)
-declare option xdmp:update "true"; 
-
+declare option xdmp:update "true";
 
 (:~ rxq:process-request - processes request
  :
@@ -82,40 +81,38 @@ declare option xdmp:update "true";
  : @return 
  :)
  declare function rxq:process-request(
-  $enable-cache as xs:boolean,
-  $post-process-func as function(*)?
+  $enable-cache as xs:boolean
 )
 {
   let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE)
   let $arity := xs:integer(xdmp:get-request-field("arity", "0"))
   let $use-custom-serializer := xdmp:get-request-field(
       "use-rxq-serializer", "false")
+  let $gzip-content := xdmp:get-request-field("xdmp-gzip", "false")
       
-  let $filter :=
-    if($use-custom-serializer eq "true") then
-      fn:function-lookup(xs:QName("rxq:serialize"), 1)
-    else
-      function($item) { $item } (: filter that does nothing :)
+  let $filters-sequence as function(*)* := (: add filters here :)
+  (
+    rxq:serialize#1[$use-custom-serializer eq "true"],
+    rxq:gzip#1[$gzip-content eq "true"]
+  )
 
-  let $post-process-f :=
-    if(exists($post-process-func)) then
-        $post-process-func
-    else
-      function($item) { $item } (: filter that does nothing :)
-            
   return
     if ($mode eq $rxq:_REWRITE_MODE)
     then (rxq:rewrite($enable-cache), xdmp:get-request-url())[1]
     else if($mode eq $rxq:_MUX_MODE) then
-     $post-process-f(   
-      $filter(
-          rxq:mux(
-              xdmp:get-request-field("produces", $rxq:default-content-type),
-              xdmp:get-request-field("consumes", $rxq:default-content-type),
-              fn:function-lookup(fn:QName(
-                  xdmp:get-request-field("f-ns"),
-                  xdmp:get-request-field("f-name")), $arity),
-                  $arity)))
+
+      rxq:apply-filters(
+        rxq:mux(
+          xdmp:get-request-field("produces", $rxq:default-content-type),
+          xdmp:get-request-field("consumes", $rxq:default-content-type),
+          fn:function-lookup(
+            fn:QName(
+              xdmp:get-request-field("f-ns"),
+              xdmp:get-request-field("f-name")
+            ), $arity
+          ),
+          $arity
+        ), $filters-sequence)
     else
       rxq:handle-error()
 };
@@ -124,8 +121,8 @@ declare option xdmp:update "true";
  :
  : @return element(rest:options)
  :)
- declare function rxq:process-request(){
-     rxq:process-request(false(),false())
+declare function rxq:process-request(){
+  rxq:process-request(false())
 };    
 
 
@@ -196,7 +193,11 @@ declare function rxq:rewrite-options(
               <uri-param name="use-rxq-serializer">{
                 fn:exists($serialization-uri-params)
               }</uri-param>
-            )
+            ),
+
+            if (xdmp:annotation($f,xs:QName('xdmp:gzip')))
+                then <uri-param name="xdmp-gzip">true</uri-param> else ()
+
           }
 
         </request>
@@ -242,7 +243,7 @@ declare function rxq:rewrite(
  : @returns  a reserialized output according to the %output:* annotations
  : @author Charles Foster
  :)
-declare function rxq:serialize(
+declare %private function rxq:serialize(
   $output
 ) as item()*
 {
@@ -276,13 +277,12 @@ declare function rxq:serialize(
   )
 };
 
-
 (:~ rxq:gzip - custom gzip 
  :
  : @output   the output of the user's target function
  : @returns  gzip output 
  :)
-declare function rxq:gzip(
+declare %private function rxq:gzip(
   $output
 ) as item()*
 {
@@ -381,6 +381,22 @@ declare function rxq:mux(
      }
 };
 
+(:~ rxq:apply-filters - applies filters over user's produced contnet
+ :
+ : @param  $content the output of a user's target function
+ : @param  $filters a sequence of filter functions to apply to the content
+ :
+ : @return content that has been sequentially transformed by N filters
+ :)
+declare %private function rxq:apply-filters($content, $filters as function(*)*)
+{
+  if(fn:exists($filters)) then
+    rxq:apply-filters(
+      $filters[1]($content),
+      $filters[2 to fn:last()]
+    )
+  else $content
+};
 
 (:~ rxq:raw-params - returns query params
  :

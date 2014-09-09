@@ -26,25 +26,23 @@ import module namespace rxq="http://exquery.org/ns/restxq" at "/lib/rxq.xqy";
 
 (:~ rewriter for RXQ.
  :
- :  Import modules that contain REST XQ annotations below
+ :  Import modules containing REST XQ annotations here
  :)
 
-(: example
+ import module namespace ex1="http://example.org/ex1"
+    at "modules/ex1.xqy";
 
-import module namespace view = "https://github.com/dashML/view" at "/modules/view.xqy";
+import module namespace ex2="http://example.org/ex2"
+    at "modules/ex2.xqy" ;
 
-:)
+import module namespace address="http://example.org/address"
+    at "lib/address.xqy";
+
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
 declare option xdmp:mapping "false";
 
 declare variable $ENABLE-CACHE as xs:boolean := fn:false();
-declare variable $GZIP-FUNCTION := rxq:gzip#1;
 
-rxq:process-request($ENABLE-CACHE, ())
-
-(: alternately to enable post processing ex. gzip encoding use the following :)
-
-(: rxq:process-request($ENABLE-CACHE, $GZIP-FUNCTION) :)
-
+rxq:process-request($ENABLE-CACHE)
