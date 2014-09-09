@@ -29,15 +29,8 @@ import module namespace rxq="http://exquery.org/ns/restxq" at "/lib/rxq.xqy";
  :  Import modules containing REST XQ annotations here
  :)
 
- import module namespace ex1="http://example.org/ex1"
-    at "modules/ex1.xqy";
-
-import module namespace ex2="http://example.org/ex2"
-    at "modules/ex2.xqy" ;
-
-import module namespace address="http://example.org/address"
-    at "lib/address.xqy";
-
+import module namespace view = "https://github.com/dashML/view"
+  at "/modules/view.xqy";
 
 declare default function namespace "http://www.w3.org/2005/xpath-functions";
 
