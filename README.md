@@ -1,6 +1,6 @@
 # RXQ v1.0 - RESTXQ for MarkLogic
 
-Use RXQ to build MVC/RESTful apps with MarkLogic XQuery.
+Use RXQ to build MVC/RESTful apps with MarkLogic XQuery. 
 
 Until RXQ has a release version, we list significant changes [here](https://github.com/xquery/rxq/wiki/Changes)
 
@@ -12,13 +12,9 @@ Until RXQ has a release version, we list significant changes [here](https://gith
 
 One such feature, [annotations](http://www.w3.org/TR/xquery-30/#id-annotations), provides the opportunity to implement Adam Retter's [RESTXQ](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation) draft (introduced at [XML Prague 2012](http://archive.xmlprague.cz/2012/sessions.html#RESTful-XQuery---Standardised-XQuery-3.0-Annotations-for-REST)).
 
-RESTXQ is an elegant approach for building RESTFul interfaces; full blown web applications using XQuery within a consistent MVC architecture.
-
 RESTXQ is based on the annotations defined within [JSR-311](http://download.oracle.com/otndocs/jcp/jaxrs-1.0-fr-eval-oth-JSpec).
 
-To understand what RESTXQ is and how it works with XQuery 3.0 annotations please [download](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf) Adam Retter's excellent overview.
-
-RXQ is an implementation of RESTXQ for the MarkLogic server.
+RXQ is an implementation of a subset of RESTXQ for the MarkLogic server.
 
 ## For the Impatient (set up example application)
 
@@ -48,12 +44,12 @@ You can now point your web browser to the created app (e.g. http://&lt;host&gt;:
 
 To use RXQ in your own application emulate how the example-simple is structured.
 
-Essentially, you need these files in your project.
+Essentially, you will need these files in your project.
 
 * rxq-rewriter.xqy - simple rewriter and entry point where you import modules which include RESTXQ annotations
 * lib/rxq.xqy - the RXQ library
 
-Then you will need setup a MarkLogic appserver (follow example simple instructions), edit rxq-rewriter.xqy to import the library modules containing your RESTXQ annotations.
+Then you will need to setup a MarkLogic appserver (follow example simple instructions), edit rxq-rewriter.xqy to import the library modules containing your RESTXQ annotations.
 
 All the following code examples are included in the example application.
 
@@ -157,9 +153,6 @@ The RESTXQ spec is still in draft form; where things are currently unclear or in
  * no `xdmp:eval` were hurt (or used) in the creation of RXQ ... all execution is done by first class function invokation available using XQuery 3.0
  * annotations are mapped onto MarkLogic existing REST library functionality ( [rest functions](https://docs.marklogic.com/rest-lib))
  * RXQ is not pure XQuery 3.0 due to usage of xdmp: functions, such as [xdmp:annotation()](https://docs.marklogic.com/xdmp:annotation).
- * allow for full regex expressions within `%rxq:path`, instead of binding by variable names
- * its the responsibility of underlying function to grab hold of a PUT or POST content body
- * added some more metadata to the output of `rxq:resource-function()`
 
 ## License
 
@@ -179,5 +172,3 @@ Unless required by applicable law or agreed to in writing, software distributed 
 * [EXQuery RESTXQ Draft Specification](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation).
 * Adam Retter's [RESTXQ](http://archive.xmlprague.cz/2012/presentations/RESTful_XQuery.pdf).
 * [JSR-311](http://download.oracle.com/otndocs/jcp/jaxrs-1.0-fr-eval-oth-JSpec/).
-
-The usage of RESTXQ annotations turns out to be a very concise way of building up flexible RESTFul interfaces, as well as providing the basis from which to create MVC architectures for our XQuery web applications.
