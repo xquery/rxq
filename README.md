@@ -1,6 +1,6 @@
 # RXQ v1.0 - RESTXQ for MarkLogic
 
-Use RXQ to build MVC/RESTful apps with MarkLogic XQuery. 
+Use RXQ to build MVC/RESTful apps with MarkLogic XQuery.
 
 Until RXQ has a release version, we list significant changes [here](https://github.com/xquery/rxq/wiki/Changes)
 
