@@ -68,6 +68,17 @@ declare variable $rxq:output-parameters as xs:string+ := (
   "normalization-form", "media-type", "use-character-maps", "byte-order-mark",
   "escape-uri-attributes", "include-content-type", "item-separator");
 
+declare variable $rxq:use-custom-serializer := xdmp:get-request-field(
+    "use-rxq-serializer", "false");
+
+declare variable $rxq:gzip-content :=
+    xdmp:get-request-field("xdmp-gzip", "false");
+      
+declare variable $rxq:filters-sequence as function(*)* := (: add filters here :)
+  (
+    rxq:serialize#1[$rxq:use-custom-serializer eq "true"],
+    rxq:gzip#1[$rxq:gzip-content eq "true"]);
+
 (:~ define options :)
 declare option xdmp:mapping "false";
 
@@ -86,16 +97,6 @@ declare option xdmp:update "true";
 {
   let $mode := xdmp:get-request-field("mode", $rxq:_REWRITE_MODE)
   let $arity := xs:integer(xdmp:get-request-field("arity", "0"))
-  let $use-custom-serializer := xdmp:get-request-field(
-      "use-rxq-serializer", "false")
-  let $gzip-content := xdmp:get-request-field("xdmp-gzip", "false")
-      
-  let $filters-sequence as function(*)* := (: add filters here :)
-  (
-    rxq:serialize#1[$use-custom-serializer eq "true"],
-    rxq:gzip#1[$gzip-content eq "true"]
-  )
-
   return
     if ($mode eq $rxq:_REWRITE_MODE)
     then (rxq:rewrite($enable-cache), xdmp:get-request-url())[1]
@@ -112,7 +113,7 @@ declare option xdmp:update "true";
             ), $arity
           ),
           $arity
-        ), $filters-sequence)
+        ), $rxq:filters-sequence)
     else
       rxq:handle-error()
 };
@@ -124,7 +125,6 @@ declare option xdmp:update "true";
 declare function rxq:process-request(){
   rxq:process-request(false())
 };    
-
 
 (:~ rxq:rewrite-options - generate <rest:request/> based on restxq annotations
  :
