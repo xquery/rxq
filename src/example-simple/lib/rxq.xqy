@@ -390,12 +390,12 @@ declare function rxq:mux(
  :)
 declare %private function rxq:apply-filters($content, $filters as function(*)*)
 {
-  if(fn:exists($filters)) then
-    rxq:apply-filters(
-      $filters[1]($content),
-      $filters[2 to fn:last()]
-    )
-  else $content
+    if(exists($filters))
+    then fold-left(
+        function($c,$b){
+            $b($c)
+        },$content,$filters)
+    else $content
 };
 
 (:~ rxq:raw-params - returns query params
