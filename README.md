@@ -4,6 +4,8 @@ Use RXQ to build MVC/RESTful apps with MarkLogic XQuery.
 
 Until RXQ has a release version, we list significant changes [here](https://github.com/xquery/rxq/wiki/Changes)
 
+Feel free to ask questions on [XQuery mailing list](http://x-query.com/mailman/listinfo/talk) or at IRC channel [#rxq](irc://irc.freenode.net) on freenode
+
 [Applications built with RXQ](https://github.com/xquery/rxq/wiki/Applications-using-RXQ)
 
 ## What is RESTXQ/RXQ ?
