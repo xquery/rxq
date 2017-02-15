@@ -4,11 +4,11 @@ module namespace test = "http://github.com/robwhitby/xray/test";
 
 import module namespace assert = "http://github.com/robwhitby/xray/assertions" at "/xray/src/assertions.xqy";
 
-import module namespace rxq = "http://exquery.org/ns/restxq" at "/xquery/lib/rxq.xqy";
+import module namespace rxq = "http://exquery.org/ns/restxq" at "/example-simple/lib/rxq.xqy";
 declare namespace http = "xdmp:http";
 
 (: IMPORTANT- need to setup example-simple application with httpserver on port 9012 :)
-declare variable $base-url as xs:string := "http://localhost:9012";
+declare variable $base-url as xs:string := "http://node1:8003";
 
 declare variable $admin-auth :=
   <authentication method="digest" xmlns="xdmp:http">
@@ -502,13 +502,13 @@ let $request :=
 (: xdmp annotations, e.g. xdmp:gzip, maybe multipart etc                      :)
 (: -------------------------------------------------------------------------- :)
 
-(:  
+(:
   testing the %xdmp:gzip annotation
 
   unfortunately, the xdmp:http-get function does not support calling content
   where the response where both the following headers exist:
 
-  Content-type: */*; charset=UTF-8 
+  Content-type: */*; charset=UTF-8
   Content-encoding: gzip
 
   xdmp:http-get throws:
