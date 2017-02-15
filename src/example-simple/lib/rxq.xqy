@@ -2,7 +2,7 @@ xquery version "1.0-ml";
 (:
  : rxq.xqy
  :
- : Copyright (c) 2012-2014 James Fuller - jim.fuller@webcomposite.com . All Rights Reserved.
+ : Copyright (c) 2012-2017 James Fuller - jim.fuller@webcomposite.com . All Rights Reserved.
  :
  : Licensed under the Apache License, Version 2.0 (the "License");
  : you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ declare variable $rxq:use-custom-serializer := xdmp:get-request-field(
 
 declare variable $rxq:gzip-content :=
     xdmp:get-request-field("xdmp-gzip", "false");
-      
+
 declare variable $rxq:filters-sequence as function(*)* := (: add filters here :)
   (
     rxq:serialize#1[$rxq:use-custom-serializer eq "true"],
@@ -89,7 +89,7 @@ declare option xdmp:update "true";
  :
  : @param $cache
  :
- : @return 
+ : @return
  :)
  declare function rxq:process-request(
   $enable-cache as xs:boolean
@@ -124,7 +124,7 @@ declare option xdmp:update "true";
  :)
 declare function rxq:process-request(){
   rxq:process-request(false())
-};    
+};
 
 (:~ rxq:rewrite-options - generate <rest:request/> based on restxq annotations
  :
@@ -270,23 +270,23 @@ declare %private function rxq:serialize(
         <xsl:copy-of select="." validation="preserve" />
       </xsl:template>
     </xsl:stylesheet>,
-    $output, (), 
+    $output, (),
     <options xmlns="xdmp:eval">
       <isolation>same-statement</isolation>
     </options>
   )
 };
 
-(:~ rxq:gzip - custom gzip 
+(:~ rxq:gzip - custom gzip
  :
  : @output   the output of the user's target function
- : @returns  gzip output 
+ : @returns  gzip output
  :)
 declare %private function rxq:gzip(
   $output
 ) as item()*
 {
-  xdmp:add-response-header("Content-encoding", "gzip"),       
+  xdmp:add-response-header("Content-encoding", "gzip"),
   xdmp:gzip($output)
 };
 
