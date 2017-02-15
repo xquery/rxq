@@ -10,9 +10,9 @@ Feel free to ask questions on [XQuery mailing list](http://x-query.com/mailman/l
 
 ## What is RESTXQ/RXQ ?
 
-[MarkLogic 6 and 7](http://www.marklogic.com) includes support for annotations [XQuery 3.0](http://www.w3.org/TR/xquery-30).
+[Since MarkLogic 6](http://www.marklogic.com) XQuery annotations have been supported ([XQuery 3.0](http://www.w3.org/TR/xquery-30)).
 
-One such feature, [annotations](http://www.w3.org/TR/xquery-30/#id-annotations), provides the opportunity to implement Adam Retter's [RESTXQ](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation) draft (introduced at [XML Prague 2012](http://archive.xmlprague.cz/2012/sessions.html#RESTful-XQuery---Standardised-XQuery-3.0-Annotations-for-REST)).
+[Annotations](http://www.w3.org/TR/xquery-30/#id-annotations) provide the opportunity to implement Adam Retter's [RESTXQ](http://exquery.github.com/exquery/exquery-restxq-specification/restxq-1.0-specification.html#method-annotation) draft (introduced at [XML Prague 2012](http://archive.xmlprague.cz/2012/sessions.html#RESTful-XQuery---Standardised-XQuery-3.0-Annotations-for-REST)).
 
 RESTXQ is based on the annotations defined within [JSR-311](http://download.oracle.com/otndocs/jcp/jaxrs-1.0-fr-eval-oth-JSpec).
 
@@ -20,7 +20,7 @@ RXQ is an implementation of a subset of RESTXQ for the MarkLogic server.
 
 ## For the Impatient (set up example application)
 
-MarkLogic 6.0-3 and higher is required version for use with RXQ.
+MarkLogic 6.0-3 or higher is required version for use with RXQ.
 
 The quickest way to see RXQ in action is to setup the example application under [src/example-simple](https://github.com/xquery/rxq/tree/master/src/example-simple).
 
@@ -35,10 +35,10 @@ You can now point your web browser to the created app (e.g. http://&lt;host&gt;:
 ## Distribution
 
 * [README.md](https://github.com/xquery/rxq) - This document
-* [api](https://github.com/xquery/rxq/tree/master/api) - contains api level docs of RXQ rewriter and module library
+* [rxq-rewriter.xqy](https://github.com/xquery/rxq/tree/master/rxq-rewriter.xqy) - rxq rewriter
+* [lib/rxq.xqy](https://github.com/xquery/rxq/tree/master/lib/rxq.xqy) - rxq library
 * [src/example-simple](https://github.com/xquery/rxq/tree/master/src/example-simple) - contains example site which demonstrates how to use RXQ
-*  [src/example-dashML](https://github.com/xquery/rxq/tree/master/src/example-dashml) - non trivial [dashML](https://github.com/xquery/dashML) application (dashboard metrics) using RXQ.
-* [src/xquery](https://github.com/xquery/rxq/tree/master/src/xquery) - contains clean rxq-rewriter.xqy and lib/rxq.xqy you can use in your own projects
+* [src/example-dashML](https://github.com/xquery/rxq/tree/master/src/example-dashml) - non trivial [dashML](https://github.com/xquery/dashML) application (dashboard metrics) using RXQ.
 * src/xray - RXQ uses Rob Whitby's excellent [XRAY](https://github.com/robwhitby/xray) for xquery unit testing
 * [src/tests](https://github.com/xquery/rxq/tree/master/src/test) - used for testing
 
