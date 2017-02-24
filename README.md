@@ -2,9 +2,15 @@
 
 Use RXQ to build MVC/RESTful apps with MarkLogic XQuery.
 
-Until RXQ has a release version, we list significant changes [here](https://github.com/xquery/rxq/wiki/Changes)
+RXQ goals are:
 
-Feel free to ask questions on [XQuery mailing list](http://x-query.com/mailman/listinfo/talk) or at IRC channel [#rxq](irc://irc.freenode.net) on freenode
+* make it easy to build REST endpoints with XQuery
+* easy to understand and maintain
+* fast, small and simple in design
+
+Feel free to ask questions on [hipchat](https://hipchat.marklogic.com/g7F0QYGtD),[XQuery mailing list](http://x-query.com/mailman/listinfo/talk) or at IRC channel [#rxq](irc://irc.freenode.net) on freenode.
+
+Until RXQ has a release version, we list significant changes [here](https://github.com/xquery/rxq/wiki/Changes)
 
 [Applications built with RXQ](https://github.com/xquery/rxq/wiki/Applications-using-RXQ)
 
