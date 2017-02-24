@@ -83,7 +83,7 @@ The `addr:get-address($id)` function has defined 4 RESTXQ annotations;
 
 The `addr:get-address()` function is invoked when there is an HTTP GET Request on URL /address/id/(.*).
 
-The routing 'magic' is taken care of by [src/xquery/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/xquery/rxq-rewriter.xqy) (which you attach to MarkLogic appserver). The `%rxq:GET` annotation specifies the HTTP method and the `%rxq:path` annotation value specifies the concrete URL.
+The routing 'magic' is taken care of by [src/xquery/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/rxq-rewriter.xqy) (which you attach to MarkLogic appserver). The `%rxq:GET` annotation specifies the HTTP method and the `%rxq:path` annotation value specifies the concrete URL.
 
 The value for the `addr:get-address` function's `$id` variable is taken from the first regex capture group in the url as specified by %rxq:path. This $id value can then be used by some search to lookup the address.
 
@@ -105,7 +105,7 @@ import module namespace addr="﻿http://example.org/addr at "modules/addr.xqy";
 
 This allows the RXQ implementation to scan for annotated functions and generate the neccessary url rewriting and evaluation.
 
-Please review the [src/example-simple/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/example-site/rxq-rewriter.xqy) to see how to setup your own.
+Please review the [src/example-simple/rxq-rewriter.xqy](https://github.com/xquery/rxq/blob/master/src/example-simple/rxq-rewriter.xqy) to see how to setup your own.
 
 To continue with our address example, lets add a function which inserts an address.
 
