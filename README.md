@@ -38,7 +38,13 @@ First, you *need* to download and install [MarkLogic](https://developer.marklogi
 * _error handler_: `/rxq-rewriter.xqy?mode=error`
 * _rewrite handler_: `/rxq-rewriter.xqy?mode=rewrite`
 
-You can now point your web browser to the created app (e.g. http://&lt;host&gt;:&lt;port&gt;/) and you should see an html page which is the example-simple application.
+Which you can do via MarkLogic Admin GUI or using REST Management API with curl example provided below:
+
+```
+curl -i -X PUT --anyauth --user admin:admin -H "Content-Type:application/json" -d'{"root":"/home/jfuller/projects/rxq/src/example-simple","error-handler":"/rxq-rewriter.xqy?mode=error","url-rewriter":"/rxq-rewriter.xqy?mode=rewrite"}' "http://node1:8002/manage/v2/servers/test8/properties?group-id=Default"
+```
+
+You may now browse with your web browser to the created app (e.g. http://&lt;host&gt;:&lt;port&gt;/) and you should see an html page which is the example-simple application.
 
 ## Distribution
 
