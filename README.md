@@ -1,6 +1,8 @@
 # RXQ v1.0 - RESTXQ for MarkLogic
 
-Use RXQ to build MVC/RESTful apps with MarkLogic XQuery.
+RXQ provides a set of annotations to be used on functions in XQuery that expose RESTful services in MarkLogic.
+
+You may use RXQ to build MVC/RESTful apps with MarkLogic XQuery.
 
 RXQ goals are:
 
